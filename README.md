@@ -5,7 +5,7 @@ No Redis installation is required: all operations are performed in-memory.
 
 Very often, a Nodejs application use 'cluster' module, and is running on several processes. Then you need to share data and send messages (pub/sub) between processes.
 
-Redis is a good solution to do that, but sometime you want to provide a standalone application without heavy dependencies. You can then use Redjs and later, replace Redjs with [Ioredis](https://github.com/luin/ioredis), without changing the code.
+Redis is a good solution to do that, but sometime you want to provide a standalone application without heavy dependencies. You can then use Redjs and later, replace it with [Ioredis](https://github.com/luin/ioredis), without changing the code.
 
 
 # Quick Start
