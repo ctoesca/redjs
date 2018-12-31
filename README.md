@@ -65,9 +65,6 @@ redjs.get('foo').then(function (result) {
 redjs.sadd('set', 1, 3, 5, 7);
 redjs.sadd('set', [1, 3, 5, 7]);
 
-// All arguments are passed directly to the redis server:
-redjs.set('key', 100, 'EX', 10);
-```
 
 ## Available commands (Work in progress...)
 
