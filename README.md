@@ -1,5 +1,7 @@
 # redjs
-Embedded Redis-like in-memory data store, for use in nodejs cluster
+Embedded Redis-like in-memory data store, for use in nodejs cluster.
+No Redis installation is required: all operations are performed in-memory.
+Redjs can be replaced by ioredis if you want to use Redis.
 
 # Quick Start
 
@@ -59,3 +61,9 @@ redjs.sadd('set', [1, 3, 5, 7]);
 // All arguments are passed directly to the redis server:
 redjs.set('key', 100, 'EX', 10);
 ```
+
+## Pub/Sub
+
+Like in ioredis, Pub/Sub is supported.
+
+
