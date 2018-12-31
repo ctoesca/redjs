@@ -64,7 +64,7 @@ redjs.get('foo').then(function (result) {
 // Arguments to commands are flattened, so the following are the same:
 redjs.sadd('set', 1, 3, 5, 7);
 redjs.sadd('set', [1, 3, 5, 7]);
-
+```
 
 ## Available commands (Work in progress...)
 
