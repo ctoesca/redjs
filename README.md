@@ -14,7 +14,7 @@ $ npm install redjs
 
 ## Basic Usage
 
-### RedjsServer must be created in master process. Example (index.js) :
+#### RedjsServer must be created in master process. Example (index.js) :
 
 ```javascript
 if (cluster.isMaster){
@@ -29,7 +29,9 @@ if (cluster.isMaster){
     	console.log(`worker ${worker.process.pid} died code=`+code);
 	cluster.fork();
     })
-		
+    
+    /* create RedjsServer */
+    var RedjsServer = require('Redjs').RedjsServer		
     var redjsServer = new RedjsServer({})
     redjsServer.start()
     
@@ -40,7 +42,7 @@ if (cluster.isMaster){
 }
 ```
 
-### Then you can use Redjs client in your workers:
+#### Then you can use Redjs client in your workers:
   
 ```javascript
 var Redjs = require('Redjs');
