@@ -45,7 +45,7 @@ if (cluster.isMaster){
 }
 ```
 
-#### Then you can use Redjs client in your workers:
+#### Then you can use Redjs client in your workers processes:
   
 ```javascript
 var Redjs = require('Redjs');
