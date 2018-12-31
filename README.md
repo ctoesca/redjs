@@ -35,7 +35,7 @@ if (cluster.isMaster){
     
     /* create RedjsServer */
     var RedjsServer = require('Redjs').RedjsServer		
-    var redjsServer = new RedjsServer({})
+    var redjsServer = new RedjsServer()
     redjsServer.start()
     
 }else{
