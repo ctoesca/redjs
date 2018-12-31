@@ -39,8 +39,8 @@ if (cluster.isMaster){
     redjsServer.start()
     
 }else{
-    /* WORKER: 
-    use Redjs client
+    /* 
+    WORKER PROCESS: use Redjs client
     */				
 }
 ```
