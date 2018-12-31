@@ -1,7 +1,7 @@
 # redjs
 Redjs is a Redis-like in-memory data store, for use in nodejs cluster. Ioredis compatible.
 
-No Redis installation is required: all operations are performed in-memory.
+No Redis installation is required: all operations are performed in-memory, on master process.
 
 Very often, a Nodejs application use 'cluster' module, and is running on several processes. Then you need to share data and send messages (pub/sub) between processes.
 
