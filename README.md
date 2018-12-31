@@ -66,7 +66,8 @@ redjs.sadd('set', 1, 3, 5, 7);
 redjs.sadd('set', [1, 3, 5, 7]);
 ```
 
-## Available commands (Work in progress...)
+
+## Available commands (work in progress...)
 
 See [Ioredis](https://github.com/luin/ioredis) form more details.
 
