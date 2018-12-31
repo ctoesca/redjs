@@ -1,0 +1,31 @@
+{
+  "name": "redjs",
+  "version": "0.0.2",
+  "description": "Embedded Redis mock for use in nodejs cluster",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/ctoesca/redjs.git"
+  },
+  "keywords": [
+    "redis",
+    "cluster",
+    "mock",
+    "shared",
+    "memory",
+    "pubsub"
+  ],
+  "author": "Christophe Toesca",
+  "license": "MIT",
+  "readme": "ERROR: No README data found!",
+  "dependencies": {
+    "bluebird": "^3.5.3",
+    "uuid": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=6"
+  }
+}
