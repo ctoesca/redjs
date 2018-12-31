@@ -1,7 +1,7 @@
 {
   "name": "redjs",
   "version": "0.0.2",
-  "description": "Embedded Redis mock for use in nodejs cluster",
+  "description": "Redjs is a Redis-like in-memory data store, for use in nodejs cluster. Ioredis compatible",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
