@@ -12,7 +12,7 @@ Redis is a good solution to do that, but sometime you want to provide a standalo
 
 ## Install
 ```shell
-$ npm install redjs
+$ npm install ctoesca/redjs
 ```
 
 ## Basic Usage
