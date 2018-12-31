@@ -1,5 +1,5 @@
 # redjs
-Redjs is a Redis-like in-memory data store, for use in nodejs cluster.
+Redjs is a Redis-like in-memory data store, for use in nodejs cluster. Ioredis compatible.
 
 No Redis installation is required: all operations are performed in-memory.
 
