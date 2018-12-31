@@ -69,8 +69,29 @@ redjs.sadd('set', [1, 3, 5, 7]);
 redjs.set('key', 100, 'EX', 10);
 ```
 
-## Pub/Sub
+## Available commands (Work in progress...)
 
-Like in ioredis, Pub/Sub is supported.
+### Pub/sub
+
+- subscribe
+- unsubscribe
+- publish
+
+### Hashes
+
+- hget
+- hset
+
+### Keys
+
+- get
+- set
+- incr
+
+### Sets
+
+- sadd
+- srem
+- smembers
 
 
