@@ -75,11 +75,36 @@ See [Ioredis](https://github.com/luin/ioredis) form more details.
 - subscribe
 - unsubscribe
 - publish
+- psubscribe
+- punsubscribe
+
+### Lists
+
+- lpush
+- rpush
+- llen
+- rpop
+- lpop
+- lindex
+- lset
+- linsert
 
 ### Hashes
 
+- hkeys
+- hlen
 - hget
 - hset
+- hmget
+- hmset
+- hdel
+- hexists
+- hgetall
+- hincrby
+- hincrbyfloat
+- hsetnx
+- hstrlen
+- hvals
 
 ### Keys
 
