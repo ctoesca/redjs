@@ -12,14 +12,14 @@ Notes:
 - Persistence is not yet implemented
 
 
-# Quick Start
+## Quick Start
 
-## Install
+### Install
 ```shell
 $ npm install ctoesca/redjs
 ```
 
-## Basic Usage
+### Basic Usage
 
 
 #### In a single process application:
