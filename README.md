@@ -89,7 +89,9 @@ redis-cli -p 6379
 (integer) 1
 127.0.0.1:6379> hget hash1 var1
 "foo"
-127.0.0.1:6379>
+127.0.0.1:6379> hgetall hash1
+1) "var1"
+2) "foo"
 ```
 
 ## Available commands (work in progress...)
