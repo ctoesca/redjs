@@ -22,12 +22,13 @@ $ npm install ctoesca/redjs
 ### Basic Usage
 
 
-#### In a single process application:
+#### Redjs instanciation in a single process application:
 ```javascript
 /* create RedjsServer */
 var RedjsServer = require('Redjs')      
 new RedjsServer().start(6379)
 ```
+
 
 #### If you use cluster module, RedjsServer must be created in master process:
 
@@ -57,7 +58,7 @@ if (cluster.isMaster){
 ```
 
 
-#### Then you can use Redjs server with your favorite client library ([Ioredis](https://github.com/luin/ioredis) in this example):
+### Using Redjs server with your favorite client library ([Ioredis](https://github.com/luin/ioredis) in this example)
   
 ```javascript
 var Redis = require('ioredis');
