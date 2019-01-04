@@ -19,10 +19,10 @@ Notes:
 $ npm install ctoesca/redjs
 ```
 
-### Basic Usage
+### Redjs instanciation 
 
 
-#### Redjs instanciation in a single process application:
+#### In a single process application:
 ```javascript
 /* create RedjsServer */
 var RedjsServer = require('Redjs')      
@@ -30,7 +30,7 @@ new RedjsServer().start(6379)
 ```
 
 
-#### If you use cluster module, RedjsServer must be created in master process:
+#### If you use 'cluster' module, RedjsServer must be created in master process:
 
 ```javascript
 if (cluster.isMaster){
