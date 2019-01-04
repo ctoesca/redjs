@@ -20,7 +20,7 @@
   ],
   "author": "Christophe Toesca",
   "license": "MIT",
-  "readme": "ERROR: No README data found!",
+  "readme": "README.md",
   "dependencies": {
     "bluebird": "^3.5.3",
     "bunyan": "^1.8.12",
