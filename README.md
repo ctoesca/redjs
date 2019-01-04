@@ -1,7 +1,7 @@
 # redjs
 Redjs is a Redis-like in-memory data store. It can be used with [Ioredis](https://github.com/luin/ioredis), [NodeRedis](https://github.com/NodeRedis/node_redis) and by other applications (nodejs or not).
 
-Very often, a Nodejs application use 'cluster' module, and is running on several processes. Then you need to share data and send messages (pub/sub) between processes.
+Very often, a Nodejs application uses 'cluster' module, and is running on several processes (or several servers). Then you need to share data and send messages (pub/sub) between processes.
 
 Redis is a good solution to do that, but sometime you want to provide a standalone application without dependencies. You can then use embed Redjs server in your application (or not) and use it like Redis.
 
