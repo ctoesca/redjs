@@ -57,7 +57,7 @@ if (cluster.isMaster){
 ```
 
 
-#### Then you can use Redjs server with [Ioredis](https://github.com/luin/ioredis) client library:
+#### Then you can use Redjs server with your favorite client library ([Ioredis](https://github.com/luin/ioredis) in this example):
   
 ```javascript
 var Redis = require('ioredis');
