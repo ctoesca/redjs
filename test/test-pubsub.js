@@ -27,12 +27,12 @@ describe('PubSub', function()
 	    	})
 	    	.delay( 1000 )
 	    	.then( () => {
-	    		redis1.off('message', onMessage1)
+	    		redis1.removeListener('message', onMessage1)
 
 	    		if (!received){
 	    			done("Le message n'a pas été reçu en 1 sec")
 	    		}else{
-	    			return redis2.publish('channel.toto', 'this message is received after calling redis.off("message"...)') 
+	    			return redis2.publish('channel.toto', 'this message is received after calling redis.removeListener("message"...)') 
 	    		}	    		
 	    	})
 	    	.delay( 1000 )
@@ -66,7 +66,7 @@ describe('PubSub', function()
 	    	})	    	
 	    	.delay( 1000 )
 	    	.then(function(){
-	    		redis1.off('message', onMessage2)
+	    		redis1.removeListener('message', onMessage2)
 	    		done()
 	    	})
 	    	.catch( done )
@@ -102,7 +102,7 @@ describe('PubSub', function()
 	    	})
 	    	.delay(1000)
 	    	.then(()=>{
-	    		redis1.off('message', onMessage3)	
+	    		redis1.removeListener('message', onMessage3)	
 	    		if (received.length != 2){	    				    		
 		    		done("Les 2 messages n'ont pas étté reçus en 1 sec")
 	    		}else{

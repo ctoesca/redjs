@@ -11,7 +11,7 @@ describe('Connect Events', function()
 	    	var redis = getRedis()
 
 	    	var onEvent = function(r){	    		
-	    		redis.off('connect', onEvent)
+	    		redis.removeListener('connect', onEvent)
 	    		done()
 	    	}
 
@@ -26,7 +26,7 @@ describe('Connect Events', function()
 	    	var redis = new Redjs()
 
 	    	var onEvent = function(err){	    		
-	    		redis.off('error', onEvent)
+	    		redis.removeListener('error', onEvent)
 	    		done()
 	    	}
 
