@@ -7,7 +7,7 @@ Redis is a good solution to do that, but sometime you want to provide a standalo
 
 Notes: 
 - The purpose of this module is not to compete with Redis (the performance of Redjs is about 2 to 3 times less than Redis, and there is no replication or cluster) but to provide a shared memory and a pub-sub system between nodejs processes, using "standard" client modules like ioredis, node_redis etc.
-- Redjs server behaves like Redis and can be used by any Application.
+- Redjs imlement Redis protocol and behaves like Redis: so it can be used by any application.
 - All operations are performed in-memory, on master process. 
 - Persistence is not yet implemented
 
