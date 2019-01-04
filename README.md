@@ -19,7 +19,7 @@ Notes:
 $ npm install ctoesca/redjs
 ```
 
-### Redjs instanciation 
+### Create and start Redjs
 
 
 #### In a single process application:
