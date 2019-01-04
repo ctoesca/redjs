@@ -85,6 +85,11 @@ To check that it works, you can connect to redjs with redis-cli program (provide
 
 ```bash
 redis-cli -p 6379
+127.0.0.1:6379> hset hash1 var1 foo
+(integer) 1
+127.0.0.1:6379> hget hash1 var1
+"foo"
+127.0.0.1:6379>
 ```
 
 ## Available commands (work in progress...)
