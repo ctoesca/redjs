@@ -81,7 +81,7 @@ redis.sadd('set', [1, 3, 5, 7]);
 
 ### Using Redjs with redis-cli
   
-To check that it works, you can connect to redjs with redis-cli program (provided with redis).
+Of course, you can connect to redjs with redis-cli program (provided with redis):
 
 ```bash
 redis-cli -p 6379
