@@ -1,11 +1,16 @@
 # redjs
-Redjs is a Redis-like in-memory data store, for use in nodejs cluster. Ioredis compatible. 
-
-No Redis installation is required: all operations are performed in-memory, on master process.
+Redjs is a Redis-like in-memory data store.
 
 Very often, a Nodejs application use 'cluster' module, and is running on several processes. Then you need to share data and send messages (pub/sub) between processes.
 
-Redis is a good solution to do that, but sometime you want to provide a standalone application without heavy dependencies. You can then use Redjs and later, replace it with [Ioredis](https://github.com/luin/ioredis), without changing the code.
+Redis is a good solution to do that, but sometime you want to provide a standalone application without dependencies. 
+You can then use Redjs server and use it with [Ioredis](https://github.com/luin/ioredis), [NodeRedis](https://github.com/NodeRedis/node_redis) or other modules.
+
+Notes: 
+- The purpose of this module is not to compete with Redis (the performance of Redjs is about 2 to 3 times less than Redis, and there is no replication or cluster) but to provide a shared memory and a pub-sub system between nodejs processes, using "standard" client modules like ioredis, node_redis etc.
+- Redjs server behaves like Redis and can be used by any Application.
+- All operations are performed in-memory, on master process. 
+- Persistence is not yet implemented
 
 
 # Quick Start
@@ -17,7 +22,15 @@ $ npm install ctoesca/redjs
 
 ## Basic Usage
 
-#### RedjsServer must be created in master process. Example (index.js) :
+
+#### In a single process application:
+```javascript
+/* create RedjsServer */
+var RedjsServer = require('Redjs')      
+new RedjsServer().start(6379)
+```
+
+#### If you use cluster module, RedjsServer must be created in master process:
 
 ```javascript
 if (cluster.isMaster){
@@ -34,41 +47,42 @@ if (cluster.isMaster){
     })
     
     /* create RedjsServer */
-    var RedjsServer = require('Redjs').RedjsServer		
-    new RedjsServer().start()
+    var RedjsServer = require('Redjs')      
+    new RedjsServer().start(6379)
     
 }else{
     /* 
-    WORKER PROCESS: use Redjs client
+    WORKER PROCESS
     */				
 }
 ```
 
-#### Then you can use Redjs client in your workers processes:
+
+#### Then you can use Redjs server with [Ioredis](https://github.com/luin/ioredis) client library:
   
 ```javascript
-var Redjs = require('Redjs');
-var redjs = new Redjs();
+var Redis = require('ioredis');
+var redis = new Redis();
 
-redjs.set('foo', 'bar');
-redjs.get('foo', function (err, result) {
+redis.set('foo', 'bar');
+redis.get('foo', function (err, result) {
   console.log(result);
 });
 
 // Or using a promise if the last argument isn't a function
-redjs.get('foo').then(function (result) {
+redis.get('foo').then(function (result) {
   console.log(result);
 });
 
 // Arguments to commands are flattened, so the following are the same:
-redjs.sadd('set', 1, 3, 5, 7);
-redjs.sadd('set', [1, 3, 5, 7]);
+redis.sadd('set', 1, 3, 5, 7);
+redis.sadd('set', [1, 3, 5, 7]);
 ```
 
 
 ## Available commands (work in progress...)
 
-See [Ioredis](https://github.com/luin/ioredis) form more details.
+- monitor
 
 ### Pub/sub
 

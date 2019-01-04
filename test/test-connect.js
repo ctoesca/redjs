@@ -1,4 +1,5 @@
 const Redjs = require('..');
+const Redis = require('ioredis');
 const assert = require('assert');
 
 describe('Connect Events', function() 
@@ -7,15 +8,14 @@ describe('Connect Events', function()
 	describe('connect', function() {
 	    it('should receive "connect" event', function( done ) {
 	    	
-	    	var redjs = new Redjs()
+	    	var redis = getRedis()
 
 	    	var onEvent = function(r){	    		
-	    		redjs.off('connect', onEvent)
-	    		assert.equal(r, "OK"); 
+	    		redis.off('connect', onEvent)
 	    		done()
 	    	}
 
-	    	redjs.on('connect', onEvent)	
+	    	redis.on('connect', onEvent)	
 	    });
   	});
 
@@ -23,14 +23,14 @@ describe('Connect Events', function()
 	/*describe('connect error', function() {
 	    it('should receive "error" event', function( done ) {
 	    	
-	    	var redjs = new Redjs()
+	    	var redis = new Redjs()
 
 	    	var onEvent = function(err){	    		
-	    		redjs.off('error', onEvent)
+	    		redis.off('error', onEvent)
 	    		done()
 	    	}
 
-	    	redjs.on('error', onEvent)	
+	    	redis.on('error', onEvent)	
 	    });
   	});*/
 

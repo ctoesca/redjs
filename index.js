@@ -1,7 +1,6 @@
 'use strict';
 
-exports = module.exports = require('./lib/client/Redjs');
+exports = module.exports = require('./lib/RedjsServer');
 
-exports.RedjsServer = require('./lib/server/RedjsServer');
 exports.Timer = require('./lib/utils/Timer');
 

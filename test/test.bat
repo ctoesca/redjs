@@ -1,5 +1,9 @@
 echo off
 set SCRIPT_DIR=%~dp0
-set PATH=%SCRIPT_DIR%\..\node;%PATH%
+set DIR=%SCRIPT_DIR%\..
 
-..\node_modules\.bin\mocha test-app.js
+set PATH=%DIR%\node;%DIR%\node_modules\.bin;%PATH%
+
+node -v
+
+mocha %DIR%\test\test-app.js

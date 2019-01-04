@@ -1,9 +1,11 @@
-const Redjs = require('..');
-const redjs = new Redjs()
+
 const assert = require('assert');
+
 
 describe('PubSub', function() 
 {
+	var redis1 = getRedis()
+	var redis2 = getRedis()
 
 	describe('check subscribe/publish / removelister', function() {
 	    it('should receive message from channel.toto', function( done ) {
@@ -13,24 +15,24 @@ describe('PubSub', function()
 	    		assert.equal(msg, "message from "+channel);
 	    		received = true
 	    	}
-	    	redjs.on('message', onMessage1)
+	    	redis1.on('message', onMessage1)
 
-	    	redjs.subscribe('channel.toto')
+	    	redis1.subscribe('channel.toto')
 	    	.then( function(r){	    
 	    		
-	    		return redjs.publish('channel.toto', 'message from channel.toto') 
+	    		return redis2.publish('channel.toto', 'message from channel.toto') 
 	    		.then( function(r){
 	    			assert.equal(r, 1 )		
 	    		})
 	    	})
 	    	.delay( 1000 )
 	    	.then( () => {
-	    		redjs.off('message', onMessage1)
+	    		redis1.off('message', onMessage1)
 
 	    		if (!received){
 	    			done("Le message n'a pas été reçu en 1 sec")
 	    		}else{
-	    			return redjs.publish('channel.toto', 'this message is received after calling redjs.off("message"...)') 
+	    			return redis2.publish('channel.toto', 'this message is received after calling redis.off("message"...)') 
 	    		}	    		
 	    	})
 	    	.delay( 1000 )
@@ -53,18 +55,18 @@ describe('PubSub', function()
 	    		received = true
 	    		done("this message from channel '"+channel+"' is received after unsubscribe")
 	    	}
-	    	redjs.on('message', onMessage2)
+	    	redis1.on('message', onMessage2)
 
-	    	redjs.unsubscribe('channel.toto') 	
+	    	redis1.unsubscribe('channel.toto') 	
 	    	.then( function(r){
-	    		return redjs.publish('channel.toto', 'message from channel.toto2222') 		    		
+	    		return redis2.publish('channel.toto', 'message from channel.toto2222') 		    		
 	    	})  	
 	    	.then( function(r){
 	    		assert.equal(r, 0 )
 	    	})	    	
 	    	.delay( 1000 )
 	    	.then(function(){
-	    		redjs.off('message', onMessage2)
+	    		redis1.off('message', onMessage2)
 	    		done()
 	    	})
 	    	.catch( done )
@@ -83,24 +85,24 @@ describe('PubSub', function()
 	    			received.push(msg)
 	    		}
 	    	}
-	    	redjs.on('message', onMessage3)	
+	    	redis1.on('message', onMessage3)	
 
-	    	redjs.psubscribe('channel.*') 	
+	    	redis1.psubscribe('channel.*') 	
 	    	.then( function(r){
 	    		
-	    		redjs.publish('channel.tutu', 'message from channel.tutu') 
+	    		redis2.publish('channel.tutu', 'message from channel.tutu') 
 	    		.then(function(r){
 	    			console.log("3 - PUBLISH channel.tutu to "+r+" clients")
 	    		})
 
-	    		redjs.publish('channel.toto', 'message from channel.toto') 
+	    		redis2.publish('channel.toto', 'message from channel.toto') 
 	    		.then(function(r){
 	    			console.log("3 - PUBLISH channel.toto to "+r+" clients")
 	    		})
 	    	})
 	    	.delay(1000)
 	    	.then(()=>{
-	    		redjs.off('message', onMessage3)	
+	    		redis1.off('message', onMessage3)	
 	    		if (received.length != 2){	    				    		
 		    		done("Les 2 messages n'ont pas étté reçus en 1 sec")
 	    		}else{

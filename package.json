@@ -27,10 +27,13 @@
     "lodash": "^4.17.11",
     "minimatch": "^3.0.4",
     "mocha": "^5.2.0",
+    "redis-parser": "^3.0.0",
     "uuid": "^3.3.2"
   },
   "engines": {
     "node": ">=11.6"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ioredis": "^4.3.0"
+  }
 }
