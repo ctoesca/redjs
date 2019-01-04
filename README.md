@@ -3,23 +3,23 @@ Redjs is a Redis-like in-memory data store. It can be used with [Ioredis](https:
 
 Very often, a Nodejs application uses 'cluster' module, and is running on several processes (or several servers). Then you need to share data and send messages (pub/sub) between processes.
 
-Redis is a good solution to do that, but sometime you want to provide a standalone application without dependencies. You can then use embed Redjs server in your application (or not) and use it like Redis.
+Redis is a good solution to do that, but sometime you want to provide a standalone application without dependencies. You can then embed Redjs server in your nodejs application (or in a dedicated nodejs application) and use it like Redis.
 
 Notes: 
 - The purpose of this module is not to compete with Redis (the performance of Redjs is about 2 to 3 times less than Redis, and there is no replication or cluster) but to provide a shared memory and a pub-sub system between nodejs processes, using "standard" client modules like ioredis, node_redis etc.
-- Redjs server behaves like Redis and can be used by any Application.
+- Redjs imlement Redis protocol and behaves like Redis: so it can be used by any application.
 - All operations are performed in-memory, on master process. 
 - Persistence is not yet implemented
 
 
-# Quick Start
+## Quick Start
 
-## Install
+### Install
 ```shell
 $ npm install ctoesca/redjs
 ```
 
-## Basic Usage
+### Create and start Redjs
 
 
 #### In a single process application:
@@ -29,7 +29,8 @@ var RedjsServer = require('Redjs')
 new RedjsServer().start(6379)
 ```
 
-#### If you use cluster module, RedjsServer must be created in master process:
+
+#### If you use 'cluster' module, RedjsServer must be created in master process:
 
 ```javascript
 if (cluster.isMaster){
@@ -57,7 +58,7 @@ if (cluster.isMaster){
 ```
 
 
-#### Then you can use Redjs server with [Ioredis](https://github.com/luin/ioredis) client library:
+### Using Redjs server with your favorite client library ([Ioredis](https://github.com/luin/ioredis) in this example)
   
 ```javascript
 var Redis = require('ioredis');
@@ -78,6 +79,20 @@ redis.sadd('set', 1, 3, 5, 7);
 redis.sadd('set', [1, 3, 5, 7]);
 ```
 
+### Using Redjs with redis-cli
+  
+Of course, you can connect to redjs with redis-cli program (provided with redis):
+
+```bash
+redis-cli -p 6379
+127.0.0.1:6379> hset hash1 var1 foo
+(integer) 1
+127.0.0.1:6379> hget hash1 var1
+"foo"
+127.0.0.1:6379> hgetall hash1
+1) "var1"
+2) "foo"
+```
 
 ## Available commands (work in progress...)
 
