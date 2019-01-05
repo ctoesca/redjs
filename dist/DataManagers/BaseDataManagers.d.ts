@@ -10,7 +10,6 @@ export declare class BaseDataManagers extends EventEmitter {
     protected mainTimer: Timer;
     protected data: any;
     constructor(opt: any);
-    static getCommandsNames(): string[];
     getCommandsNames(): string[];
     protected checkArgCount(cmd: string, args: IArguments, expected: number): void;
     protected checkMinArgCount(cmd: string, args: IArguments, expected: number): void;

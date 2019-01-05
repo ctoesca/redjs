@@ -4,7 +4,7 @@ export declare class PubSub extends BaseDataManagers {
     protected channels: Map<string, Map<string, Connection>>;
     protected patternsSubscriptions: Map<string, Map<string, Connection>>;
     constructor(opt: any);
-    static getCommandsNames(): string[];
+    getCommandsNames(): string[];
     getSubscriptionsCount(conn: Connection): number;
     subscribe(conn: Connection, ...channels: string[]): any[];
     psubscribe(conn: Connection, ...patterns: string[]): any[];

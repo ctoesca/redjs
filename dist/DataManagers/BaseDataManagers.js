@@ -18,11 +18,8 @@ class BaseDataManagers extends EventEmitter {
         this.mainTimer = new Timer_1.Timer({ delay: 10000 });
         this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
     }
-    static getCommandsNames() {
-        return [];
-    }
     getCommandsNames() {
-        return BaseDataManagers.getCommandsNames();
+        return [];
     }
     checkArgCount(cmd, args, expected) {
         if (args.length !== expected) {

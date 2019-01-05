@@ -5,7 +5,7 @@ export declare class Hashes extends BaseDataManagers {
     protected defaultScancount: number;
     protected lastCursorId: number;
     constructor(opt: any);
-    static getCommandsNames(): string[];
+    getCommandsNames(): string[];
     hscan(conn: Connection, key: string, cursor: number, ...options: any[]): string;
     hget(conn: Connection, key: string, field: string): any;
     hvals(conn: Connection, key: string): any[];
@@ -19,8 +19,9 @@ export declare class Hashes extends BaseDataManagers {
     hdel(conn: Connection, key: string, ...fields: string[]): number;
     hkeys(conn: Connection, key: string): string[];
     hlen(conn: Connection, key: string): number;
-    hincrby(conn: Connection, key: string, field: string, incr: number): any;
-    hincrbyfloat(conn: Connection, key: string, field: string, incr: number): any;
-    protected _incr(conn: Connection, key: string, field: string, incr: number): any;
+    hincrby(conn: Connection, key: string, field: string, incr: number): number;
+    hincrbyfloat(conn: Connection, key: string, field: string, incr: number): number;
+    protected _incr(conn: Connection, key: string, field: string, incr: number): number;
+    protected createNewKey(key: string): any;
     protected onTimer(): void;
 }

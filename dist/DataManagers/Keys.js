@@ -5,7 +5,7 @@ class Keys extends BaseDataManagers_1.BaseDataManagers {
     constructor(opt) {
         super(opt);
     }
-    static getCommandsNames() {
+    getCommandsNames() {
         return ['get', 'set', 'incr', 'DEL', 'DUMP', 'EXISTS', 'EXPIRE', 'EXPIREAT', 'KEYS', 'MIGRATE', 'MOVE', 'OBJECT', 'PERSISTS',
             'PEXPIRE', 'PEXPIREAT', 'PTTL', 'RANDOMKEY', 'RENAME', 'RENAMENX', 'RESTORE', 'SORT', 'TOUCH', 'TTL', 'TYPE', 'UNLINK', 'WAIT', 'SCAN'];
     }

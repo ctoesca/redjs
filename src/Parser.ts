@@ -82,6 +82,9 @@ export class Parser extends EventEmitter {
 			for (let value of resp) {
 				r += this.toRESP(value)
 			}
+		} else if (typeof resp === 'number') {
+			// FLOAT -> bulkString
+			r = '$' + resp.toString().length + '\r\n' + resp + '\r\n'
 		} else {
 			throw ('ERR Unknown response type for response \'' + resp + '\'')
 		}

@@ -5,7 +5,7 @@ class Lists extends BaseDataManagers_1.BaseDataManagers {
     constructor(opt) {
         super(opt);
     }
-    static getCommandsNames() {
+    getCommandsNames() {
         return ['blpop', 'brpop', 'BRPOPLPUSH', 'LINDEX', 'LINSERT', 'LLEN', 'LPOP', 'LPUSH',
             'LPUSH', 'LPUSHX', 'LRANGE', 'LREM', 'LSET', 'LTRIM', 'RPOP', 'RPOPLPUSH', 'RPUSH', 'RPUSHX'];
     }
@@ -14,6 +14,9 @@ class Lists extends BaseDataManagers_1.BaseDataManagers {
         let h = this.getDataset(key);
         if (!h) {
             throw key + ' is not a list';
+        }
+        if (typeof index === 'string') {
+            index = parseInt(index, 10);
         }
         let r = null;
         let indx;
@@ -63,6 +66,9 @@ class Lists extends BaseDataManagers_1.BaseDataManagers {
         let h = this.getDataset(key);
         if (!h) {
             throw key + ' is not a list';
+        }
+        if (typeof index === 'string') {
+            index = parseInt(index, 10);
         }
         let indx;
         if (index >= 0) {

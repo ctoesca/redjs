@@ -8,7 +8,7 @@ export class SortedSets extends BaseDataManagers {
 		super(opt);
 	}
 
-	public static getCommandsNames(): string[] {
+	public getCommandsNames(): string[] {
 		return ['BZPOPMIN', 'BZPOPMAX', 'ZADD', 'ZCARD', 'ZCOUNT', 'ZINCRBY', 'ZINTERSTORE', 'ZLEXCOUNT', 'ZPOPMAX', 'ZPOPMIN', 'ZRANGE',
 		'ZRANGEBYLEX', 'ZREVRANGEBYLEX', 'ZRANGEBYSCORE', 'ZRANK', 'ZREM', 'ZREMRANGEBYLEX', 'ZREMRANGEBYRANK', 'ZREMRANGEBYSCORE',
 		'ZREVRANGE', 'ZREVRANGEBYSCORE', 'ZREVRANK', 'ZSCORE', 'ZUNIONSTORE', 'ZSCAN']

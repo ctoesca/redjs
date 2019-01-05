@@ -22,10 +22,10 @@ class RedjsServer extends EventEmitter {
         this.mainTimer = null;
         this.dataManager = null;
         this.options = null;
-        this.parseOptions(opt);
         let constructor = this.constructor;
         this.logger = bunyan.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
+        this.parseOptions(...opt);
         this.mainTimer = new Timer_1.Timer({ delay: 10000 });
         this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
         this.mainTimer.start();

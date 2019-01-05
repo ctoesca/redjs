@@ -5,7 +5,7 @@ class Sets extends BaseDataManagers_1.BaseDataManagers {
     constructor(opt) {
         super(opt);
     }
-    static getCommandsNames() {
+    getCommandsNames() {
         return ['SADD', 'SCARD', 'SDIFF', 'SDIFFSTORE', 'SINTER', 'SINTERSTORE', 'SISMEMBER', 'SMEMBERS',
             'SMOVE', 'SPOP', 'SRANDMEMBER', 'SREM', 'SUNION', 'SUNIONSTORE', 'SSCAN'];
     }

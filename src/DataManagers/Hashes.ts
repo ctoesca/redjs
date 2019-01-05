@@ -12,7 +12,7 @@ export class Hashes extends BaseDataManagers {
 		super(opt);
 	}
 
-	public static getCommandsNames(): string[] {
+	public getCommandsNames(): string[] {
 		return ['hget', 'hset', 'HDEL', 'HEXISTS', 'HGETALL', 'HINCRBY', 'HINCRBYFLOAT',
 		'HKEYS', 'HLEN', 'HMGET', 'HMSET', 'HSETNX', 'HSTRLEN', 'HVALS', 'HSCAN']
 	}
@@ -23,7 +23,7 @@ export class Hashes extends BaseDataManagers {
 		this.checkMinArgCount('hscan', arguments, 3)
 
 		let argsNames = ['match', 'count']
-		let args = {}
+		let args: any = {}
 
 		try {
 			if (options.length > argsNames.length * 2) {
@@ -91,24 +91,22 @@ export class Hashes extends BaseDataManagers {
 		this.checkArgCount('hget', arguments, 3)
 
 		let r = null
-		let h = this.getDataset(key)
-		if (h && (typeof this.data[key][field] !== 'undefined')) {
-			r = h[field]
+		let h: Map<string, any> = this.getDataset(key)
+		if (h && h.has(field)) {
+			r = h.get(field)
 		}
 		return r
 	}
 
-	public hvals(conn: Connection, key: string) {
+	public hvals(conn: Connection, key: string): any[] {
 		this.checkArgCount('hvals', arguments, 2)
 
-		let h = this.getDataset(key)
-		let r = []
+		let h: Map<string, any> = this.getDataset(key)
+		let r: any[] = []
 		if (h) {
-			for (let field in h) {
-				if ( typeof h[field] !== 'undefined' ) {
-					r.push( h[field] )
-				}
-			}
+			h.forEach( ( value: any, field: string ) => {
+				r.push( value )
+			})
 		}
 		return r
 	}
@@ -117,12 +115,13 @@ export class Hashes extends BaseDataManagers {
 
 		this.checkArgCount('hstrlen', arguments, 3)
 
-		let h = this.getDataset(key)
+		let h: Map<string, any> = this.getDataset(key)
 
 		let r = 0
-		if ( h && (typeof h[field] !== 'undefined')) {
-			if ( h[field] !== null) {
-				r = h[field].length
+		if ( h && h.has(field)) {
+			let value = h.get(field)
+			if ( value !== null) {
+				r = value.toString().length
 			}
 		}
 
@@ -133,14 +132,14 @@ export class Hashes extends BaseDataManagers {
 
 		this.checkArgCount('hset', arguments, 4)
 
-		let h = this.getOrCreate(key)
+		let h: Map<string, any> = this.getOrCreate(key)
 
 		let r = 0
-		if (typeof h[field] === 'undefined') {
+		if (!h.has(field)) {
 			r = 1
 		}
 
-		h[field] = value
+		h.set(field, value)
 
 		return r
 	}
@@ -149,15 +148,15 @@ export class Hashes extends BaseDataManagers {
 
 		this.checkArgCount('hsetnx', arguments, 4)
 
-		let h = this.getDataset(key)
+		let h: Map<string, any> = this.getDataset(key)
 		let r = 0
 		if (!h) {
 			h = this.createNewKey(key)
 			r = 1;
 		}
-		if (typeof h[field] === 'undefined') {
+		if (!h.has(field)) {
 			r = 1
-			h[field] = value
+			h.set(field, value)
 		}
 		return r
 	}
@@ -167,12 +166,13 @@ export class Hashes extends BaseDataManagers {
 		this.checkMinArgCount('hmget', arguments, 3)
 
 		let r = []
-		let h = this.getDataset(key)
+		let h: Map<string, any> = this.getDataset(key)
+
 		for (let i = 0; i < fields.length; i ++) {
 			if (h) {
 				let field = fields[i]
-				if (typeof h[field] !== 'undefined') {
-					r.push(h[field])
+				if (h.has(field)) {
+					r.push(h.get(field))
 				} else {
 					r.push(null)
 				}
@@ -188,7 +188,7 @@ export class Hashes extends BaseDataManagers {
 		this.checkMinArgCount('hmset', arguments, 4)
 
 		let r = 'OK'
-		let h = this.getOrCreate(key)
+		let h: Map<string, any> = this.getOrCreate(key)
 
 		this.hset(conn, key, field, value)
 
@@ -200,28 +200,26 @@ export class Hashes extends BaseDataManagers {
 		return r
 	}
 
-	public hgetall(conn: Connection, key: string) {
+	public hgetall(conn: Connection, key: string): any[] {
 
 		this.checkArgCount('hgetall', arguments, 2)
 
-		let h = this.getDataset(key)
-		let r = [];
+		let h: Map<string, any> = this.getDataset(key)
+		let r: any[] = [];
 		if (h) {
-			for (let field in h) {
-				if (typeof h[field] !== 'undefined') {
-					r.push(field)
-					r.push(h[field])
-				}
-			}
+			h.forEach( ( value: any, field: string ) => {
+				r.push(field)
+				r.push(value)
+			})
 		}
 		return r
 	}
 
 	public hexists(conn: Connection, key: string, field: string) {
 		this.checkArgCount('hexists', arguments, 3)
-		let h = this.getDataset(key)
+		let h: Map<string, any> = this.getDataset(key)
 		let r = 0;
-		if (h && (typeof h[field] !== 'undefined')) {
+		if (h && h.has(field)) {
 			r = 1
 		}
 		return r
@@ -231,13 +229,13 @@ export class Hashes extends BaseDataManagers {
 
 		this.checkMinArgCount('hdel', arguments, 3)
 
-		let h = this.getDataset(key)
+		let h: Map<string, any> = this.getDataset(key)
 		let r = 0
 		if (h) {
 			for (let i = 0; i < fields.length; i ++) {
 				let field = fields[i]
-				if (typeof h[field] !== 'undefined') {
-					delete h[field]
+				if (h.has(field)) {
+					h.delete(field)
 					r ++
 				}
 			}
@@ -247,20 +245,22 @@ export class Hashes extends BaseDataManagers {
 
 	public hkeys(conn: Connection, key: string ) {
 		this.checkArgCount('hkeys', arguments, 2)
-		let h = this.getDataset(key)
+		let h: Map<string, any> = this.getDataset(key)
 		let r: string[] = []
 		if (h) {
-			r = Object.keys(h)
+			h.forEach( ( value: any, field: string ) => {
+				r.push(field)
+			})
 		}
 		return r
 	}
 
 	public hlen( conn: Connection, key: string ) {
 		this.checkArgCount('hlen', arguments, 2)
-		let h = this.getDataset(key)
+		let h: Map<string, any> = this.getDataset(key)
 		let r = 0
 		if (h) {
-			r = Object.keys(h).length
+			r = h.size
 		}
 		return r
 	}
@@ -290,17 +290,23 @@ export class Hashes extends BaseDataManagers {
 	}
 
 	protected _incr(conn: Connection, key: string, field: string, incr: number)	{
-		let h = this.getDataset(key)
-		if (!h) {
-			h = this.createNewKey(key)
+		let h: Map<string, any> = this.getOrCreate(key)
+
+		let value = 0
+		if (h.has(field)) {
+			value = h.get(field)
 		}
 
-		if (typeof h[field] === 'undefined') {
-			h[field] = 0
-		}
+		value += incr
+		
+		h.set(field, value)
 
-		h[field] += incr
-		return h[field]
+		return value
+	}
+
+	protected createNewKey( key: string ) {
+		this.data[key] = new Map<string, any>()
+		return this.data[key]
 	}
 
 	protected onTimer() {

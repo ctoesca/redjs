@@ -28,11 +28,12 @@ export class RedjsServer extends EventEmitter {
 
 		super();
 
-		this.parseOptions(opt)
-
 		let constructor: any = this.constructor
 		this.logger = bunyan.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
+
+
+		this.parseOptions(...opt)
 
 		this.mainTimer = new Timer({delay: 10000});
 		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this));
@@ -83,6 +84,7 @@ export class RedjsServer extends EventEmitter {
 
 
 	protected parseOptions(...args: any[]) {
+
 		this.options = {};
 		for (let i = 0; i < args.length; ++i) {
 			let arg = args[i];

@@ -8,7 +8,7 @@ export class Keys extends BaseDataManagers {
 		super(opt);
 	}
 
-	public static getCommandsNames(): string[] {
+	public getCommandsNames(): string[] {
 		return ['get', 'set', 'incr', 'DEL', 'DUMP', 'EXISTS', 'EXPIRE', 'EXPIREAT', 'KEYS', 'MIGRATE', 'MOVE', 'OBJECT', 'PERSISTS',
 		'PEXPIRE', 'PEXPIREAT', 'PTTL', 'RANDOMKEY', 'RENAME', 'RENAMENX', 'RESTORE', 'SORT', 'TOUCH', 'TTL', 'TYPE', 'UNLINK', 'WAIT', 'SCAN']
 	}

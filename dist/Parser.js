@@ -68,6 +68,9 @@ class Parser extends EventEmitter {
                 r += this.toRESP(value);
             }
         }
+        else if (typeof resp === 'number') {
+            r = '$' + resp.toString().length + '\r\n' + resp + '\r\n';
+        }
         else {
             throw ('ERR Unknown response type for response \'' + resp + '\'');
         }

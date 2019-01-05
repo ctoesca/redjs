@@ -13,7 +13,7 @@ export class PubSub extends BaseDataManagers {
 		super(opt);
 	}
 
-	public static getCommandsNames(): string[] {
+	public getCommandsNames(): string[] {
 		return ['unsubscribe', 'subscribe', 'publish', 'PSUBSCRIBE', 'PUBSUB', 'PUNSUBSCRIBE' ]
 	}
 
@@ -179,8 +179,8 @@ export class PubSub extends BaseDataManagers {
 		let destConnections: Map<string, Connection>
 
 		/* channels subscriptions */
-		if (this.channels.has('channel')) {
-			destConnections = this.channels.get('channel')
+		if (this.channels.has(channel)) {
+			destConnections = this.channels.get(channel)
 		} else {
 			destConnections = new Map<string, Connection>()
 		}

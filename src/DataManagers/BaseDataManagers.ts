@@ -31,12 +31,8 @@ export class BaseDataManagers extends EventEmitter {
 
 	}
 
-	public static getCommandsNames(): string[] {
-		return []
-	}
-
 	public getCommandsNames(): string[] {
-		return BaseDataManagers.getCommandsNames()
+		return []
 	}
 
 	protected checkArgCount(cmd: string, args: IArguments, expected: number) {

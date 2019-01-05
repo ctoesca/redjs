@@ -108,8 +108,10 @@ export class DataManager extends EventEmitter {
 	protected addComands( manager: BaseDataManagers ) {
 
 		let commandsNames = manager.getCommandsNames()
+
 		for (let i = 0; i < commandsNames.length; i ++) {
 			let commandName = commandsNames[i].toLowerCase()
+
 			this.commands[commandName] = {
 				manager: manager
 			}

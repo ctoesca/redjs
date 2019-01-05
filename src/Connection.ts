@@ -115,7 +115,7 @@ export class Connection extends EventEmitter {
 		} catch (err) {
 			if (this.lastError !== err.toString()) {
 				this.lastError = err.toString()
-				console.error('REQUEST: ' + data.toString().replace(/\r\n/g, '\\r\\n') + ', ERROR: ' , err)
+				this.logger.debug('REQUEST: ' + data.toString().replace(/\r\n/g, '\\r\\n') + ', ERROR: ' , err)
 			}
 			resp = this.parser.toRESP( err.toString(), 'error' )
 			this.sock.write( resp );

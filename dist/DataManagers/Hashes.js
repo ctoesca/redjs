@@ -8,7 +8,7 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         this.defaultScancount = 10;
         this.lastCursorId = 1;
     }
-    static getCommandsNames() {
+    getCommandsNames() {
         return ['hget', 'hset', 'HDEL', 'HEXISTS', 'HGETALL', 'HINCRBY', 'HINCRBYFLOAT',
             'HKEYS', 'HLEN', 'HMGET', 'HMSET', 'HSETNX', 'HSTRLEN', 'HVALS', 'HSCAN'];
     }
@@ -69,8 +69,8 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         this.checkArgCount('hget', arguments, 3);
         let r = null;
         let h = this.getDataset(key);
-        if (h && (typeof this.data[key][field] !== 'undefined')) {
-            r = h[field];
+        if (h && h.has(field)) {
+            r = h.get(field);
         }
         return r;
     }
@@ -79,11 +79,9 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         let h = this.getDataset(key);
         let r = [];
         if (h) {
-            for (let field in h) {
-                if (typeof h[field] !== 'undefined') {
-                    r.push(h[field]);
-                }
-            }
+            h.forEach((value, field) => {
+                r.push(value);
+            });
         }
         return r;
     }
@@ -91,9 +89,10 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         this.checkArgCount('hstrlen', arguments, 3);
         let h = this.getDataset(key);
         let r = 0;
-        if (h && (typeof h[field] !== 'undefined')) {
-            if (h[field] !== null) {
-                r = h[field].length;
+        if (h && h.has(field)) {
+            let value = h.get(field);
+            if (value !== null) {
+                r = value.toString().length;
             }
         }
         return r;
@@ -102,10 +101,10 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         this.checkArgCount('hset', arguments, 4);
         let h = this.getOrCreate(key);
         let r = 0;
-        if (typeof h[field] === 'undefined') {
+        if (!h.has(field)) {
             r = 1;
         }
-        h[field] = value;
+        h.set(field, value);
         return r;
     }
     hsetnx(conn, key, field, value) {
@@ -116,9 +115,9 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
             h = this.createNewKey(key);
             r = 1;
         }
-        if (typeof h[field] === 'undefined') {
+        if (!h.has(field)) {
             r = 1;
-            h[field] = value;
+            h.set(field, value);
         }
         return r;
     }
@@ -129,8 +128,8 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         for (let i = 0; i < fields.length; i++) {
             if (h) {
                 let field = fields[i];
-                if (typeof h[field] !== 'undefined') {
-                    r.push(h[field]);
+                if (h.has(field)) {
+                    r.push(h.get(field));
                 }
                 else {
                     r.push(null);
@@ -158,12 +157,10 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         let h = this.getDataset(key);
         let r = [];
         if (h) {
-            for (let field in h) {
-                if (typeof h[field] !== 'undefined') {
-                    r.push(field);
-                    r.push(h[field]);
-                }
-            }
+            h.forEach((value, field) => {
+                r.push(field);
+                r.push(value);
+            });
         }
         return r;
     }
@@ -171,7 +168,7 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         this.checkArgCount('hexists', arguments, 3);
         let h = this.getDataset(key);
         let r = 0;
-        if (h && (typeof h[field] !== 'undefined')) {
+        if (h && h.has(field)) {
             r = 1;
         }
         return r;
@@ -183,8 +180,8 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         if (h) {
             for (let i = 0; i < fields.length; i++) {
                 let field = fields[i];
-                if (typeof h[field] !== 'undefined') {
-                    delete h[field];
+                if (h.has(field)) {
+                    h.delete(field);
                     r++;
                 }
             }
@@ -196,7 +193,9 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         let h = this.getDataset(key);
         let r = [];
         if (h) {
-            r = Object.keys(h);
+            h.forEach((value, field) => {
+                r.push(field);
+            });
         }
         return r;
     }
@@ -205,7 +204,7 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         let h = this.getDataset(key);
         let r = 0;
         if (h) {
-            r = Object.keys(h).length;
+            r = h.size;
         }
         return r;
     }
@@ -230,15 +229,18 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         return this._incr(conn, key, field, incr);
     }
     _incr(conn, key, field, incr) {
-        let h = this.getDataset(key);
-        if (!h) {
-            h = this.createNewKey(key);
+        let h = this.getOrCreate(key);
+        let value = 0;
+        if (h.has(field)) {
+            value = h.get(field);
         }
-        if (typeof h[field] === 'undefined') {
-            h[field] = 0;
-        }
-        h[field] += incr;
-        return h[field];
+        value += incr;
+        h.set(field, value);
+        return value;
+    }
+    createNewKey(key) {
+        this.data[key] = new Map();
+        return this.data[key];
     }
     onTimer() {
     }

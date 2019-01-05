@@ -191,21 +191,21 @@ describe('Hashes', function()
 
 
 	/* HINCRBY */
-	describe('hincrby key2 var1 2', function() {
-	    it('hincrby result should be 2', function( done ) {
-	    	redis.hincrby('key2', 'var1', 2)
+	describe('hincrby key2 var1 202', function() {
+	    it('hincrby result should be 202', function( done ) {
+	    	redis.hincrby('key2', 'var1', 202)
 	    	.then( function(r){
-	    		assert.equal(r, 2)	
+	    		assert.equal(r, 202)	
 	    		done()
 	    	})
 	    	.catch( done )    	
 	    });
 	});
-	describe('hincrby key2 var1 1', function() {
-	    it('hincrby result should be 3', function( done ) {
-	    	redis.hincrby('key2', 'var1', 1)
+	describe('hincrby key2 var1 55', function() {
+	    it('hincrby result should be 257', function( done ) {
+	    	redis.hincrby('key2', 'var1', 55)
 	    	.then( function(r){
-	    		assert.equal(r, 3)	
+	    		assert.equal(r, 257)	
 	    		done()
 	    	})
 	    	.catch( done )	    	
@@ -215,22 +215,22 @@ describe('Hashes', function()
 
 
 	/* HINCRBYFLOAT */
-	describe('hincrbyfloat key2 var2 2.5', function() {
-	    it('hincrbyfloat result should be 2.5', function( done ) {
-	    	redis.hincrbyfloat('key2', 'var2', 2.5)
+	describe('hincrbyfloat key2 var2 259.5', function() {
+	    it('hincrbyfloat result should be 259.5', function( done ) {
+	    	redis.hincrbyfloat('key2', 'var2', 259.5)
 	    	.then( function(r){
-	    		assert.equal(r, 2.5)	
+	    		assert.equal(r, 259.5)	
 	    		done()
 	    	})
 	    	.catch( done )
 	    	
 	    });
 	});
-	describe('hincrbyfloat key2 var1 3.3', function() {
-	    it('hincrbyfloat result should be 5.8', function( done ) {
-	    	redis.hincrbyfloat('key2', 'var2', 3.3)
+	describe('hincrbyfloat key2 var2 33.3', function() {
+	    it('hincrbyfloat result should be 292.8', function( done ) {
+	    	redis.hincrbyfloat('key2', 'var2', 33.3)
 	    	.then( function(r){
-	    		assert.equal(r, 5.8)	
+	    		assert.equal(r, 292.8)	
 	    		done()
 	    	})
 	    	.catch( done )	    	

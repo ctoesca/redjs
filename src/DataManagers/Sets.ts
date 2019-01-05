@@ -8,7 +8,7 @@ export class Sets extends BaseDataManagers {
 		super(opt);
 	}
 
-	public static getCommandsNames(): string[] {
+	public getCommandsNames(): string[] {
 		return ['SADD', 'SCARD', 'SDIFF', 'SDIFFSTORE', 'SINTER', 'SINTERSTORE', 'SISMEMBER', 'SMEMBERS',
 		'SMOVE', 'SPOP', 'SRANDMEMBER', 'SREM', 'SUNION', 'SUNIONSTORE', 'SSCAN']
 	}

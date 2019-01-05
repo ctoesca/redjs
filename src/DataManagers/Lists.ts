@@ -8,12 +8,12 @@ export class Lists extends BaseDataManagers {
 		super(opt);
 	}
 
-	public static getCommandsNames(): string[] {
+	public getCommandsNames(): string[] {
 		return ['blpop', 'brpop', 'BRPOPLPUSH', 'LINDEX', 'LINSERT', 'LLEN', 'LPOP', 'LPUSH',
 		'LPUSH', 'LPUSHX', 'LRANGE', 'LREM', 'LSET', 'LTRIM', 'RPOP', 'RPOPLPUSH', 'RPUSH', 'RPUSHX']
 	}
 
-	public lindex(conn: Connection, key: string, index: number) {
+	public lindex(conn: Connection, key: string, index: any) {
 		/* https://redis.io/commands/lindex */
 
 		this.checkArgCount('lindex', arguments, 3)
@@ -22,10 +22,13 @@ export class Lists extends BaseDataManagers {
 		if (!h) {
 			throw key + ' is not a list'
 		}
+		if (typeof index === 'string') {
+			index = parseInt(index, 10)
+		}
 
 		let r = null
 
-		let indx
+		let indx: number
 		if (index >= 0) {
 			indx = index
 		} else {
@@ -73,7 +76,7 @@ export class Lists extends BaseDataManagers {
 		}
 		return r
 	}
-	public lset(conn: Connection, key: string, index: number, value: string) {
+	public lset(conn: Connection, key: string, index: any, value: string) {
 
 		this.checkArgCount('lset', arguments, 4)
 
@@ -82,8 +85,10 @@ export class Lists extends BaseDataManagers {
 		if (!h) {
 			throw key + ' is not a list'
 		}
-
-		let indx
+		if (typeof index === 'string') {
+			index = parseInt(index, 10)
+		}
+		let indx: number
 		if (index >= 0) {
 			indx = index
 		} else {

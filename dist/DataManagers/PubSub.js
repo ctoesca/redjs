@@ -8,7 +8,7 @@ class PubSub extends BaseDataManagers_1.BaseDataManagers {
         this.channels = new Map();
         this.patternsSubscriptions = new Map();
     }
-    static getCommandsNames() {
+    getCommandsNames() {
         return ['unsubscribe', 'subscribe', 'publish', 'PSUBSCRIBE', 'PUBSUB', 'PUNSUBSCRIBE'];
     }
     getSubscriptionsCount(conn) {
@@ -129,8 +129,8 @@ class PubSub extends BaseDataManagers_1.BaseDataManagers {
         this.checkArgCount('publish', arguments, 3);
         let r = 0;
         let destConnections;
-        if (this.channels.has('channel')) {
-            destConnections = this.channels.get('channel');
+        if (this.channels.has(channel)) {
+            destConnections = this.channels.get(channel);
         }
         else {
             destConnections = new Map();
