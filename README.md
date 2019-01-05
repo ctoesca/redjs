@@ -1,6 +1,6 @@
 # redjs
 
-[![Build Status](https://travis-ci.org/luin/ioredis.svg?branch=master)](https://travis-ci.org/luin/ioredis)
+[![Build Status](https://travis-ci.org/ctoesca/redjs.svg?branch=master)](https://travis-ci.org/ctoesca/redjs)
 
 Redjs is a Redis-like in-memory data store. It can be used with [Ioredis](https://github.com/luin/ioredis), [NodeRedis](https://github.com/NodeRedis/node_redis) and by other applications (nodejs or not).
 
