@@ -7,7 +7,7 @@ node_js:
 - '11'
 
 script:
-- npm run test:cov || npm run test:cov || npm run test:cov
+- node test/test-app.js
 
 before_script:
 - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
