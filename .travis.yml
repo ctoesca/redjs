@@ -22,7 +22,8 @@ branches:
 deploy:
   # runs semantic-release on each
   - provider: script
-    script: npm ci && npx semantic-release
+    # script: npm ci && npx semantic-release
+    script: npm ci
     skip_cleanup: true
     on:
       tags: false
