@@ -1,20 +1,23 @@
 /// <reference types="node" />
 import { Timer } from './utils/Timer';
-import { DataManager } from './DataManager';
-import { Parser } from './Parser';
+import { Database } from './Data/Database';
+import { RedjsServer } from './RedjsServer';
+import { Parser } from './utils/Parser';
+import { Commander } from './Commander';
 import EventEmitter = require('events');
 import bunyan = require('bunyan');
 import net = require('net');
 export declare class Connection extends EventEmitter {
     id: string;
     lastError: any;
+    database: Database;
     protected sock: net.Socket;
-    protected dataManager: DataManager;
+    protected commander: Commander;
+    protected server: RedjsServer;
     protected logger: bunyan;
     protected mainTimer: Timer;
-    protected systemCommands: any;
     protected parser: Parser;
-    constructor(sock: net.Socket, dataManager: DataManager);
+    constructor(server: RedjsServer, sock: net.Socket, commander: Commander);
     getRemoteAddress(): string;
     getRemotePort(): number;
     writeMonitorData(data: any): void;
@@ -24,7 +27,4 @@ export declare class Connection extends EventEmitter {
     protected onSockError(err: any): void;
     protected onSockClose(): void;
     protected onTimer(): void;
-    protected monitor(conn: Connection): string;
-    protected ping(conn: Connection, responseExpected?: string): string;
-    protected info(conn: Connection): string;
 }

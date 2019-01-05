@@ -32,27 +32,33 @@ class DataManager extends EventEmitter {
         this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
         this.commands = {};
         this.hashes = new Hashes_1.Hashes({
-            server: this.server
+            server: this.server,
+            db: this
         });
         this.addComands(this.hashes);
         this.keys = new Keys_1.Keys({
-            server: this.server
+            server: this.server,
+            db: this
         });
         this.addComands(this.keys);
         this.pubsub = new PubSub_1.PubSub({
-            server: this.server
+            server: this.server,
+            db: this
         });
         this.addComands(this.pubsub);
         this.lists = new Lists_1.Lists({
-            server: this.server
+            server: this.server,
+            db: this
         });
         this.addComands(this.lists);
         this.sets = new Sets_1.Sets({
-            server: this.server
+            server: this.server,
+            db: this
         });
         this.addComands(this.sets);
         this.sortedSets = new SortedSets_1.SortedSets({
-            server: this.server
+            server: this.server,
+            db: this
         });
         this.addComands(this.sortedSets);
     }
@@ -72,9 +78,6 @@ class DataManager extends EventEmitter {
         else {
             throw 'ERR Unknown command: \'' + cmd + '\'';
         }
-    }
-    connect(conn, opt = null) {
-        return 'OK';
     }
     addComands(manager) {
         let commandsNames = manager.getCommandsNames();

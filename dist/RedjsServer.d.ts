@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import { Timer } from './utils/Timer';
-import { DataManager } from './DataManager';
+import { Datastore } from './Data/Datastore';
+import { Commander } from './Commander';
 import { Connection } from './Connection';
 import Promise = require('bluebird');
 import EventEmitter = require('events');
@@ -11,11 +12,12 @@ export declare class RedjsServer extends EventEmitter {
     started: Boolean;
     lastError: any;
     connections: Map<string, Connection>;
+    datastore: Datastore;
     protected logger: bunyan;
     protected _workers: any;
     protected monitoredConnections: Map<string, Connection>;
     protected mainTimer: Timer;
-    protected dataManager: DataManager;
+    protected commander: Commander;
     protected options: any;
     constructor(...opt: any[]);
     static getDefaultOptions(): {

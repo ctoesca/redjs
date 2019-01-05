@@ -96,7 +96,6 @@ redis-cli -p 6379
 
 ## Available commands (work in progress...)
 
-- monitor
 
 ### Pub/sub
 
@@ -116,6 +115,7 @@ redis-cli -p 6379
 - lindex
 - lset
 - linsert
+- lrange
 
 ### Hashes
 
@@ -136,14 +136,28 @@ redis-cli -p 6379
 
 ### Keys
 
-- get
-- set
-- incr
+- del
+- exists
+- keys
 
 ### Sets
 
 - sadd
 - srem
 - smembers
+
+### Strings
+
+- get
+- set
+- incr
+
+### Server
+- monitor
+- flushdb
+- info
+
+### Connection
+- ping
 
 

@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Timer_1 = require("./utils/Timer");
-const DataManager_1 = require("./DataManager");
+const Datastore_1 = require("./Data/Datastore");
+const Commander_1 = require("./Commander");
 const Connection_1 = require("./Connection");
 const utils = require("./utils");
 const Promise = require("bluebird");
@@ -16,11 +17,12 @@ class RedjsServer extends EventEmitter {
         this.started = false;
         this.lastError = null;
         this.connections = new Map();
+        this.datastore = null;
         this.logger = null;
         this._workers = {};
         this.monitoredConnections = new Map();
         this.mainTimer = null;
-        this.dataManager = null;
+        this.commander = null;
         this.options = null;
         let constructor = this.constructor;
         this.logger = bunyan.createLogger({ name: constructor.name });
@@ -29,7 +31,8 @@ class RedjsServer extends EventEmitter {
         this.mainTimer = new Timer_1.Timer({ delay: 10000 });
         this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
         this.mainTimer.start();
-        this.dataManager = new DataManager_1.DataManager({ server: this });
+        this.datastore = new Datastore_1.Datastore({ server: this });
+        this.commander = new Commander_1.Commander({ server: this, datastore: this.datastore });
     }
     static getDefaultOptions() {
         return {
@@ -128,7 +131,7 @@ class RedjsServer extends EventEmitter {
             let HOST = this.options.host;
             let PORT = this.options.port;
             this.server = net.createServer((sock) => {
-                let conn = new Connection_1.Connection(sock, this.dataManager);
+                let conn = new Connection_1.Connection(this, sock, this.commander);
                 conn.on('close', () => {
                     this.onConnectionClosed(conn);
                 });

@@ -25,7 +25,6 @@ export declare class DataManager extends EventEmitter {
     protected lists: Lists;
     constructor(opt: any);
     execCommand(cmd: string, conn: Connection, ...args: any[]): any;
-    protected connect(conn: Connection, opt?: any): string;
     protected addComands(manager: BaseDataManagers): void;
     protected onTimer(): void;
 }

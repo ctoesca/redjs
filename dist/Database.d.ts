@@ -1,0 +1,33 @@
+/// <reference types="node" />
+import { Timer } from './utils/Timer';
+import EventEmitter = require('events');
+import bunyan = require('bunyan');
+import net = require('net');
+import { Connection } from './Connection';
+import { Keys } from './DataManagers/Keys';
+import { Hashes } from './DataManagers/Hashes';
+import { PubSub } from './DataManagers/PubSub';
+import { Lists } from './DataManagers/Lists';
+import { Sets } from './DataManagers/Sets';
+import { SortedSets } from './DataManagers/SortedSets';
+import { BaseDataManagers } from './DataManagers/BaseDataManagers';
+export declare class Database extends EventEmitter {
+    protected config: any;
+    protected server: net.Server;
+    protected logger: bunyan;
+    protected mainTimer: Timer;
+    protected commands: any;
+    protected hashes: Hashes;
+    protected keys: Keys;
+    protected pubsub: PubSub;
+    protected sets: Sets;
+    protected sortedSets: SortedSets;
+    protected lists: Lists;
+    constructor(opt: any);
+    createNewKey(key: string, object: any): any;
+    getDataset(key: string): any;
+    execCommand(cmd: string, conn: Connection, ...args: any[]): any;
+    flushdb(conn: Connection, async: string): string;
+    protected addComands(manager: BaseDataManagers): void;
+    protected onTimer(): void;
+}

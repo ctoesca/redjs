@@ -4,42 +4,62 @@ const BaseDataManagers_1 = require("./BaseDataManagers");
 class Keys extends BaseDataManagers_1.BaseDataManagers {
     constructor(opt) {
         super(opt);
+        this.data = new Map();
     }
     getCommandsNames() {
-        return ['get', 'set', 'incr', 'DEL', 'DUMP', 'EXISTS', 'EXPIRE', 'EXPIREAT', 'KEYS', 'MIGRATE', 'MOVE', 'OBJECT', 'PERSISTS',
+        return ['DEL', 'DUMP', 'EXISTS', 'EXPIRE', 'EXPIREAT', 'KEYS', 'MIGRATE', 'MOVE', 'OBJECT', 'PERSIST',
             'PEXPIRE', 'PEXPIREAT', 'PTTL', 'RANDOMKEY', 'RENAME', 'RENAMENX', 'RESTORE', 'SORT', 'TOUCH', 'TTL', 'TYPE', 'UNLINK', 'WAIT', 'SCAN'];
     }
-    get(conn, key) {
-        this.checkArgCount('get', arguments, 2);
-        let r = null;
-        if (typeof this.data[key] !== 'undefined') {
-            r = this.data[key];
-        }
-        return r;
+    clear() {
+        this.data.clear();
     }
-    set(conn, key, value) {
-        this.checkArgCount('set', arguments, 3);
+    get(key) {
+        return this.data.get(key);
+    }
+    set(key, object) {
+        if (this.data.has(key)) {
+            throw 'key \'' + key + ' already exists';
+        }
+        this.data.set(key, object);
+        return object;
+    }
+    del(conn, key, ...keys) {
+        this.checkMinArgCount('get', arguments, 2);
         let r = 0;
-        if (typeof this.data[key] === 'undefined') {
-            r = 1;
+        if (this.data.has(key)) {
+            this.data.delete(key);
+            r++;
         }
-        this.data[key] = value;
+        for (let i = 0; i < keys.length; i++) {
+            if (this.data.has(keys[i])) {
+                this.data.delete(keys[i]);
+                r++;
+            }
+        }
         return r;
     }
-    incr(conn, key) {
-        this.checkArgCount('incr', arguments, 2);
-        if (typeof this.data[key] === 'undefined') {
-            this.data[key] = 0;
+    exists(conn, key, ...keys) {
+        this.checkMinArgCount('get', arguments, 2);
+        let r = 0;
+        if (this.data.has(key)) {
+            this.data.delete(key);
+            r++;
         }
-        else {
-            if (typeof this.data[key] === 'number') {
-                this.data[key]++;
-            }
-            else {
-                throw key + ' is not integer';
+        for (let i = 0; i < keys.length; i++) {
+            if (this.data.has(key)) {
+                r++;
             }
         }
-        let r = this.data[key];
+        return r;
+    }
+    keys(conn, pattern) {
+        this.checkArgCount('keys', arguments, 2);
+        let r = [];
+        this.data.forEach((value, key) => {
+            if (this.match(key, pattern)) {
+                r.push(key);
+            }
+        });
         return r;
     }
     onTimer() {

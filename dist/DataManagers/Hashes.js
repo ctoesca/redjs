@@ -238,9 +238,15 @@ class Hashes extends BaseDataManagers_1.BaseDataManagers {
         h.set(field, value);
         return value;
     }
+    getDataset(key) {
+        let r = this.db.getDataset(key);
+        if (r && !(r instanceof Map)) {
+            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
+        }
+        return r;
+    }
     createNewKey(key) {
-        this.data[key] = new Map();
-        return this.data[key];
+        return this.db.createNewKey(key, new Map());
     }
     onTimer() {
     }

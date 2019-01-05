@@ -11,6 +11,7 @@ export declare class Lists extends BaseDataManagers {
     rpop(conn: Connection, key: string): any;
     lpop(conn: Connection, key: string): any;
     llen(conn: Connection, key: string): number;
+    protected getDataset(key: string): any;
     protected createNewKey(key: string): any;
     protected onTimer(): void;
 }

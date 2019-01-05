@@ -62,4 +62,12 @@ function parseURL(url: any) {
 		return !isNaN(value) && (x | 0) === x
 	}
 
-export { isInt, parseURL };
+	/*function isInt(n){
+    	return Number(n) === n && n % 1 === 0;
+	}*/
+	function isFloat(n: any) {
+		let x = parseFloat(n)
+		return !isNaN(x) ;
+	}
+
+export { isInt, isFloat, parseURL };

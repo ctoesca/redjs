@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const BaseDataManagers_1 = require("./BaseDataManagers");
-const minimatch = require("minimatch");
 class PubSub extends BaseDataManagers_1.BaseDataManagers {
     constructor(opt) {
         super(opt);
@@ -152,9 +151,6 @@ class PubSub extends BaseDataManagers_1.BaseDataManagers {
         this.patternsSubscriptions.forEach((connections, channel) => {
             connections.delete(conn.id);
         });
-    }
-    match(value, pattern) {
-        return minimatch(value, pattern);
     }
     onTimer() {
     }

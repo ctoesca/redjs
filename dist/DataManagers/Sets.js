@@ -47,9 +47,15 @@ class Sets extends BaseDataManagers_1.BaseDataManagers {
         }
         return r;
     }
+    getDataset(key) {
+        let r = this.db.getDataset(key);
+        if (r && !(r instanceof Set)) {
+            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
+        }
+        return r;
+    }
     createNewKey(key) {
-        this.data[key] = new Set();
-        return this.data[key];
+        return this.db.createNewKey(key, new Set());
     }
     onTimer() {
     }

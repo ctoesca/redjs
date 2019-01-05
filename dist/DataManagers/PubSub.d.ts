@@ -12,6 +12,5 @@ export declare class PubSub extends BaseDataManagers {
     punsubscribe(conn: Connection, ...patterns: string[]): any[];
     publish(conn: Connection, channel: string, message: any): number;
     protected onConnectionClosed(conn: Connection): void;
-    protected match(value: string, pattern: string): boolean;
     protected onTimer(): void;
 }

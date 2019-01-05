@@ -1,6 +1,7 @@
 
 import {Timer} from './utils/Timer';
-import {DataManager} from './DataManager';
+import {Datastore} from './Data/Datastore';
+import {Commander} from './Commander';
 import {Connection} from './Connection';
 import * as utils from './utils';
 
@@ -16,12 +17,13 @@ export class RedjsServer extends EventEmitter {
 	public started: Boolean = false
 	public lastError: any = null
 	public connections: Map<string, Connection> = new Map<string, Connection>()
+	public datastore: Datastore = null
 
 	protected logger: bunyan = null
 	protected _workers: any = {}
 	protected monitoredConnections: Map<string, Connection> = new Map<string, Connection>()
 	protected mainTimer: Timer = null
-	protected dataManager: DataManager = null
+	protected commander: Commander = null
 	protected options: any = null
 
 	constructor( ...opt: any[] ) {
@@ -39,7 +41,8 @@ export class RedjsServer extends EventEmitter {
 		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this));
 		this.mainTimer.start()
 
-		this.dataManager = new DataManager({server: this})
+		this.datastore = new Datastore({server: this})
+		this.commander = new Commander({server: this, datastore: this.datastore})
 	}
 
 	public static getDefaultOptions() {
@@ -164,7 +167,7 @@ export class RedjsServer extends EventEmitter {
 			let PORT = this.options.port;
 
 			this.server = net.createServer((sock: net.Socket) => {
-				let conn: Connection = new Connection(sock, this.dataManager)
+				let conn: Connection = new Connection(this, sock, this.commander)
 				conn.on('close', () => {
 					this.onConnectionClosed(conn)
 				})

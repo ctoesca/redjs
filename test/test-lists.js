@@ -227,6 +227,74 @@ describe('Lists', function()
 	    	.catch( done )
 	    });
   	});
+
+  	/* Lrange */
+  	describe('lrange list3 0 0', function() {
+	    it('should return [var1]', function( done ) {
+	    	redis.lrange('list3', 0, 0)
+	    	.then( function(r){
+	    		assert.deepEqual(r, ['var1']);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('lrange list3 1 2', function() {
+	    it('should return [var2, var3]', function( done ) {
+	    	redis.lrange('list3', 1, 2)
+	    	.then( function(r){
+	    		assert.deepEqual(r, ['var2', 'var3']);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('lrange list3 0 10', function() {
+	    it('should return [var1, var2, var3, var4]', function( done ) {
+	    	redis.lrange('list3', 0, 10)
+	    	.then( function(r){
+	    		assert.deepEqual(r, ['var1', 'var2', 'var3', 'var4']);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('lrange list3 1 -2', function() {
+	    it('should return [var2, var3, var4]', function( done ) {
+	    	redis.lrange('list3', 1, -2)
+	    	.then( function(r){
+	    		assert.deepEqual(r, ['var2', 'var3']);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('lrange list3 1 0', function() {
+	    it('should return []', function( done ) {
+	    	redis.lrange('list3', 1, 0)
+	    	.then( function(r){
+	    		assert.deepEqual(r, []);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('lrange list3 -1 1', function() {
+	    it('should return []', function( done ) {
+	    	redis.lrange('list3', -1, 1)
+	    	.then( function(r){
+	    		assert.deepEqual(r, []);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
   	describe('linsert list3 BEFORE var2 var1.1', function() {
 	    it('should return 5', function( done ) {
 	    	redis.linsert('list3', "BEFORE", "var2", "var1.1")

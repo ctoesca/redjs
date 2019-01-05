@@ -3,15 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Timer_1 = require("../utils/Timer");
 const bunyan = require("bunyan");
 const EventEmitter = require("events");
+const minimatch = require("minimatch");
 class BaseDataManagers extends EventEmitter {
     constructor(opt) {
         super();
         this.config = null;
+        this.db = null;
         this.logger = null;
         this.mainTimer = null;
         this.data = {};
-        this.config = opt;
         this.server = opt.server;
+        this.db = opt.db;
         let constructor = this.constructor;
         this.logger = bunyan.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
@@ -32,22 +34,20 @@ class BaseDataManagers extends EventEmitter {
         }
     }
     createNewKey(key) {
-        this.data[key] = {};
-        return this.data[key];
+        return this.db.createNewKey(key, {});
     }
     getDataset(key) {
-        let r = null;
-        if (typeof this.data[key] !== 'undefined') {
-            r = this.data[key];
-        }
-        return r;
+        return this.db.getDataset(key);
     }
     getOrCreate(key) {
         let r = this.getDataset(key);
-        if (r == null) {
+        if (!r) {
             r = this.createNewKey(key);
         }
         return r;
+    }
+    match(value, pattern) {
+        return minimatch(value, pattern);
     }
     onTimer() {
     }

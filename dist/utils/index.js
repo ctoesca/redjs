@@ -40,4 +40,9 @@ function isInt(value) {
     return !isNaN(value) && (x | 0) === x;
 }
 exports.isInt = isInt;
+function isFloat(n) {
+    let x = parseFloat(n);
+    return !isNaN(x);
+}
+exports.isFloat = isFloat;
 //# sourceMappingURL=index.js.map

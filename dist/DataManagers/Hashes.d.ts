@@ -22,6 +22,7 @@ export declare class Hashes extends BaseDataManagers {
     hincrby(conn: Connection, key: string, field: string, incr: number): number;
     hincrbyfloat(conn: Connection, key: string, field: string, incr: number): number;
     protected _incr(conn: Connection, key: string, field: string, incr: number): number;
+    protected getDataset(key: string): any;
     protected createNewKey(key: string): any;
     protected onTimer(): void;
 }

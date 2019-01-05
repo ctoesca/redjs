@@ -128,9 +128,15 @@ class Lists extends BaseDataManagers_1.BaseDataManagers {
         }
         return r;
     }
+    getDataset(key) {
+        let r = this.db.getDataset(key);
+        if (r && (typeof r.push === 'undefined')) {
+            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
+        }
+        return r;
+    }
     createNewKey(key) {
-        this.data[key] = [];
-        return this.data[key];
+        return this.db.createNewKey(key, []);
     }
     onTimer() {
     }

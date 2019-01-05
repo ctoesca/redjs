@@ -6,6 +6,7 @@ export declare class Sets extends BaseDataManagers {
     srem(conn: Connection, key: string, ...members: string[]): number;
     sadd(conn: Connection, key: string, ...members: string[]): number;
     smembers(conn: Connection, key: string): any[];
+    protected getDataset(key: string): any;
     protected createNewKey(key: string): any;
     protected onTimer(): void;
 }
