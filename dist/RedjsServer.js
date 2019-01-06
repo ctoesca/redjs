@@ -119,7 +119,7 @@ class RedjsServer extends EventEmitter {
     }
     onCommand(sentBy, cmd, ...args) {
         let timestamp = new Date().getTime() / 1000;
-        let data = timestamp + ' [0 ' + sentBy.getRemoteAddressPort() + '] \'' + cmd + '\'';
+        let data = timestamp + ' [' + sentBy.database.getIndex() + ' ' + sentBy.getRemoteAddressPort() + '] "' + cmd + '"';
         for (let arg of args) {
             data += ' "' + arg + '"';
         }

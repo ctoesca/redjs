@@ -10,7 +10,9 @@ export declare class Database extends EventEmitter {
     protected logger: any;
     protected mainTimer: Timer;
     protected datastore: Datastore;
+    protected index: number;
     constructor(opt: any);
+    getIndex(): number;
     clear(): void;
     createNewKey(key: string, object: any): any;
     getDataset(key: string): any;

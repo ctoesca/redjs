@@ -33,7 +33,8 @@ export class Datastore extends EventEmitter {
 		for (let i = 0; i < 10; i++) {
 			this.databases.push( new Database({
 				server: this.server,
-				datastore: this
+				datastore: this,
+				index: i
 			}))
 		}
 	}

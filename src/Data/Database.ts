@@ -16,6 +16,7 @@ export class Database extends EventEmitter {
 	protected logger: any = null
 	protected mainTimer: Timer = null
 	protected datastore: Datastore = null
+	protected index = 0
 
 
 	constructor(opt: any) {
@@ -26,6 +27,7 @@ export class Database extends EventEmitter {
 
 		this.server = opt.server
 		this.datastore = opt.datastore
+		this.index = opt.index
 
 		let constructor: any = this.constructor
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
@@ -36,7 +38,9 @@ export class Database extends EventEmitter {
 		this.mainTimer.start() */
 
 	}
-
+	public getIndex(){
+		return this.index
+	}
 	public clear() {
 		return this.keys.clear()
 	}

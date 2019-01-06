@@ -11,12 +11,17 @@ class Database extends EventEmitter {
         this.logger = null;
         this.mainTimer = null;
         this.datastore = null;
+        this.index = 0;
         this.config = opt;
         this.server = opt.server;
         this.datastore = opt.datastore;
+        this.index = opt.index;
         let constructor = this.constructor;
         this.logger = RedjsServer_1.RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
+    }
+    getIndex() {
+        return this.index;
     }
     clear() {
         return this.keys.clear();
