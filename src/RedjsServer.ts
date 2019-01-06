@@ -124,12 +124,11 @@ export class RedjsServer extends EventEmitter {
 
 		this.emit('connection-close', conn)
 
+		this.unmonitorConnection(conn)
+
 		if (this.connections.has(conn.id)) {
 			this.connections.delete(conn.id)
 		}
-
-		this.unmonitorConnection(conn)
-
 		this.logConnectionsCount()
 
 	}
@@ -138,7 +137,6 @@ export class RedjsServer extends EventEmitter {
 
 		if (!this.monitoredConnections.has(conn.id)) {
 			this.monitoredConnections.set(conn.id, conn)
-
 			this.connections.forEach( ( connection: Connection, connId: string ) => {
 				if (!connection.getCommandListener()) {
 					connection.setCommandListener( this.onCommand.bind(this) )
@@ -149,7 +147,7 @@ export class RedjsServer extends EventEmitter {
 	protected unmonitorConnection(conn: Connection) {
 
 		if (this.monitoredConnections.has(conn.id)) {
-			this.connections.delete(conn.id)
+			this.monitoredConnections.delete(conn.id)
 			if (this.getMonitoredConnectionsCount() === 0) {
 				this.connections.forEach( ( connection: Connection, connId: string ) => {
 					connection.removeCommandListener()

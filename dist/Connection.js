@@ -96,7 +96,7 @@ class Connection extends EventEmitter {
                 for (let i = 0; i < requestData.length; i++) {
                     let cmd = requestData[i][0].toLowerCase();
                     requestData[i].shift();
-                    if (this.listenerCount('command') > 0) {
+                    if (this.onCommand) {
                         this.onCommand(this, cmd, ...requestData[i]);
                     }
                     let responseData = this.commander.execCommand(cmd, this, ...requestData[i]);
@@ -109,7 +109,7 @@ class Connection extends EventEmitter {
             else {
                 let cmd = requestData[0].toLowerCase();
                 requestData.shift();
-                if (this.listenerCount('command') > 0) {
+                if (this.onCommand) {
                     this.onCommand(this, cmd, ...requestData);
                 }
                 let responseData = this.commander.execCommand(cmd, this, ...requestData);

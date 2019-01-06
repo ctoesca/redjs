@@ -91,10 +91,10 @@ class RedjsServer extends EventEmitter {
     }
     onConnectionClosed(conn) {
         this.emit('connection-close', conn);
+        this.unmonitorConnection(conn);
         if (this.connections.has(conn.id)) {
             this.connections.delete(conn.id);
         }
-        this.unmonitorConnection(conn);
         this.logConnectionsCount();
     }
     monitorConnection(conn) {
@@ -109,7 +109,7 @@ class RedjsServer extends EventEmitter {
     }
     unmonitorConnection(conn) {
         if (this.monitoredConnections.has(conn.id)) {
-            this.connections.delete(conn.id);
+            this.monitoredConnections.delete(conn.id);
             if (this.getMonitoredConnectionsCount() === 0) {
                 this.connections.forEach((connection, connId) => {
                     connection.removeCommandListener();
