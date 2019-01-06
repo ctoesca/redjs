@@ -1,4 +1,8 @@
 # redjs
+
+[![Build Status](https://travis-ci.org/ctoesca/redjs.svg?branch=master)](https://travis-ci.org/ctoesca/redjs)
+[![Codeclimate](https://codeclimate.com/github/ctoesca/redjs/badges/coverage.svg)](https://codeclimate.com/github/ctoesca/redjs)
+
 Redjs is a Redis-like in-memory data store. It can be used with [Ioredis](https://github.com/luin/ioredis), [NodeRedis](https://github.com/NodeRedis/node_redis) and by other applications (nodejs or not).
 
 Very often, a Nodejs application uses 'cluster' module, and is running on several processes (or several servers). Then you need to share data and send messages (pub/sub) between processes.
