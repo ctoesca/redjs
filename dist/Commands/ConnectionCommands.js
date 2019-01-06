@@ -6,14 +6,39 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         super(opt);
     }
     getCommandsNames() {
-        return ['ping'];
+        return ['ping', 'auth', 'echo', 'quit', 'select', 'swapdb'];
     }
     ping(conn, responseExpected = null) {
         let r = 'PONG';
         if (responseExpected) {
             r = responseExpected;
         }
-        return r;
+        return {
+            type: 'simpleString',
+            value: r
+        };
+    }
+    select(conn, index = 0) {
+        let r = 'OK';
+        return {
+            type: 'simpleString',
+            value: r
+        };
+    }
+    auth(conn, password) {
+        let r = 'OK';
+        return {
+            type: 'simpleString',
+            value: r
+        };
+    }
+    echo(conn, message) {
+        this.checkArgCount('echo', arguments, 2);
+        let r = message;
+        return {
+            type: 'simpleString',
+            value: r
+        };
     }
 }
 exports.ConnectionCommands = ConnectionCommands;

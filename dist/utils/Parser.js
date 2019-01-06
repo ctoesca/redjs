@@ -62,10 +62,18 @@ class Parser extends EventEmitter {
         else if (utils.isInt(data)) {
             r = ':' + data + '\r\n';
         }
-        else if ((typeof data === 'object') && (typeof data.push === 'function')) {
-            r = '*' + data.length + '\r\n';
-            for (let value of data) {
-                r += this.toRESP(value);
+        else if (typeof data === 'object') {
+            if (typeof data.push === 'function') {
+                r = '*' + data.length + '\r\n';
+                for (let value of data) {
+                    r += this.toRESP(value);
+                }
+            }
+            else if (typeof data.value !== 'undefined') {
+                r = this.toRESP(data.value, data.type);
+            }
+            else {
+                throw ('ERR Unknown response type for response \'' + data + '\'');
             }
         }
         else if (typeof data === 'number') {

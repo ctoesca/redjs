@@ -5,7 +5,6 @@ import { RedjsServer } from './RedjsServer';
 import { Parser } from './utils/Parser';
 import { Commander } from './Commander';
 import EventEmitter = require('events');
-import bunyan = require('bunyan');
 import net = require('net');
 export declare class Connection extends EventEmitter {
     id: string;
@@ -14,7 +13,7 @@ export declare class Connection extends EventEmitter {
     protected sock: net.Socket;
     protected commander: Commander;
     protected server: RedjsServer;
-    protected logger: bunyan;
+    protected logger: any;
     protected mainTimer: Timer;
     protected parser: Parser;
     constructor(server: RedjsServer, sock: net.Socket, commander: Commander);
@@ -23,6 +22,8 @@ export declare class Connection extends EventEmitter {
     writeMonitorData(data: any): void;
     writeChannelMessage(channel: string, payload: any): void;
     destroy(): void;
+    pause(): void;
+    resume(): void;
     protected onSockData(data: any): void;
     protected onSockError(err: any): void;
     protected onSockClose(): void;

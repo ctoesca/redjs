@@ -32,6 +32,25 @@ export class Keys extends AbstractCommands {
 	/* -------------------------------------------------------------------------------------- */
 
 
+	public scan(conn: Connection, cursor: number, MATCH: string, pattern: string, COUNT: string, count: number) {
+		/* SCAN cursor [MATCH pattern] [COUNT count]
+		ex : scan 0 MATCH * COUNT 10000 */
+
+		// !!
+
+		this.checkArgCount('scan', arguments, 6)
+
+		let r: any[] = [0, []]
+
+		conn.database.keys.forEach( ( value: any, key: string ) => {
+			if (this.match(key, pattern)) {
+				r[1].push( key )
+			}
+		})
+
+		return r
+	}
+
 	public del(conn: Connection, key: string, ...keys: string[]) {
 		this.checkMinArgCount('get', arguments, 2)
 		let r = 0

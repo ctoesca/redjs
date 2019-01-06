@@ -5,9 +5,9 @@ const Datastore_1 = require("./Data/Datastore");
 const Commander_1 = require("./Commander");
 const Connection_1 = require("./Connection");
 const utils = require("./utils");
+const bunyan = require("bunyan");
 const Promise = require("bluebird");
 const EventEmitter = require("events");
-const bunyan = require("bunyan");
 const _ = require("lodash");
 const net = require("net");
 class RedjsServer extends EventEmitter {
@@ -25,7 +25,7 @@ class RedjsServer extends EventEmitter {
         this.commander = null;
         this.options = null;
         let constructor = this.constructor;
-        this.logger = bunyan.createLogger({ name: constructor.name });
+        this.logger = RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
         this.parseOptions(...opt);
         this.mainTimer = new Timer_1.Timer({ delay: 10000 });
@@ -33,6 +33,9 @@ class RedjsServer extends EventEmitter {
         this.mainTimer.start();
         this.datastore = new Datastore_1.Datastore({ server: this });
         this.commander = new Commander_1.Commander({ server: this, datastore: this.datastore });
+    }
+    static createLogger(opt) {
+        return bunyan.createLogger({ name: opt.name });
     }
     static getDefaultOptions() {
         return {
@@ -95,13 +98,16 @@ class RedjsServer extends EventEmitter {
     ;
     onTimer() {
     }
+    logConnectionsCount() {
+        this.logger.debug('Connections count: ' + this.getConnectionsCount());
+    }
     onConnectionClosed(conn) {
         if (this.connections.has(conn.id)) {
             this.connections.get(conn.id).destroy();
             this.connections.delete(conn.id);
         }
         this.monitoredConnections.delete(conn.id);
-        this.logger.info('Connections count: ' + this.getConnectionsCount());
+        this.logConnectionsCount();
         if (this.getMonitoredConnectionsCount() === 0) {
             this.connections.forEach((connection, connId) => {
                 connection.removeAllListeners('command');
@@ -139,7 +145,7 @@ class RedjsServer extends EventEmitter {
                     this.onMonitoredConnection(conn);
                 });
                 this.connections.set(conn.id, conn);
-                this.logger.info('Connections count: ' + this.getConnectionsCount());
+                this.logConnectionsCount();
                 if (this.getMonitoredConnectionsCount() > 0) {
                     conn.on('command', (sentBy, cmd, ...args) => {
                         this.onCommand(sentBy, cmd, ...args);

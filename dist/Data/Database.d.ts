@@ -2,13 +2,12 @@
 import { Timer } from '../utils/Timer';
 import { Datastore } from './Datastore';
 import EventEmitter = require('events');
-import bunyan = require('bunyan');
 import net = require('net');
 export declare class Database extends EventEmitter {
     keys: Map<string, any>;
     protected config: any;
     protected server: net.Server;
-    protected logger: bunyan;
+    protected logger: any;
     protected mainTimer: Timer;
     protected datastore: Datastore;
     constructor(opt: any);

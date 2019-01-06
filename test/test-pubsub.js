@@ -91,14 +91,14 @@ describe('PubSub', function()
 	    	.then( function(r){
 	    		
 	    		redis2.publish('channel.tutu', 'message from channel.tutu') 
-	    		.then(function(r){
-	    			console.log("3 - PUBLISH channel.tutu to "+r+" clients")
+	    		.then(function(r1){
+	    			console.log("3 - PUBLISH channel.tutu to "+r1+" clients")
+		    		redis2.publish('channel.toto', 'message from channel.toto') 
+		    		.then(function(r2){
+		    			console.log("3 - PUBLISH channel.toto to "+r2+" clients")
+		    		})
 	    		})
 
-	    		redis2.publish('channel.toto', 'message from channel.toto') 
-	    		.then(function(r){
-	    			console.log("3 - PUBLISH channel.toto to "+r+" clients")
-	    		})
 	    	})
 	    	.delay(1000)
 	    	.then(()=>{

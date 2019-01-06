@@ -5,7 +5,6 @@ import {Datastore} from '../Data/Datastore';
 import {Database} from '../Data/Database';
 
 import Promise = require('bluebird');
-import bunyan = require('bunyan');
 import EventEmitter = require('events');
 import net = require('net');
 import minimatch = require('minimatch')
@@ -15,7 +14,7 @@ export class AbstractCommands extends EventEmitter {
 	protected config: any = null
 	protected server: RedjsServer
 	protected datastore: Datastore = null
-	protected logger: bunyan = null
+	protected logger: any = null
 	protected mainTimer: Timer = null
 	protected data: any = {}
 
@@ -27,7 +26,7 @@ export class AbstractCommands extends EventEmitter {
 		this.datastore = opt.datastore
 
 		let constructor: any = this.constructor
-		this.logger = bunyan.createLogger({ name: constructor.name })
+		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
 		this.mainTimer = new Timer({delay: 10000})

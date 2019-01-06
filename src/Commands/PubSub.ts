@@ -73,6 +73,9 @@ export class PubSub extends AbstractCommands {
 			}
 		}
 		r.push( this.getSubscriptionsCount(conn) )
+
+		// conn.pause()
+
 		return r
 	}
 
@@ -105,6 +108,9 @@ export class PubSub extends AbstractCommands {
 		}
 
 		r.push( this.getSubscriptionsCount(conn) )
+
+		// conn.pause()
+
 		return r
 	}
 

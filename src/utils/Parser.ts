@@ -50,7 +50,7 @@ export class Parser extends EventEmitter {
 		}
 	}
 
-	public toRESP( data: any, type: string = null) {
+	public toRESP( data: any, type: string = null): any {
 		/*
 		type: simpleString | error | integer | bulkString | array
 		*/
@@ -75,12 +75,22 @@ export class Parser extends EventEmitter {
 		} else if (utils.isInt(data)) {
 			// INTEGER
 			r = ':' + data + '\r\n'
-		} else if ((typeof data === 'object') && (typeof data.push === 'function')) {
-			// ARRAY
-			// *2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n
-			r = '*' + data.length + '\r\n'
-			for (let value of data) {
-				r += this.toRESP(value)
+		} else if (typeof data === 'object') {
+			if (typeof data.push === 'function') {
+				// ARRAY
+				// *2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n
+				r = '*' + data.length + '\r\n'
+				for (let value of data) {
+					r += this.toRESP(value)
+				}
+			} else if (typeof data.value !== 'undefined') {
+				/* object {
+					value: '...',
+					type: 'simpleString'
+				}*/
+				r = this.toRESP(data.value, data.type)
+			} else {
+				throw ('ERR Unknown response type for response \'' + data + '\'')
 			}
 		} else if (typeof data === 'number') {
 			// FLOAT -> bulkString

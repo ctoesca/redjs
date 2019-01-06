@@ -19,6 +19,16 @@ class Keys extends AbstractCommands_1.AbstractCommands {
         conn.database.keys.set(key, object);
         return object;
     }
+    scan(conn, cursor, MATCH, pattern, COUNT, count) {
+        this.checkArgCount('scan', arguments, 6);
+        let r = [0, []];
+        conn.database.keys.forEach((value, key) => {
+            if (this.match(key, pattern)) {
+                r[1].push(key);
+            }
+        });
+        return r;
+    }
     del(conn, key, ...keys) {
         this.checkMinArgCount('get', arguments, 2);
         let r = 0;

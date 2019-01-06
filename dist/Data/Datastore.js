@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Timer_1 = require("../utils/Timer");
 const Database_1 = require("./Database");
+const RedjsServer_1 = require("../RedjsServer");
 const EventEmitter = require("events");
-const bunyan = require("bunyan");
 class Datastore extends EventEmitter {
     constructor(opt) {
         super();
@@ -15,7 +15,7 @@ class Datastore extends EventEmitter {
         this.config = opt;
         this.server = opt.server;
         let constructor = this.constructor;
-        this.logger = bunyan.createLogger({ name: constructor.name });
+        this.logger = RedjsServer_1.RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
         this.mainTimer = new Timer_1.Timer({ delay: 10000 });
         this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));

@@ -70,4 +70,5 @@ function parseURL(url: any) {
 		return !isNaN(x) ;
 	}
 
-export { isInt, isFloat, parseURL };
+
+export { isInt, isFloat, parseURL};

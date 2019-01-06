@@ -1,16 +1,15 @@
 import {Timer} from '../utils/Timer';
 import {Database} from './Database';
+import {RedjsServer} from '../RedjsServer';
 import Promise = require('bluebird');
 import EventEmitter = require('events');
-import bunyan = require('bunyan');
 import net = require('net');
-
 
 export class Datastore extends EventEmitter {
 
 	protected config: any = null
 	protected server: net.Server = null
-	protected logger: bunyan = null
+	protected logger: any = null
 	protected mainTimer: Timer = null
 
 	protected databases: Database[] = []
@@ -24,7 +23,7 @@ export class Datastore extends EventEmitter {
 		this.server = opt.server
 
 		let constructor: any = this.constructor
-		this.logger = bunyan.createLogger({ name: constructor.name })
+		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
 		this.mainTimer = new Timer({delay: 10000})

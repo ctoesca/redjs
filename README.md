@@ -159,5 +159,5 @@ redis-cli -p 6379
 
 ### Connection
 - ping
-
+- echo
 

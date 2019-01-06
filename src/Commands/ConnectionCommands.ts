@@ -10,7 +10,7 @@ export class ConnectionCommands extends AbstractCommands {
 	}
 
 	public getCommandsNames(): string[] {
-		return ['ping']
+		return ['ping', 'auth', 'echo', 'quit', 'select', 'swapdb']
 	}
 
 	public ping( conn: Connection, responseExpected: string = null) {
@@ -18,8 +18,36 @@ export class ConnectionCommands extends AbstractCommands {
 		if (responseExpected) {
 			r = responseExpected
 		}
-		return r
+		return {
+			type: 'simpleString',
+			value: r
+		}
 	}
 
+	public select ( conn: Connection, index = 0) {
+		// !!
+		let r = 'OK'
+		return {
+			type: 'simpleString',
+			value: r
+		}
+	}
 
+	public auth( conn: Connection, password: string) {
+		// !!
+		let r = 'OK'
+		return {
+			type: 'simpleString',
+			value: r
+		}
+	}
+	public echo( conn: Connection, message: string) {
+
+		this.checkArgCount('echo', arguments, 2)
+		let r = message
+		return {
+			type: 'simpleString',
+			value: r
+		}
+	}
 }
