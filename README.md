@@ -1,7 +1,8 @@
 # redjs
 
 [![Build Status](https://travis-ci.org/ctoesca/redjs.svg?branch=master)](https://travis-ci.org/ctoesca/redjs)
-[![Codeclimate](https://codeclimate.com/github/ctoesca/redjs/badges/coverage.svg)](https://codeclimate.com/github/ctoesca/redjs)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a865589db2e1d75ca37f/maintainability)](https://codeclimate.com/github/ctoesca/redjs/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a865589db2e1d75ca37f/test_coverage)](https://codeclimate.com/github/ctoesca/redjs/test_coverage)
 
 Redjs is a Redis-like in-memory data store. It can be used with [Ioredis](https://github.com/luin/ioredis), [NodeRedis](https://github.com/NodeRedis/node_redis) and by other applications (nodejs or not).
 
