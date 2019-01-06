@@ -44,7 +44,7 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
     unsubscribe(conn, ...channels) {
         let r = ['unsubscribe'];
         this.checkMinArgCount('punsubscribe', arguments, 1);
-        r = r.concat(this._unsubscribe(conn, this.patternsSubscriptions, channels));
+        r = r.concat(this._unsubscribe(conn, this.channels, channels));
         r.push(this.getSubscriptionsCount(conn));
         return r;
     }

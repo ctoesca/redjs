@@ -27,8 +27,8 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         this.checkMinArgCount('sadd', arguments, 3);
         let r = 0;
         let set = this.getOrCreate(conn.database, key);
-        for (let i = 0; i < members.length; i++) {
-            let member = members[i];
+        for (let member of members) {
+            console.log('add member ' + member);
             if (!set.has(member)) {
                 set.add(member);
                 r++;
@@ -38,9 +38,10 @@ class Sets extends AbstractCommands_1.AbstractCommands {
     }
     smembers(conn, key) {
         this.checkArgCount('smembers', arguments, 2);
+        let set = this.getDataset(conn.database, key);
         let r = [];
-        if (typeof this.data[key] !== 'undefined') {
-            let iterator = this.data[key].values();
+        if (set) {
+            let iterator = set.values();
             for (let v of iterator) {
                 r.push(v);
             }

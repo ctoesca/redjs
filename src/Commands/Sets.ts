@@ -38,8 +38,8 @@ export class Sets extends AbstractCommands {
 
 		let r = 0
 		let set = this.getOrCreate(conn.database, key)
-		for (let i = 0; i < members.length; i ++) {
-			let member = members[i]
+		for (let member of members) {			
+			console.log('add member '+member)
 			if (!set.has(member)) {
 				set.add( member )
 				r ++
@@ -52,10 +52,12 @@ export class Sets extends AbstractCommands {
 	public smembers(conn: Connection, key: string) {
 
 		this.checkArgCount('smembers', arguments, 2)
+		
+		let set = this.getDataset(conn.database, key)
 
 		let r = []
-		if (typeof this.data[key] !== 'undefined') {
-			let iterator = this.data[key].values()
+		if (set) {
+			let iterator = set.values()
 			for (let v of iterator) {
 				r.push(v)
 			}

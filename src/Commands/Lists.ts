@@ -141,27 +141,13 @@ export class Lists extends AbstractCommands {
 	}
 
 	public rpop(conn: Connection, key: string) {
-
 		this.checkArgCount('rpop', arguments, 2)
-
-		let h = this.getDataset(conn.database, key)
-		let r = null
-		if (h && h.length > 0) {
-			r = h.pop()
-		}
-
-		return r
+		return this._pop( conn, key, 'right')
 	}
 
 	public lpop(conn: Connection, key: string) {
 		this.checkArgCount('lpop', arguments, 2)
-		let h = this.getDataset(conn.database, key)
-		let r = null
-		if (h && h.length > 0) {
-			r = h.shift();
-		}
-
-		return r
+		return this._pop( conn, key, 'left')
 	}
 
 	public llen(conn: Connection, key: string) {
@@ -197,4 +183,18 @@ export class Lists extends AbstractCommands {
 		return db.createNewKey( key, [] )
 	}
 
+	protected _pop(conn: Connection, key: string, type: string = null) {
+		let h = this.getDataset(conn.database, key)
+		let r = null
+		if (h && h.length > 0) {
+			if (type === 'left') {
+				r = h.shift();
+			} else if (type === 'right') {
+				r = h.pop();
+			} else {
+				throw "Invalid option: type='" + type + "'"
+			}
+		}
+		return r
+	}
 }

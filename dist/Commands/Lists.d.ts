@@ -16,4 +16,5 @@ export declare class Lists extends AbstractCommands {
     protected normalizeIndex(index: any, arr: any[]): number;
     protected getDataset(db: Database, key: string): any;
     protected createNewKey(db: Database, key: string): any;
+    protected _pop(conn: Connection, key: string, type?: string): any;
 }

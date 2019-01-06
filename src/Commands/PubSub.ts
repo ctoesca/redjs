@@ -78,7 +78,7 @@ export class PubSub extends AbstractCommands {
 
 		this.checkMinArgCount('punsubscribe', arguments, 1)
 
-		r = r.concat( this._unsubscribe(conn, this.patternsSubscriptions, channels) )
+		r = r.concat( this._unsubscribe(conn, this.channels, channels) )
 
 		r.push( this.getSubscriptionsCount(conn) )
 		return r

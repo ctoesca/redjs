@@ -103,21 +103,11 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     rpop(conn, key) {
         this.checkArgCount('rpop', arguments, 2);
-        let h = this.getDataset(conn.database, key);
-        let r = null;
-        if (h && h.length > 0) {
-            r = h.pop();
-        }
-        return r;
+        return this._pop(conn, key, 'right');
     }
     lpop(conn, key) {
         this.checkArgCount('lpop', arguments, 2);
-        let h = this.getDataset(conn.database, key);
-        let r = null;
-        if (h && h.length > 0) {
-            r = h.shift();
-        }
-        return r;
+        return this._pop(conn, key, 'left');
     }
     llen(conn, key) {
         this.checkArgCount('llen', arguments, 2);
@@ -148,6 +138,22 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     createNewKey(db, key) {
         return db.createNewKey(key, []);
+    }
+    _pop(conn, key, type = null) {
+        let h = this.getDataset(conn.database, key);
+        let r = null;
+        if (h && h.length > 0) {
+            if (type === 'left') {
+                r = h.shift();
+            }
+            else if (type === 'right') {
+                r = h.pop();
+            }
+            else {
+                throw "Invalid option: type='" + type + "'";
+            }
+        }
+        return r;
     }
 }
 exports.Lists = Lists;
