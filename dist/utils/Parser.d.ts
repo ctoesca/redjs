@@ -6,4 +6,5 @@ export declare class Parser extends EventEmitter {
     toRESP(data: any, type?: string): any;
     protected stringToResp(data: any, forcedType?: string): string;
     protected objectToResp(data: any): any;
+    protected execRedisParser(data: any, results: any, errors: any): void;
 }

@@ -76,9 +76,9 @@ export class Lists extends AbstractCommands {
 
 		if (h) {
 			// !!verifier qu'il s'agit d'une liste
-			
+
 			let added = false
-			for (let i = 0; i< h.length; i++) {
+			for (let i = 0; i < h.length; i++) {
 				let v = h[i]
 				if (v === pivot) {
 					let spliceIndx = i
@@ -193,7 +193,7 @@ export class Lists extends AbstractCommands {
 		let r = null
 
 		let h = this.getDataset(conn.database, key)
-		
+
 		if (h && h.length > 0) {
 			if (type === 'left') {
 				r = h.shift();
@@ -203,7 +203,7 @@ export class Lists extends AbstractCommands {
 				throw "Invalid option: type='" + type + "'"
 			}
 		}
-		
+
 		return r
 	}
 }

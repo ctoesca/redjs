@@ -10,19 +10,7 @@ class Parser extends EventEmitter {
     fromRESP(data) {
         let results = [];
         let errors = [];
-        let parser = new RedisParser({
-            returnReply: (reply) => {
-                results.push(reply);
-            },
-            returnError: (err) => {
-                errors.push(err);
-            },
-            returnFatalError: (err) => {
-                errors.push(err);
-            },
-            name: 'javascript'
-        });
-        parser.execute(data);
+        this.execRedisParser(data, results, errors);
         if (errors.length > 0) {
             if (errors.length === 1) {
                 throw errors[0];
@@ -93,6 +81,21 @@ class Parser extends EventEmitter {
             throw ('ERR Unknown response type for response \'' + data + '\'');
         }
         return r;
+    }
+    execRedisParser(data, results, errors) {
+        let parser = new RedisParser({
+            returnReply: (reply) => {
+                results.push(reply);
+            },
+            returnError: (err) => {
+                errors.push(err);
+            },
+            returnFatalError: (err) => {
+                errors.push(err);
+            },
+            name: 'javascript'
+        });
+        parser.execute(data);
     }
 }
 exports.Parser = Parser;
