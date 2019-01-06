@@ -3,8 +3,8 @@ const assert = require('assert');
 
 describe('Strings', function() 
 {
+console.log('!!!!!!!!!!!!! '+redis)
 	var redis = getRedis()
-
 	describe('flushdb', function() {
 	    it('should return OK', function( done ) {
 	    	redis.flushdb()

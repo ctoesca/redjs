@@ -101,6 +101,7 @@ export class Connection extends EventEmitter {
 		this.sock.destroy();
 		this.sock = null
 		this.commander = null
+		this.onCommand = null
 	}
 
 	public quit() {
