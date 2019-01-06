@@ -16,6 +16,8 @@ class Connection extends EventEmitter {
         this.logger = null;
         this.mainTimer = null;
         this.parser = null;
+        this.closing = false;
+        this.processingData = false;
         this.id = uuid();
         this.sock = sock;
         this.server = server;
@@ -51,11 +53,22 @@ class Connection extends EventEmitter {
         this.sock.write(this.parser.toRESP(data));
     }
     destroy() {
-        this.mainTimer.destroy();
+        this.closing = false;
+        this.processingData = false;
         this.removeAllListeners();
         this.sock.removeAllListeners();
+        this.sock.destroy();
         this.sock = null;
         this.commander = null;
+        console.log("DESTROY");
+    }
+    quit() {
+        if (this.processingData) {
+            this.closing = true;
+        }
+        else {
+            this.sock.end();
+        }
     }
     pause() {
         this.sock.pause();
@@ -66,6 +79,7 @@ class Connection extends EventEmitter {
     onSockData(data) {
         this.logger.debug('onSockData ' + this.sock.remoteAddress + ': ' + data);
         try {
+            this.processingData = true;
             let requestData = this.parser.fromRESP(data);
             let commands = [];
             if (typeof requestData[0] === 'object') {
@@ -93,6 +107,7 @@ class Connection extends EventEmitter {
                 let resp = this.parser.toRESP(responseData);
                 this.sock.write(resp);
             }
+            this.processingData = false;
         }
         catch (err) {
             if (this.lastError !== err.toString()) {
@@ -101,7 +116,10 @@ class Connection extends EventEmitter {
             }
             let resp = this.parser.toRESP(err.toString(), 'error');
             this.sock.write(resp);
+            this.processingData = false;
         }
+        if (this.closing)
+            this.sock.end();
     }
     onSockError(err) {
         if (err.code !== 'ECONNRESET') {

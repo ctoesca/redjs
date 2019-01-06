@@ -16,12 +16,15 @@ export declare class Connection extends EventEmitter {
     protected logger: any;
     protected mainTimer: Timer;
     protected parser: Parser;
+    protected closing: boolean;
+    protected processingData: boolean;
     constructor(server: RedjsServer, sock: net.Socket, commander: Commander);
     getRemoteAddress(): string;
     getRemotePort(): number;
     writeMonitorData(data: any): void;
     writeChannelMessage(channel: string, payload: any): void;
     destroy(): void;
+    quit(): void;
     pause(): void;
     resume(): void;
     protected onSockData(data: any): void;

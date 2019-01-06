@@ -24,6 +24,8 @@ export class Connection extends EventEmitter {
 	protected logger: any = null
 	protected mainTimer: Timer = null
 	protected parser: Parser = null
+	protected closing = false
+	protected processingData = false
 
 	constructor(server: RedjsServer, sock: net.Socket, commander: Commander) {
 		super();
@@ -77,11 +79,23 @@ export class Connection extends EventEmitter {
 	}
 
 	public destroy() {
-		this.mainTimer.destroy()
+		// this.mainTimer.destroy()
+		this.closing = false;
+		this.processingData = false;
 		this.removeAllListeners()
 		this.sock.removeAllListeners()
+		this.sock.destroy();
 		this.sock = null
 		this.commander = null
+	}
+
+	public quit(){
+		if (this.processingData){
+			this.closing = true;
+		}
+		else{
+			this.sock.end()
+		}
 	}
 
 	public pause() {
@@ -95,6 +109,7 @@ export class Connection extends EventEmitter {
 		this.logger.debug('onSockData ' +  this.sock.remoteAddress + ': ' + data)
 
 		try {
+				this.processingData = true;
 
 			// console.log('request: '+data.toString().replace(/\r\n/g, '\\r\\n').replace(/\n/g, '\\n'))
 			/* pipeline:
@@ -166,7 +181,7 @@ export class Connection extends EventEmitter {
 				this.sock.write( resp )
 			}
 
-
+			this.processingData = false;
 
 		} catch (err) {
 			if (this.lastError !== err.toString()) {
@@ -175,7 +190,12 @@ export class Connection extends EventEmitter {
 			}
 			let resp = this.parser.toRESP( err.toString(), 'error' )
 			this.sock.write( resp );
+			this.processingData = false;
 		}
+
+		if (this.closing)
+			this.sock.end();
+
 	}
 
 

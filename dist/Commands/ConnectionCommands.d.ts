@@ -19,4 +19,8 @@ export declare class ConnectionCommands extends AbstractCommands {
         type: string;
         value: string;
     };
+    quit(conn: Connection): {
+        type: string;
+        value: string;
+    };
 }

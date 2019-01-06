@@ -36,7 +36,7 @@ export class ConnectionCommands extends AbstractCommands {
 
 	public auth( conn: Connection, password: string) {
 		// !!
-		this.checkArgCount('echo', arguments, 2)
+		this.checkArgCount('auth', arguments, 2)
 		let r = 'OK'
 		return {
 			type: 'simpleString',
@@ -52,4 +52,18 @@ export class ConnectionCommands extends AbstractCommands {
 			value: r
 		}
 	}
+	public quit( conn: Connection) {
+		// !!
+		conn.on('close', () => {
+			console.log('Connection closed')
+		})
+		conn.quit()
+		
+		let r = "OK"
+		return {
+			type: 'simpleString',
+			value: r
+		}
+	}
+
 }

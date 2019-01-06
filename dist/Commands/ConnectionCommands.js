@@ -27,7 +27,7 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         };
     }
     auth(conn, password) {
-        this.checkArgCount('echo', arguments, 2);
+        this.checkArgCount('auth', arguments, 2);
         let r = 'OK';
         return {
             type: 'simpleString',
@@ -37,6 +37,17 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
     echo(conn, message) {
         this.checkArgCount('echo', arguments, 2);
         let r = message;
+        return {
+            type: 'simpleString',
+            value: r
+        };
+    }
+    quit(conn) {
+        conn.on('close', () => {
+            console.log('Connection closed');
+        });
+        conn.quit();
+        let r = "OK";
         return {
             type: 'simpleString',
             value: r

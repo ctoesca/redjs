@@ -100,4 +100,17 @@ describe('Connect Events', function()
 	    });
   	});
 
+  	describe('quit', function() {
+	    it('should receive OK', function( done ) {	    	
+	    	redis.quit()
+	    	.then( function(r){
+	    		assert.equal(r, "OK");
+	    		done()
+	    	})
+	    });
+  	});
+
+
+  	
+
 });
