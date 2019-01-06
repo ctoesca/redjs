@@ -3,3 +3,4 @@
 /lib/client
 /bin
 /.nyc_output
+/coverage
