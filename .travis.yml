@@ -27,7 +27,7 @@ after_success:
 after_script:  
   #- ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
   - ./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.json
-  #- ./cc-test-reporter upload-coverage
+  - ./cc-test-reporter upload-coverage
 
 # Trigger a push build on master/release and greenkeeper branches + PRs build on every branches
 # Avoid double build on PRs (See https://github.com/travis-ci/travis-ci/issues/1147)
