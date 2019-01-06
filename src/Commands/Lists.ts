@@ -65,7 +65,7 @@ export class Lists extends AbstractCommands {
 		this.checkArgCount('linsert', arguments, 5)
 
 		// LINSERT key BEFORE|AFTER pivot value
-		if ((position !== 'BEFORE') && (position !== 'AFTER')) {
+		if (['BEFORE','AFTER'].indexOf(position) == -1) {
 			throw 'Invalid argument'
 		}
 
@@ -79,10 +79,8 @@ export class Lists extends AbstractCommands {
 			for (let i = 0; i < h.length; i++) {
 				let v = h[i]
 				if (v === pivot) {
-					let spliceIndx = i
-					if (position === 'AFTER') {
-						spliceIndx = i + 1
-					}
+					let spliceIndx
+					(position === 'AFTER') ? spliceIndx = i + 1 :  spliceIndx = i
 					h.splice(spliceIndx, 0, value)
 					added = true
 					i ++

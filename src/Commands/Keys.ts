@@ -17,6 +17,7 @@ export class Keys extends AbstractCommands {
 	}
 
 
+	/*
 	public get( conn: Connection, key: string) {
 		return conn.database.keys.get(key)
 	}
@@ -27,7 +28,7 @@ export class Keys extends AbstractCommands {
 		}
 		conn.database.keys.set(key, object)
 		return object
-	}
+	}*/
 
 	/* -------------------------------------------------------------------------------------- */
 

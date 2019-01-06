@@ -42,7 +42,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     linsert(conn, key, position, pivot, value) {
         this.checkArgCount('linsert', arguments, 5);
-        if ((position !== 'BEFORE') && (position !== 'AFTER')) {
+        if (['BEFORE', 'AFTER'].indexOf(position) == -1) {
             throw 'Invalid argument';
         }
         let r = -1;
@@ -52,10 +52,8 @@ class Lists extends AbstractCommands_1.AbstractCommands {
             for (let i = 0; i < h.length; i++) {
                 let v = h[i];
                 if (v === pivot) {
-                    let spliceIndx = i;
-                    if (position === 'AFTER') {
-                        spliceIndx = i + 1;
-                    }
+                    let spliceIndx;
+                    (position === 'AFTER') ? spliceIndx = i + 1 : spliceIndx = i;
                     h.splice(spliceIndx, 0, value);
                     added = true;
                     i++;

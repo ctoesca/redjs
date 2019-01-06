@@ -9,16 +9,6 @@ class Keys extends AbstractCommands_1.AbstractCommands {
         return ['DEL', 'DUMP', 'EXISTS', 'EXPIRE', 'EXPIREAT', 'KEYS', 'MIGRATE', 'MOVE', 'OBJECT', 'PERSIST',
             'PEXPIRE', 'PEXPIREAT', 'PTTL', 'RANDOMKEY', 'RENAME', 'RENAMENX', 'RESTORE', 'SORT', 'TOUCH', 'TTL', 'TYPE', 'UNLINK', 'WAIT', 'SCAN'];
     }
-    get(conn, key) {
-        return conn.database.keys.get(key);
-    }
-    set(conn, key, object) {
-        if (conn.database.keys.has(key)) {
-            throw 'key \'' + key + ' already exists';
-        }
-        conn.database.keys.set(key, object);
-        return object;
-    }
     scan(conn, cursor, MATCH, pattern, COUNT, count) {
         this.checkArgCount('scan', arguments, 6);
         let r = [0, []];
