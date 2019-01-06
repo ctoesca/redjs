@@ -8,5 +8,4 @@ export declare class StringsCommands extends AbstractCommands {
     set(conn: Connection, key: string, value: string, ...options: any[]): string;
     incr(conn: Connection, key: string): any;
     protected createNewKey(db: Database, key: string): any;
-    protected onTimer(): void;
 }

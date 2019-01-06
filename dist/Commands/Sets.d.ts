@@ -9,5 +9,4 @@ export declare class Sets extends AbstractCommands {
     smembers(conn: Connection, key: string): any[];
     protected getDataset(db: Database, key: string): any;
     protected createNewKey(db: Database, key: string): any;
-    protected onTimer(): void;
 }

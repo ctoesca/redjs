@@ -36,9 +36,9 @@ export class RedjsServer extends EventEmitter {
 
 		this.parseOptions(...opt)
 
-		this.mainTimer = new Timer({delay: 10000});
+		/* this.mainTimer = new Timer({delay: 10000});
 		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this));
-		this.mainTimer.start()
+		this.mainTimer.start() */
 
 		this.datastore = new Datastore({server: this})
 		this.commander = new Commander({server: this, datastore: this.datastore})
@@ -118,9 +118,9 @@ export class RedjsServer extends EventEmitter {
 		}
 	};
 
-	protected onTimer() {
+	/* protected onTimer() {
 
-	}
+	} */
 
 	protected logConnectionsCount() {
 		this.logger.debug('Connections count: ' + this.getConnectionsCount())

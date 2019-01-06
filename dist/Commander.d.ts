@@ -33,5 +33,4 @@ export declare class Commander extends EventEmitter {
     constructor(opt: any);
     execCommand(cmd: string, conn: Connection, ...args: any[]): any;
     protected addComands(manager: AbstractCommands): void;
-    protected onTimer(): void;
 }

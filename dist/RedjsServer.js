@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Timer_1 = require("./utils/Timer");
 const Datastore_1 = require("./Data/Datastore");
 const Commander_1 = require("./Commander");
 const Connection_1 = require("./Connection");
@@ -28,9 +27,6 @@ class RedjsServer extends EventEmitter {
         this.logger = RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
         this.parseOptions(...opt);
-        this.mainTimer = new Timer_1.Timer({ delay: 10000 });
-        this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
-        this.mainTimer.start();
         this.datastore = new Datastore_1.Datastore({ server: this });
         this.commander = new Commander_1.Commander({ server: this, datastore: this.datastore });
     }
@@ -96,8 +92,6 @@ class RedjsServer extends EventEmitter {
         }
     }
     ;
-    onTimer() {
-    }
     logConnectionsCount() {
         this.logger.debug('Connections count: ' + this.getConnectionsCount());
     }

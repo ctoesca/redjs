@@ -1,5 +1,6 @@
 import urlParser = require('url')
 import _ = require('lodash')
+import { Timer} from './Timer'
 
 function parseURL(url: any) {
 	if (isInt(url)) {
@@ -71,4 +72,4 @@ function parseURL(url: any) {
 	}
 
 
-export { isInt, isFloat, parseURL};
+export { isInt, isFloat, parseURL, Timer};

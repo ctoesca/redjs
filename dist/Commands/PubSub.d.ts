@@ -14,7 +14,7 @@ export declare class PubSub extends AbstractCommands {
     punsubscribe(conn: Connection, ...patterns: string[]): any[];
     publish(conn: Connection, channel: string, message: any): number;
     protected _subscribe(conn: Connection, map: Map<string, Map<string, Connection>>, channels: string[]): string[];
-    protected iterateAllSubscriptions(cb: Function): void;
+    protected iterateAllSubscriptions(cb: Function): number;
     protected _unsubscribe(conn: Connection, map: Map<string, Map<string, Connection>>, channels: string[]): string[];
     protected onConnectionClosed(conn: Connection): void;
 }

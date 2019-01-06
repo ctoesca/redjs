@@ -79,8 +79,4 @@ export class StringsCommands extends AbstractCommands {
 		return db.createNewKey( key, {value: ''} )
 	}
 
-	protected onTimer() {
-
-	}
-
 }

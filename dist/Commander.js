@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Timer_1 = require("./utils/Timer");
 const EventEmitter = require("events");
 const RedjsServer_1 = require("./RedjsServer");
 const Keys_1 = require("./Commands/Keys");
@@ -35,8 +34,6 @@ class Commander extends EventEmitter {
         let constructor = this.constructor;
         this.logger = RedjsServer_1.RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
-        this.mainTimer = new Timer_1.Timer({ delay: 10000 });
-        this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
         this.commands = {};
         this.hashes = new Hashes_1.Hashes({
             server: this.server,
@@ -106,8 +103,6 @@ class Commander extends EventEmitter {
                 manager: manager
             };
         }
-    }
-    onTimer() {
     }
 }
 exports.Commander = Commander;

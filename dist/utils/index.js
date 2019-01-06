@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const urlParser = require("url");
 const _ = require("lodash");
+const Timer_1 = require("./Timer");
+exports.Timer = Timer_1.Timer;
 function parseURL(url) {
     if (isInt(url)) {
         return { port: url };

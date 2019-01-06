@@ -67,8 +67,6 @@ class Keys extends AbstractCommands_1.AbstractCommands {
         });
         return r;
     }
-    onTimer() {
-    }
 }
 exports.Keys = Keys;
 //# sourceMappingURL=Keys.js.map

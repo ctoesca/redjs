@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractCommands_1 = require("./AbstractCommands");
-const utils = require("../utils");
 class Lists extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
@@ -12,32 +11,14 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     lrange(conn, key, start, stop) {
         this.checkArgCount('lrange', arguments, 4);
-        if (!utils.isInt(start)) {
-            throw 'ERR value is not an integer or out of range';
-        }
-        if (!utils.isInt(stop)) {
-            throw 'ERR value is not an integer or out of range';
-        }
+        this.checkInt(start);
+        this.checkInt(stop);
         let data = this.getDataset(conn.database, key);
         let r = [];
         if (data) {
-            start = parseInt(start, 10);
-            stop = parseInt(stop, 10);
-            let startIndx;
-            if (start >= 0) {
-                startIndx = start;
-            }
-            else {
-                startIndx = data.length + start;
-            }
-            let stopIndx;
-            if (stop >= 0) {
-                stopIndx = stop;
-            }
-            else {
-                stopIndx = data.length + stop;
-            }
-            if (((startIndx >= 0) && (startIndx < data.length)) && (startIndx <= stopIndx)) {
+            let startIndx = this.normalizeIndex(start, data);
+            let stopIndx = this.normalizeIndex(stop, data);
+            if ((startIndx >= 0) && (startIndx < data.length) && (startIndx <= stopIndx)) {
                 for (let i = startIndx; i <= stopIndx; i++) {
                     if (i < data.length) {
                         r.push(data[i]);
@@ -49,24 +30,15 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     lindex(conn, key, index) {
         this.checkArgCount('lindex', arguments, 3);
-        let h = this.getDataset(conn.database, key);
-        if (!h) {
+        this.checkInt(index);
+        let data = this.getDataset(conn.database, key);
+        if (!data) {
             throw key + ' is not a list';
         }
-        if (!utils.isInt(index)) {
-            throw 'ERR value is not an integer or out of range';
-        }
-        index = parseInt(index, 10);
         let r = null;
-        let indx;
-        if (index >= 0) {
-            indx = index;
-        }
-        else {
-            indx = h.length + index;
-        }
-        if ((indx >= 0) && (indx < h.length)) {
-            r = h[indx];
+        let indx = this.normalizeIndex(index, data);
+        if ((indx >= 0) && (indx < data.length)) {
+            r = data[indx];
         }
         return r;
     }
@@ -98,24 +70,15 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     lset(conn, key, index, value) {
         this.checkArgCount('lset', arguments, 4);
+        this.checkInt(index);
         let r = 'OK';
-        let h = this.getDataset(conn.database, key);
-        if (!h) {
+        let data = this.getDataset(conn.database, key);
+        if (!data) {
             throw key + ' is not a list';
         }
-        if (!utils.isInt(index)) {
-            throw 'ERR value is not an integer or out of range';
-        }
-        index = parseInt(index, 10);
-        let indx;
-        if (index >= 0) {
-            indx = index;
-        }
-        else {
-            indx = h.length + index;
-        }
-        if ((indx >= 0) && (indx < h.length)) {
-            h[indx] = value;
+        let indx = this.normalizeIndex(index, data);
+        if ((indx >= 0) && (indx < data.length)) {
+            data[indx] = value;
         }
         else {
             throw 'Out of range';
@@ -165,6 +128,17 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         }
         return r;
     }
+    normalizeIndex(index, arr) {
+        let r;
+        index = parseInt(index, 10);
+        if (index >= 0) {
+            r = index;
+        }
+        else {
+            r = arr.length + index;
+        }
+        return r;
+    }
     getDataset(db, key) {
         let r = db.getDataset(key);
         if (r && (typeof r.push === 'undefined')) {
@@ -174,8 +148,6 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     createNewKey(db, key) {
         return db.createNewKey(key, []);
-    }
-    onTimer() {
     }
 }
 exports.Lists = Lists;

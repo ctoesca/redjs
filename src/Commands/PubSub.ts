@@ -17,7 +17,7 @@ export class PubSub extends AbstractCommands {
 		this.server.on('connection-close', this._onConnectionClose)
 	}
 
-	public destroy(){
+	public destroy() {
 		this.server.removeListener('connection-close', this._onConnectionClose)
 		this.channels.clear();
 		this.patternsSubscriptions.clear();
@@ -29,14 +29,13 @@ export class PubSub extends AbstractCommands {
 	}
 
 	public getSubscriptionsCount(conn: Connection) {
-		
 		let r = 0;
-		this.iterateAllSubscriptions( ( connections: Map<string, Connection>, channel: string ) => {
+		this.iterateAllSubscriptions( ( connections: Map<string, Connection>, channel: string, map: Map<string, any> ) => {
 			if (connections.has(conn.id)) {
 				r ++
 			}
 		})
-		return r		
+		return r
 	}
 
 	/*
@@ -51,11 +50,11 @@ export class PubSub extends AbstractCommands {
 	public subscribe(conn: Connection, ...channels: string[]) {
 
 		this.checkMinArgCount('subscribe', arguments, 2)
-	
+
 		let r: any[] = ['subscribe']
 
 		r.concat( this._subscribe(conn, this.channels, channels) )
-		
+
 		r.push( this.getSubscriptionsCount(conn) )
 
 		return r
@@ -65,9 +64,9 @@ export class PubSub extends AbstractCommands {
 		let r: any[] = ['psubscribe']
 
 		this.checkMinArgCount('psubscribe', arguments, 2)
-			
+
 		r.concat( this._subscribe(conn, this.patternsSubscriptions, patterns) )
-		
+
 		r.push( this.getSubscriptionsCount(conn) )
 
 		return r
@@ -76,7 +75,7 @@ export class PubSub extends AbstractCommands {
 	public unsubscribe(conn: Connection, ...channels: string[]) {
 
 		let r: any[] = ['unsubscribe']
-		
+
 		this.checkMinArgCount('punsubscribe', arguments, 1)
 
 		r = r.concat( this._unsubscribe(conn, this.patternsSubscriptions, channels) )
@@ -130,16 +129,15 @@ export class PubSub extends AbstractCommands {
 		return r
 	}
 
-	protected _subscribe(conn: Connection, map: Map<string,  Map<string, Connection>>, channels: string[])
-	{
-		let r : string[] = []
-		for (let channel of channels) {			
+	protected _subscribe(conn: Connection, map: Map<string,  Map<string, Connection>>, channels: string[]) {
+		let r: string[] = []
+		for (let channel of channels) {
 			let channelMap = map.get(channel)
-			if (typeof channelMap === "undefined") {
+			if (typeof channelMap === 'undefined') {
 				channelMap = new Map()
 				map.set(channel, channelMap)
 			}
-			
+
 			channelMap.set(conn.id, conn)
 			r.push(channel)
 		}
@@ -147,42 +145,47 @@ export class PubSub extends AbstractCommands {
 	}
 
 	protected iterateAllSubscriptions( cb: Function ) {
-		this.channels.forEach( ( connections: Map<string, Connection>, channel: string ) => {
-			cb(connections, channel, this.channels)
-		})
-		this.patternsSubscriptions.forEach( ( connections: Map<string, Connection>, channel: string ) => {
-			cb(connections, channel, this.patternsSubscriptions)
-		})
+		let r = 0;
+		for (let mapName of ['channels', 'patternsSubscriptions']) {
+			let map: Map<string, any> = this[mapName]
+			map.forEach( ( connections: Map<string, Connection>, channel: string ) => {
+				if (cb) {
+					cb(connections, channel, map)
+				}
+				r ++
+			})
+		}
+		return r
 	}
 
-	protected _unsubscribe( conn: Connection, map: Map<string,  Map<string, Connection>>, channels: string[]){
+	protected _unsubscribe( conn: Connection, map: Map<string,  Map<string, Connection>>, channels: string[]) {
 
-		let r : string[] = []
-		let channelsToRemove : string[] = []
+		let r: string[] = []
+		let channelsToRemove: string[] = []
 
 		map.forEach( ( connections: Map<string, Connection>, channel: string ) => {
 			if (connections.has(conn.id)) {
-				if (( channels.length === 0 ) ||  ( channels.indexOf(channel) >= 0 ))
-				{
+				if (( channels.length === 0 ) ||  ( channels.indexOf(channel) >= 0 )) {
 					connections.delete(conn.id)
 					r.push(channel)
 				}
-				if (connections.size == 0) {
+				if (connections.size === 0) {
 					channelsToRemove.push(channel)
 				}
 			}
 		})
 
-		for (let channel of channelsToRemove)
+		for (let channel of channelsToRemove) {
 			map.delete(channel)
+		}
 
 		return r
 	}
 	protected onConnectionClosed(conn: Connection) {
-		
+
 		this.iterateAllSubscriptions( ( connections: Map<string, Connection>, channel: string, map: Map<string, Map<string, Connection>> ) => {
 			connections.delete(conn.id)
-			if (connections.size == 0) {
+			if (connections.size === 0) {
 				map.delete( channel )
 			}
 		})

@@ -1,5 +1,5 @@
 
-import {Timer} from '../utils/Timer';
+import * as utils from '../utils';
 import {RedjsServer} from '../RedjsServer';
 import {Datastore} from '../Data/Datastore';
 import {Database} from '../Data/Database';
@@ -15,7 +15,7 @@ export class AbstractCommands extends EventEmitter {
 	protected server: RedjsServer
 	protected datastore: Datastore = null
 	protected logger: any = null
-	protected mainTimer: Timer = null
+	protected mainTimer: utils.Timer = null
 	protected data: any = {}
 
 	constructor(opt: any) {
@@ -29,26 +29,30 @@ export class AbstractCommands extends EventEmitter {
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
-		this.mainTimer = new Timer({delay: 10000})
-		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this))
-		// this.mainTimer.start()
+		/* this.mainTimer = new utils.Timer({delay: 10000})
+		this.mainTimer.on(utils.Timer.ON_TIMER, this.onTimer.bind(this))
+		this.mainTimer.start() */
 
 	}
 
-	public destroy(){
+	public destroy() {
 		this.removeAllListeners()
 	}
 
 	public getCommandsNames(): string[] {
 		return []
 	}
-	
+
 	protected checkArgCount(cmd: string, args: IArguments, expected: number) {
 		if (args.length !== expected) {
 			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')
 		}
 	}
-
+	protected checkInt( v: any ) {
+		if (!utils.isInt(v)) {
+			throw 'ERR value is not an integer or out of range'
+		}
+	}
 	protected checkMinArgCount(cmd: string, args: IArguments, expected: number) {
 		if (args.length < expected) {
 			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')
@@ -76,7 +80,7 @@ export class AbstractCommands extends EventEmitter {
 		return minimatch(value, pattern)
 	}
 
-	protected onTimer() {
+	/* protected onTimer() {
 
-	}
+	} */
 }

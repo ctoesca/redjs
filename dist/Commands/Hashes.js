@@ -245,8 +245,6 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
     createNewKey(db, key) {
         return db.createNewKey(key, new Map());
     }
-    onTimer() {
-    }
 }
 exports.Hashes = Hashes;
 //# sourceMappingURL=Hashes.js.map

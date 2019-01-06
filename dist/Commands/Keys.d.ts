@@ -9,5 +9,4 @@ export declare class Keys extends AbstractCommands {
     del(conn: Connection, key: string, ...keys: string[]): number;
     exists(conn: Connection, key: string, ...keys: string[]): number;
     keys(conn: Connection, pattern: string): string[];
-    protected onTimer(): void;
 }

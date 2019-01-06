@@ -39,9 +39,9 @@ export class Connection extends EventEmitter {
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
-		this.mainTimer = new Timer({delay: 10000})
+		/* this.mainTimer = new Timer({delay: 10000})
 		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this))
-		this.mainTimer.start()
+		this.mainTimer.start() */
 
 		this.lastError = null
 
@@ -190,8 +190,8 @@ export class Connection extends EventEmitter {
 		this.emit('close')
 	}
 
-	protected onTimer() {
+	/* protected onTimer() {
 
-	}
+	} */
 
 }

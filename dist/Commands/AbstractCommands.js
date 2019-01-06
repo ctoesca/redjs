@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Timer_1 = require("../utils/Timer");
+const utils = require("../utils");
 const RedjsServer_1 = require("../RedjsServer");
 const EventEmitter = require("events");
 const minimatch = require("minimatch");
@@ -17,8 +17,6 @@ class AbstractCommands extends EventEmitter {
         let constructor = this.constructor;
         this.logger = RedjsServer_1.RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
-        this.mainTimer = new Timer_1.Timer({ delay: 10000 });
-        this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
     }
     destroy() {
         this.removeAllListeners();
@@ -29,6 +27,11 @@ class AbstractCommands extends EventEmitter {
     checkArgCount(cmd, args, expected) {
         if (args.length !== expected) {
             throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command');
+        }
+    }
+    checkInt(v) {
+        if (!utils.isInt(v)) {
+            throw 'ERR value is not an integer or out of range';
         }
     }
     checkMinArgCount(cmd, args, expected) {
@@ -51,8 +54,6 @@ class AbstractCommands extends EventEmitter {
     }
     match(value, pattern) {
         return minimatch(value, pattern);
-    }
-    onTimer() {
     }
 }
 exports.AbstractCommands = AbstractCommands;

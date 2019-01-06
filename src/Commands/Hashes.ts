@@ -313,6 +313,4 @@ export class Hashes extends AbstractCommands {
 		return db.createNewKey( key, new Map<string, any>() )
 	}
 
-	protected onTimer() {
-	}
 }

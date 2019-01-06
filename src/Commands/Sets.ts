@@ -75,8 +75,4 @@ export class Sets extends AbstractCommands {
 		return db.createNewKey( key, new Set() )
 	}
 
-	protected onTimer() {
-
-	}
-
 }

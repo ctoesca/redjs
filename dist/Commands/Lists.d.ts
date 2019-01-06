@@ -13,7 +13,7 @@ export declare class Lists extends AbstractCommands {
     rpop(conn: Connection, key: string): any;
     lpop(conn: Connection, key: string): any;
     llen(conn: Connection, key: string): number;
+    protected normalizeIndex(index: any, arr: any[]): number;
     protected getDataset(db: Database, key: string): any;
     protected createNewKey(db: Database, key: string): any;
-    protected onTimer(): void;
 }

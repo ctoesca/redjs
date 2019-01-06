@@ -30,7 +30,6 @@ export declare class RedjsServer extends EventEmitter {
     getMonitoredConnectionsCount(): number;
     start(): void;
     protected parseOptions(...args: any[]): void;
-    protected onTimer(): void;
     protected logConnectionsCount(): void;
     protected onConnectionClosed(conn: Connection): void;
     protected onMonitoredConnection(conn: Connection): void;

@@ -17,34 +17,18 @@ export class Lists extends AbstractCommands {
 
 	public lrange(conn: Connection, key: string, start: any, stop: any) {
 		this.checkArgCount('lrange', arguments, 4)
-		if (!utils.isInt(start)) {
-			throw 'ERR value is not an integer or out of range'
-		}
-		if (!utils.isInt(stop)) {
-			throw 'ERR value is not an integer or out of range'
-		}
+		this.checkInt(start)
+		this.checkInt(stop)
 
 		let data = this.getDataset(conn.database, key)
 		let r: any[] = []
+
 		if (data) {
-			start = parseInt(start, 10)
-			stop = parseInt(stop, 10)
 
-			let startIndx: number
-			if (start >= 0) {
-				startIndx = start
-			} else {
-				startIndx = data.length + start
-			}
+			let startIndx: number = this.normalizeIndex( start, data )
+			let stopIndx: number = this.normalizeIndex( stop, data )
 
-			let stopIndx: number
-			if (stop >= 0) {
-				stopIndx = stop
-			} else {
-				stopIndx = data.length + stop
-			}
-
-			if (((startIndx >= 0) && (startIndx < data.length)) && (startIndx <= stopIndx)) {
+			if ((startIndx >= 0) && (startIndx < data.length) && (startIndx <= stopIndx)) {
 				for (let i = startIndx; i <= stopIndx; i++ ) {
 					if (i < data.length) {
 						r.push( data[i])
@@ -60,28 +44,18 @@ export class Lists extends AbstractCommands {
 		/* https://redis.io/commands/lindex */
 
 		this.checkArgCount('lindex', arguments, 3)
+		this.checkInt(index)
 
-		let h = this.getDataset(conn.database, key)
-		if (!h) {
+		let data = this.getDataset(conn.database, key)
+		if (!data) {
 			throw key + ' is not a list'
 		}
-		if (!utils.isInt(index)) {
-			throw 'ERR value is not an integer or out of range'
-		}
-
-		index = parseInt(index, 10);
 
 		let r = null
+		let indx: number = this.normalizeIndex( index, data )
 
-		let indx: number
-		if (index >= 0) {
-			indx = index
-		} else {
-			indx = h.length + index
-		}
-
-		if ((indx >= 0) && (indx < h.length)) {
-			r = h[indx]
+		if ((indx >= 0) && (indx < data.length)) {
+			r = data[indx]
 		}
 
 		// pas de out of range error
@@ -121,27 +95,18 @@ export class Lists extends AbstractCommands {
 	public lset(conn: Connection, key: string, index: any, value: string) {
 
 		this.checkArgCount('lset', arguments, 4)
+		this.checkInt(index)
 
 		let r = 'OK'
-		let h = this.getDataset(conn.database, key)
-		if (!h) {
+		let data = this.getDataset(conn.database, key)
+		if (!data) {
 			throw key + ' is not a list'
 		}
-		if (!utils.isInt(index)) {
-			throw 'ERR value is not an integer or out of range'
-		}
 
-		index = parseInt(index, 10);
+		let indx: number = this.normalizeIndex( index, data )
 
-		let indx: number
-		if (index >= 0) {
-			indx = index
-		} else {
-			indx = h.length + index
-		}
-
-		if ((indx >= 0) && (indx < h.length)) {
-			h[indx] = value
+		if ((indx >= 0) && (indx < data.length)) {
+			data[indx] = value
 		} else {
 			throw 'Out of range'
 		}
@@ -209,6 +174,17 @@ export class Lists extends AbstractCommands {
 		return r
 	}
 
+	protected normalizeIndex( index: any, arr: any[]) {
+		let r: number
+		index = parseInt(index, 10);
+		if (index >= 0) {
+			r = index
+		} else {
+			r = arr.length + index
+		}
+		return r
+	}
+
 	protected getDataset(db: Database, key: string) {
 		let r = db.getDataset(key)
 		if (r && (typeof r.push === 'undefined')) {
@@ -219,10 +195,6 @@ export class Lists extends AbstractCommands {
 
 	protected createNewKey(db: Database, key: string ) {
 		return db.createNewKey( key, [] )
-	}
-
-	protected onTimer() {
-
 	}
 
 }

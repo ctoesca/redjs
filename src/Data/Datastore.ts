@@ -26,9 +26,9 @@ export class Datastore extends EventEmitter {
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
-		this.mainTimer = new Timer({delay: 10000})
+		/* this.mainTimer = new Timer({delay: 10000})
 		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this))
-		// this.mainTimer.start()
+		this.mainTimer.start() */
 
 		for (let i = 0; i < 10; i++) {
 			this.databases.push( new Database({
@@ -41,9 +41,11 @@ export class Datastore extends EventEmitter {
 	public getDb(index = 0) {
 		return this.databases[index]
 	}
-	protected onTimer() {
+
+	/* protected onTimer() {
 
 	}
+	*/
 
 }
 

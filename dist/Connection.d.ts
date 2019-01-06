@@ -27,5 +27,4 @@ export declare class Connection extends EventEmitter {
     protected onSockData(data: any): void;
     protected onSockError(err: any): void;
     protected onSockClose(): void;
-    protected onTimer(): void;
 }

@@ -44,8 +44,6 @@ class StringsCommands extends AbstractCommands_1.AbstractCommands {
     createNewKey(db, key) {
         return db.createNewKey(key, { value: '' });
     }
-    onTimer() {
-    }
 }
 exports.StringsCommands = StringsCommands;
 //# sourceMappingURL=StringsCommands.js.map

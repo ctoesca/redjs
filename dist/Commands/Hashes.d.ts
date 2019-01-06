@@ -25,5 +25,4 @@ export declare class Hashes extends AbstractCommands {
     protected _incr(conn: Connection, key: string, field: string, incr: number): number;
     protected getDataset(db: Database, key: string): any;
     protected createNewKey(db: Database, key: string): any;
-    protected onTimer(): void;
 }

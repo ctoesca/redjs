@@ -20,7 +20,7 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
     }
     getSubscriptionsCount(conn) {
         let r = 0;
-        this.iterateAllSubscriptions((connections, channel) => {
+        this.iterateAllSubscriptions((connections, channel, map) => {
             if (connections.has(conn.id)) {
                 r++;
             }
@@ -79,7 +79,7 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
         let r = [];
         for (let channel of channels) {
             let channelMap = map.get(channel);
-            if (typeof channelMap === "undefined") {
+            if (typeof channelMap === 'undefined') {
                 channelMap = new Map();
                 map.set(channel, channelMap);
             }
@@ -89,12 +89,17 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     iterateAllSubscriptions(cb) {
-        this.channels.forEach((connections, channel) => {
-            cb(connections, channel, this.channels);
-        });
-        this.patternsSubscriptions.forEach((connections, channel) => {
-            cb(connections, channel, this.patternsSubscriptions);
-        });
+        let r = 0;
+        for (let mapName of ['channels', 'patternsSubscriptions']) {
+            let map = this[mapName];
+            map.forEach((connections, channel) => {
+                if (cb) {
+                    cb(connections, channel, map);
+                }
+                r++;
+            });
+        }
+        return r;
     }
     _unsubscribe(conn, map, channels) {
         let r = [];
@@ -105,19 +110,20 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
                     connections.delete(conn.id);
                     r.push(channel);
                 }
-                if (connections.size == 0) {
+                if (connections.size === 0) {
                     channelsToRemove.push(channel);
                 }
             }
         });
-        for (let channel of channelsToRemove)
+        for (let channel of channelsToRemove) {
             map.delete(channel);
+        }
         return r;
     }
     onConnectionClosed(conn) {
         this.iterateAllSubscriptions((connections, channel, map) => {
             connections.delete(conn.id);
-            if (connections.size == 0) {
+            if (connections.size === 0) {
                 map.delete(channel);
             }
         });

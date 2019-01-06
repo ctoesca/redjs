@@ -31,9 +31,9 @@ export class Database extends EventEmitter {
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
-		this.mainTimer = new Timer({delay: 10000})
+		/* this.mainTimer = new Timer({delay: 10000})
 		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this))
-		// this.mainTimer.start()
+		this.mainTimer.start() */
 
 	}
 
@@ -49,9 +49,9 @@ export class Database extends EventEmitter {
 		return this.keys.get(key)
 	}
 
-	protected onTimer() {
+	/* protected onTimer() {
 
-	}
+	} */
 
 }
 

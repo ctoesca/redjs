@@ -96,7 +96,4 @@ export class Keys extends AbstractCommands {
 		return r
 	}
 
-	protected onTimer() {
-
-	}
 }

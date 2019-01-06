@@ -14,5 +14,4 @@ export declare class Database extends EventEmitter {
     clear(): void;
     createNewKey(key: string, object: any): any;
     getDataset(key: string): any;
-    protected onTimer(): void;
 }
