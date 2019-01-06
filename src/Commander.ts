@@ -52,75 +52,33 @@ export class Commander extends EventEmitter {
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
-		/* this.mainTimer = new Timer({delay: 10000})
+		/*
+		this.mainTimer = new Timer({delay: 10000})
 		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this))
-		this.mainTimer.start() */
-
+		this.mainTimer.start()
+		*/
 
 		this.commands = {}
 
-		/* HASHES */
-		this.hashes = new Hashes({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.hashes )
+		let commandsManagers = [
+			{name: 'hashes', clazz: Hashes},
+			{name: 'keys', clazz: Keys},
+			{name: 'pubsub', clazz: PubSub},
+			{name: 'lists', clazz: Lists},
+			{name: 'sets', clazz: Sets},
+			{name: 'sortedSets', clazz: SortedSets},
+			{name: 'serverCommands', clazz: ServerCommands},
+			{name: 'connectionCommands', clazz: ConnectionCommands},
+			{name: 'stringsCommands', clazz: StringsCommands}
+		]
 
-		/* KEYS */
-		this.keys = new Keys({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.keys )
-
-		/* PUBSUB */
-		this.pubsub = new PubSub({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.pubsub )
-
-		/* LISTS */
-		this.lists = new Lists({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.lists )
-
-		/* SETS */
-		this.sets = new Sets({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.sets )
-
-		/* SortedSets */
-		this.sortedSets = new SortedSets({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.sortedSets )
-
-		/* Server */
-		this.serverCommands = new ServerCommands({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.serverCommands )
-
-		/* Server */
-		this.connectionCommands = new ConnectionCommands({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.connectionCommands )
-
-		/* StringsCommands */
-		this.stringsCommands = new StringsCommands({
-			server: this.server,
-			datastore: this.datastore
-		})
-		this.addComands( this.stringsCommands )
+		for (let commandManager of commandsManagers) {
+			this[commandManager.name] = new commandManager.clazz({
+				server: this.server,
+				datastore: this.datastore
+			})
+			this.addComands( this[commandManager.name] )
+		}
 
 	}
 

@@ -35,51 +35,24 @@ class Commander extends EventEmitter {
         this.logger = RedjsServer_1.RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
         this.commands = {};
-        this.hashes = new Hashes_1.Hashes({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.hashes);
-        this.keys = new Keys_1.Keys({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.keys);
-        this.pubsub = new PubSub_1.PubSub({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.pubsub);
-        this.lists = new Lists_1.Lists({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.lists);
-        this.sets = new Sets_1.Sets({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.sets);
-        this.sortedSets = new SortedSets_1.SortedSets({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.sortedSets);
-        this.serverCommands = new ServerCommands_1.ServerCommands({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.serverCommands);
-        this.connectionCommands = new ConnectionCommands_1.ConnectionCommands({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.connectionCommands);
-        this.stringsCommands = new StringsCommands_1.StringsCommands({
-            server: this.server,
-            datastore: this.datastore
-        });
-        this.addComands(this.stringsCommands);
+        let commandsManagers = [
+            { name: 'hashes', clazz: Hashes_1.Hashes },
+            { name: 'keys', clazz: Keys_1.Keys },
+            { name: 'pubsub', clazz: PubSub_1.PubSub },
+            { name: 'lists', clazz: Lists_1.Lists },
+            { name: 'sets', clazz: Sets_1.Sets },
+            { name: 'sortedSets', clazz: SortedSets_1.SortedSets },
+            { name: 'serverCommands', clazz: ServerCommands_1.ServerCommands },
+            { name: 'connectionCommands', clazz: ConnectionCommands_1.ConnectionCommands },
+            { name: 'stringsCommands', clazz: StringsCommands_1.StringsCommands }
+        ];
+        for (let commandManager of commandsManagers) {
+            this[commandManager.name] = new commandManager.clazz({
+                server: this.server,
+                datastore: this.datastore
+            });
+            this.addComands(this[commandManager.name]);
+        }
     }
     execCommand(cmd, conn, ...args) {
         if (this.commands[cmd]) {
