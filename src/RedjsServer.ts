@@ -110,12 +110,6 @@ export class RedjsServer extends EventEmitter {
 
 		_.defaults(this.options, RedjsServer.getDefaultOptions());
 
-		if (typeof this.options.port === 'string') {
-			this.options.port = parseInt(this.options.port, 10);
-		}
-		if (typeof this.options.db === 'string') {
-			this.options.db = parseInt(this.options.db, 10);
-		}
 	};
 
 	/* protected onTimer() {
@@ -171,9 +165,6 @@ export class RedjsServer extends EventEmitter {
 
 		return new Promise( (resolve, reject) => {
 
-			let HOST = this.options.host;
-			let PORT = this.options.port;
-
 			this.server = net.createServer((sock: net.Socket) => {
 				let conn: Connection = new Connection(this, sock, this.commander)
 				conn.on('close', () => {
@@ -198,8 +189,8 @@ export class RedjsServer extends EventEmitter {
 				reject(e)
 				process.exit(1)
 			})
-			this.server.listen(PORT, HOST, () => {
-				this.logger.info('Server listening on ' + HOST + ':' + PORT);
+			this.server.listen( this.options.port,  this.options.host, () => {
+				this.logger.info('Server listening on ' +  this.options.host + ':' +  this.options.port);
 				resolve()
 			});
 

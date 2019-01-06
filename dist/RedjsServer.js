@@ -84,12 +84,6 @@ class RedjsServer extends EventEmitter {
             }
         }
         _.defaults(this.options, RedjsServer.getDefaultOptions());
-        if (typeof this.options.port === 'string') {
-            this.options.port = parseInt(this.options.port, 10);
-        }
-        if (typeof this.options.db === 'string') {
-            this.options.db = parseInt(this.options.db, 10);
-        }
     }
     ;
     logConnectionsCount() {
