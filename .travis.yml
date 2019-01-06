@@ -6,10 +6,9 @@ node_js:
 - '10'
 - '11'
 
-
-
 env:
-- CC_TEST_REPORTER_ID="bce26a22807b904566a9b161484d16d9fe8760739e2f54ac2a0310fd8e733af1"
+  global:
+    - CC_TEST_REPORTER_ID=bce26a22807b904566a9b161484d16d9fe8760739e2f54ac2a0310fd8e733af1
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
