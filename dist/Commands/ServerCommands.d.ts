@@ -12,4 +12,14 @@ export declare class ServerCommands extends AbstractCommands {
         type: string;
     };
     info(conn: Connection, section?: string): string;
+    protected getReplicationInfo(): string[];
+    protected getCommandstatsInfo(): string[];
+    getServerInfo(): string[];
+    protected getClientsInfo(): string[];
+    protected getMemoryInfo(): string[];
+    protected getPersistenceInfo(): string[];
+    protected getStatsInfo(): string[];
+    protected getCPUInfo(): string[];
+    protected getKeyspaceInfo(): string[];
+    protected getClusterInfo(): string[];
 }

@@ -41,8 +41,9 @@ class Connection extends EventEmitter {
         this.parser = new Parser_1.Parser();
     }
     setCommandListener(v = null) {
-        if (!v)
-            throw "setCommandListener: cannot set null value";
+        if (!v) {
+            throw 'setCommandListener: cannot set null value';
+        }
         this.onCommand = v;
     }
     removeCommandListener() {
