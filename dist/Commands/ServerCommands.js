@@ -96,27 +96,12 @@ class ServerCommands extends AbstractCommands_1.AbstractCommands {
             "used_memory_startup:510704",
             "used_memory_dataset:263800768",
             "used_memory_dataset_perc:68.58%",
-            "allocator_allocated:385181800",
-            "allocator_active:385437696",
-            "allocator_resident:398086144",
             "total_system_memory:1044770816",
             "total_system_memory_human:996.37M",
             "used_memory_lua:37888",
             "used_memory_lua_human:37.00K",
-            "maxmemory:0",
-            "maxmemory_human:0B",
-            "maxmemory_policy:noeviction",
-            "allocator_frag_ratio:1.00",
-            "allocator_frag_bytes:255896",
-            "allocator_rss_ratio:1.03",
-            "allocator_rss_bytes:12648448",
-            "rss_overhead_ratio:1.01",
-            "rss_overhead_bytes:2777088",
             "mem_fragmentation_ratio:1.04",
-            "mem_fragmentation_bytes:15759144",
             "mem_allocator:jemalloc-4.0.3",
-            "active_defrag_running:0",
-            "lazyfree_pending_objects:0"
         ];
     }
     getPersistenceInfo() {
