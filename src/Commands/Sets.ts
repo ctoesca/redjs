@@ -22,8 +22,7 @@ export class Sets extends AbstractCommands {
 		let set = this.getDataset(conn.database, key)
 		let r = 0
 		if (set) {
-			for (let i = 0; i < members.length; i ++) {
-				let member = members[i]
+			for (let member of members) {
 				if (set.delete(member)) {
 					r++
 				}
@@ -38,8 +37,7 @@ export class Sets extends AbstractCommands {
 
 		let r = 0
 		let set = this.getOrCreate(conn.database, key)
-		for (let member of members) {			
-			console.log('add member '+member)
+		for (let member of members) {
 			if (!set.has(member)) {
 				set.add( member )
 				r ++
@@ -52,7 +50,7 @@ export class Sets extends AbstractCommands {
 	public smembers(conn: Connection, key: string) {
 
 		this.checkArgCount('smembers', arguments, 2)
-		
+
 		let set = this.getDataset(conn.database, key)
 
 		let r = []
@@ -67,9 +65,7 @@ export class Sets extends AbstractCommands {
 
 	protected getDataset(db: Database, key: string) {
 		let r = db.getDataset(key)
-		if (r && !(r instanceof Set)) {
-			throw 'WRONGTYPE Operation against a key holding the wrong kind of value'
-		}
+		this.checkType(r, Set)
 		return r
 	}
 

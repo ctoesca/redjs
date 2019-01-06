@@ -184,15 +184,17 @@ export class Lists extends AbstractCommands {
 	}
 
 	protected _pop(conn: Connection, key: string, type: string = null) {
-		let h = this.getDataset(conn.database, key)
 		let r = null
-		if (h && h.length > 0) {
-			if (type === 'left') {
-				r = h.shift();
-			} else if (type === 'right') {
-				r = h.pop();
-			} else {
-				throw "Invalid option: type='" + type + "'"
+		if (key !== undefined) {
+			let h = this.getDataset(conn.database, key)
+			if (h && h.length > 0) {
+				if (type === 'left') {
+					r = h.shift();
+				} else if (type === 'right') {
+					r = h.pop();
+				} else {
+					throw "Invalid option: type='" + type + "'"
+				}
 			}
 		}
 		return r

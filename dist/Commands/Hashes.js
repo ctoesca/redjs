@@ -237,9 +237,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
     }
     getDataset(db, key) {
         let r = db.getDataset(key);
-        if (r && !(r instanceof Map)) {
-            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
-        }
+        this.checkType(r, Map);
         return r;
     }
     createNewKey(db, key) {

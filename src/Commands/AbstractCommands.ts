@@ -42,7 +42,11 @@ export class AbstractCommands extends EventEmitter {
 	public getCommandsNames(): string[] {
 		return []
 	}
-
+	protected checkType( obj: any, type: any) {
+		if (obj && !(obj instanceof type)) {
+			throw 'WRONGTYPE Operation against a key holding the wrong kind of value'
+		}
+	}
 	protected checkArgCount(cmd: string, args: IArguments, expected: number) {
 		if (args.length !== expected) {
 			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')

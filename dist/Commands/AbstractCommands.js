@@ -24,6 +24,11 @@ class AbstractCommands extends EventEmitter {
     getCommandsNames() {
         return [];
     }
+    checkType(obj, type) {
+        if (obj && !(obj instanceof type)) {
+            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
+        }
+    }
     checkArgCount(cmd, args, expected) {
         if (args.length !== expected) {
             throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command');

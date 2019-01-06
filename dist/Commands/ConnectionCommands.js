@@ -19,6 +19,7 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         };
     }
     select(conn, index = 0) {
+        this.checkArgCount('echo', arguments, 2);
         let r = 'OK';
         return {
             type: 'simpleString',
@@ -26,6 +27,7 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         };
     }
     auth(conn, password) {
+        this.checkArgCount('echo', arguments, 2);
         let r = 'OK';
         return {
             type: 'simpleString',

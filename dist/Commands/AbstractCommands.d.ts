@@ -14,6 +14,7 @@ export declare class AbstractCommands extends EventEmitter {
     constructor(opt: any);
     destroy(): void;
     getCommandsNames(): string[];
+    protected checkType(obj: any, type: any): void;
     protected checkArgCount(cmd: string, args: IArguments, expected: number): void;
     protected checkInt(v: any): void;
     protected checkMinArgCount(cmd: string, args: IArguments, expected: number): void;

@@ -303,9 +303,7 @@ export class Hashes extends AbstractCommands {
 
 	protected getDataset(db: Database, key: string) {
 		let r = db.getDataset(key)
-		if (r && !(r instanceof Map)) {
-			throw 'WRONGTYPE Operation against a key holding the wrong kind of value'
-		}
+		this.checkType(r, Map)
 		return r
 	}
 

@@ -14,8 +14,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         let set = this.getDataset(conn.database, key);
         let r = 0;
         if (set) {
-            for (let i = 0; i < members.length; i++) {
-                let member = members[i];
+            for (let member of members) {
                 if (set.delete(member)) {
                     r++;
                 }
@@ -28,7 +27,6 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         let r = 0;
         let set = this.getOrCreate(conn.database, key);
         for (let member of members) {
-            console.log('add member ' + member);
             if (!set.has(member)) {
                 set.add(member);
                 r++;
@@ -50,9 +48,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
     }
     getDataset(db, key) {
         let r = db.getDataset(key);
-        if (r && !(r instanceof Set)) {
-            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
-        }
+        this.checkType(r, Set);
         return r;
     }
     createNewKey(db, key) {

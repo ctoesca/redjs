@@ -26,6 +26,7 @@ export class ConnectionCommands extends AbstractCommands {
 
 	public select ( conn: Connection, index = 0) {
 		// !!
+		this.checkArgCount('echo', arguments, 2)
 		let r = 'OK'
 		return {
 			type: 'simpleString',
@@ -35,6 +36,7 @@ export class ConnectionCommands extends AbstractCommands {
 
 	public auth( conn: Connection, password: string) {
 		// !!
+		this.checkArgCount('echo', arguments, 2)
 		let r = 'OK'
 		return {
 			type: 'simpleString',
