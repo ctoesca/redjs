@@ -4,8 +4,9 @@ const assert = require('assert');
 
 describe('Connect Events', function() 
 {
-	var redis = getRedis()
-
+	
+	var redis
+	
 	describe('connect', function() {
 	    it('should receive "connect" event', function( done ) {
 	    	
@@ -13,7 +14,8 @@ describe('Connect Events', function()
 	    		redis.removeListener('connect', onEvent)
 	    		done()
 	    	}
-	    	redis.on('connect', onEvent)	
+	    	redis = getRedis().on('connect', onEvent)	
+
 	    });
   	});
 
