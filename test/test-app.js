@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 
 global.PORT= 6970
+global.HOST= "127.0.0.1"
 
 // Use bluebird
 Redis.Promise = require('bluebird')
@@ -23,7 +24,7 @@ RedjsServer.createLogger = function( opt ) {
 
 global.getRedis = function(){
 	console.log('Get Redis')
-	return new Redis(global.PORT)	
+	return new Redis(global.PORT, global.HOST)	
 }
 
 if (cluster.isMaster)
@@ -43,7 +44,7 @@ if (cluster.isMaster)
 }else 
 {
 	/* WORKER */
-	var redjsServer = new RedjsServer(global.PORT)
+	var redjsServer = new RedjsServer(global.PORT, global.HOST, {})
 	redjsServer.start()
 
 	console.log("************ WORKER CREATED **************")
