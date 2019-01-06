@@ -2,3 +2,4 @@
 /node
 /lib/client
 /bin
+/.nyc_output
