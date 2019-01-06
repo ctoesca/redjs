@@ -8,24 +8,17 @@ class Parser extends EventEmitter {
         super();
     }
     fromRESP(data) {
-        let results = [];
         let errors = [];
+        let results = [];
         this.execRedisParser(data, results, errors);
         if (errors.length > 0) {
-            if (errors.length === 1) {
-                throw errors[0];
-            }
-            else {
-                throw errors;
-            }
+            throw errors;
+        }
+        else if (results.length === 1) {
+            return results[0];
         }
         else {
-            if (results.length === 1) {
-                return results[0];
-            }
-            else {
-                return results;
-            }
+            return results;
         }
     }
     toRESP(data, type = null) {

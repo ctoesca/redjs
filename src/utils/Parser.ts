@@ -18,23 +18,17 @@ export class Parser extends EventEmitter {
 	*/
 	public fromRESP( data: any ) {
 		// '*2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n'
-		let results: any[] = []
 		let errors: any[] = []
+		let results: any[] = []
 
 		this.execRedisParser( data , results, errors)
 
 		if (errors.length > 0) {
-			if (errors.length === 1) {
-				throw errors[0]
-			} else {
-				throw errors
-			}
+			throw errors
+		} else if (results.length === 1) {
+			return results[0]
 		} else {
-			if (results.length === 1) {
-				return results[0]
-			} else {
-				return results
-			}
+			return results
 		}
 	}
 
