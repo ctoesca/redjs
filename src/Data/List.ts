@@ -2,21 +2,20 @@ import {BaseDataset} from './BaseDataset';
 import {Connection} from '../Connection';
 import Promise = require('bluebird');
 
-export class Lists extends BaseDataset {
+export class List extends BaseDataset {
 
 	protected data: any[] = []
 
 	constructor(opt: any) {
 		super(opt);
 	}
-
+/*
 	public getCommandsNames(): string[] {
 		return ['blpop', 'brpop', 'BRPOPLPUSH', 'LINDEX', 'LINSERT', 'LLEN', 'LPOP', 'LPUSH',
 		'LPUSH', 'LPUSHX', 'LRANGE', 'LREM', 'LSET', 'LTRIM', 'RPOP', 'RPOPLPUSH', 'RPUSH', 'RPUSHX']
 	}
 
 	public lindex(conn: Connection, index: any) {
-		/* https://redis.io/commands/lindex */
 
 		this.checkArgCount('lindex', arguments, 3)
 
@@ -147,5 +146,5 @@ export class Lists extends BaseDataset {
 
 		return r
 	}
-
+*/
 }

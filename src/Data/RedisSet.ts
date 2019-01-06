@@ -9,7 +9,7 @@ export class RedisSet extends BaseDataset {
 	constructor(opt: any) {
 		super(opt);
 	}
-
+/*
 	public getCommandsNames(): string[] {
 		return ['SADD', 'SCARD', 'SDIFF', 'SDIFFSTORE', 'SINTER', 'SINTERSTORE', 'SISMEMBER', 'SMEMBERS',
 		'SMOVE', 'SPOP', 'SRANDMEMBER', 'SREM', 'SUNION', 'SUNIONSTORE', 'SSCAN']
@@ -55,6 +55,6 @@ export class RedisSet extends BaseDataset {
 		}
 
 		return r
-	}
+	}*/
 
 }
