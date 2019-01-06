@@ -4,7 +4,8 @@
   "description": "Redjs is a Redis-like in-memory data store, for use in nodejs cluster. Ioredis compatible",
   "main": "dist/",
   "scripts": {
-    "test": "nyc --reporter=lcov mocha test/test-app.js"
+    "test": "node test/test-app.js",
+    "test-with-coverage": "nyc --reporter=lcov mocha test/test-app.js"
   },
   "repository": {
     "type": "git",
