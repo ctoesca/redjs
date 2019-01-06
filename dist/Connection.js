@@ -41,9 +41,6 @@ class Connection extends EventEmitter {
         this.parser = new Parser_1.Parser();
     }
     setCommandListener(v = null) {
-        if (!v) {
-            throw 'setCommandListener: cannot set null value';
-        }
         this.onCommand = v;
     }
     removeCommandListener() {
@@ -70,6 +67,7 @@ class Connection extends EventEmitter {
         this.sock.destroy();
         this.sock = null;
         this.commander = null;
+        this.onCommand = null;
     }
     quit() {
         if (this.processingData) {

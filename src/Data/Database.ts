@@ -38,7 +38,7 @@ export class Database extends EventEmitter {
 		this.mainTimer.start() */
 
 	}
-	public getIndex(){
+	public getIndex() {
 		return this.index
 	}
 	public clear() {

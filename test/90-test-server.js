@@ -23,9 +23,11 @@ describe('Server commands', function()
   						console.log('ON MONITOR ',time, args, source, database)
   						assert.equal( database, 0)
   						if ((args[0] === 'keys') && (args[1] === 'test-monitor') && (database==0)){
-  							done()
-  							redis.quit()
-  						}  						
+                  redis.on('close', function(){
+                      done()
+                  })
+                  redis.quit()	
+              }				
   							
   					})
 

@@ -67,9 +67,6 @@ export class Connection extends EventEmitter {
 	}
 
 	public setCommandListener( v: Function = null ) {
-		if (!v) {
-			throw 'setCommandListener: cannot set null value'
-		}
 		this.onCommand = v
 	}
 	public removeCommandListener() {
