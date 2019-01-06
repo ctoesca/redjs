@@ -7,7 +7,7 @@ node_js:
 - '11'
 
 script:
-- node test/test-app.js
+- npm test
 
 env:
   global:
