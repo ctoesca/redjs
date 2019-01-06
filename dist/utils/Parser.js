@@ -43,18 +43,7 @@ class Parser extends EventEmitter {
     toRESP(data, type = null) {
         let r = null;
         if (typeof data === 'string') {
-            if (!type) {
-                type = 'bulkString';
-            }
-            if (type === 'simpleString') {
-                r = '+' + data + '\r\n';
-            }
-            else if (type === 'error') {
-                r = '-' + data + '\r\n';
-            }
-            else {
-                r = '$' + data.length + '\r\n' + data + '\r\n';
-            }
+            r = this.stringToResp(data, type);
         }
         else if (data === null) {
             r = '$-1\r\n';
@@ -63,21 +52,42 @@ class Parser extends EventEmitter {
             r = ':' + data + '\r\n';
         }
         else if (typeof data === 'object') {
-            if (typeof data.push === 'function') {
-                r = '*' + data.length + '\r\n';
-                for (let value of data) {
-                    r += this.toRESP(value);
-                }
-            }
-            else if (typeof data.value !== 'undefined') {
-                r = this.toRESP(data.value, data.type);
-            }
-            else {
-                throw ('ERR Unknown response type for response \'' + data + '\'');
-            }
+            r = this.objectToResp(data);
         }
         else if (typeof data === 'number') {
             r = '$' + data.toString().length + '\r\n' + data + '\r\n';
+        }
+        else {
+            throw ('ERR Unknown response type for response \'' + data + '\'');
+        }
+        return r;
+    }
+    stringToResp(data, forcedType = 'null') {
+        let r = null;
+        if (!forcedType) {
+            forcedType = 'bulkString';
+        }
+        if (forcedType === 'simpleString') {
+            r = '+' + data + '\r\n';
+        }
+        else if (forcedType === 'error') {
+            r = '-' + data + '\r\n';
+        }
+        else {
+            r = '$' + data.length + '\r\n' + data + '\r\n';
+        }
+        return r;
+    }
+    objectToResp(data) {
+        let r = null;
+        if (typeof data.push === 'function') {
+            r = '*' + data.length + '\r\n';
+            for (let value of data) {
+                r += this.toRESP(value);
+            }
+        }
+        else if (typeof data.value !== 'undefined') {
+            r = this.toRESP(data.value, data.type);
         }
         else {
             throw ('ERR Unknown response type for response \'' + data + '\'');
