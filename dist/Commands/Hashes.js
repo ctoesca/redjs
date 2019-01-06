@@ -126,10 +126,10 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
         this.checkMinArgCount('hmget', arguments, 3);
         let r = [];
         let h = this.getDataset(conn.database, key);
-        for (let i = 0; i < fields.length; i++) {
+        for (let field of fields) {
             if (h) {
-                let field = fields[i];
-                if (h.has(field)) {
+                let value = h.get(field);
+                if (value !== undefined) {
                     r.push(h.get(field));
                 }
                 else {

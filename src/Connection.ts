@@ -57,16 +57,13 @@ export class Connection extends EventEmitter {
 			this.onSockError(err)
 		})
 
-		this.logger.debug('CONNECTED: ' + this.sock.remoteAddress + ':' + this.sock.remotePort)
+		this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort() )
 
 		this.parser = new Parser()
 	}
 
-	public getRemoteAddress() {
-		return this.sock.remoteAddress
-	}
-	public getRemotePort() {
-		return this.sock.remotePort
+	public getRemoteAddressPort() {
+		return this.sock.remoteAddress + ':' + this.sock.remotePort
 	}
 
 	public writeMonitorData( data: any ) {
@@ -89,11 +86,10 @@ export class Connection extends EventEmitter {
 		this.commander = null
 	}
 
-	public quit(){
-		if (this.processingData){
+	public quit() {
+		if (this.processingData) {
 			this.closing = true;
-		}
-		else{
+		} else {
 			this.sock.end()
 		}
 	}
@@ -106,7 +102,7 @@ export class Connection extends EventEmitter {
 	}
 	protected onSockData(data: any) {
 
-		this.logger.debug('onSockData ' +  this.sock.remoteAddress + ': ' + data)
+		this.logger.debug('onSockData', data)
 
 		try {
 				this.processingData = true;
@@ -193,21 +189,23 @@ export class Connection extends EventEmitter {
 			this.processingData = false;
 		}
 
-		if (this.closing)
+		if (this.closing) {
 			this.sock.end();
+		}
 
 	}
 
 
 	protected onSockError(err: any) {
 		if (err.code !== 'ECONNRESET') {
-			this.logger.error('ERROR: ' + this.sock.remoteAddress + ' ' + this.sock.remotePort, err);
+			this.logger.error('ERROR: ' + this.getRemoteAddressPort(), err);
 		}
 	}
 
 	protected onSockClose() {
-		this.logger.debug('CLOSED: ' + this.sock.remoteAddress + ' ' + this.sock.remotePort)
+		this.logger.debug('CLOSED: ' + this.getRemoteAddressPort())
 		this.emit('close')
+		this.destroy()
 	}
 
 	/* protected onTimer() {

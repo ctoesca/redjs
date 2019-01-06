@@ -36,14 +36,11 @@ class Connection extends EventEmitter {
         this.sock.on('error', (err) => {
             this.onSockError(err);
         });
-        this.logger.debug('CONNECTED: ' + this.sock.remoteAddress + ':' + this.sock.remotePort);
+        this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort());
         this.parser = new Parser_1.Parser();
     }
-    getRemoteAddress() {
-        return this.sock.remoteAddress;
-    }
-    getRemotePort() {
-        return this.sock.remotePort;
+    getRemoteAddressPort() {
+        return this.sock.remoteAddress + ':' + this.sock.remotePort;
     }
     writeMonitorData(data) {
         this.sock.write(this.parser.toRESP(data, 'simpleString'));
@@ -60,7 +57,6 @@ class Connection extends EventEmitter {
         this.sock.destroy();
         this.sock = null;
         this.commander = null;
-        console.log("DESTROY");
     }
     quit() {
         if (this.processingData) {
@@ -77,7 +73,7 @@ class Connection extends EventEmitter {
         this.sock.resume();
     }
     onSockData(data) {
-        this.logger.debug('onSockData ' + this.sock.remoteAddress + ': ' + data);
+        this.logger.debug('onSockData', data);
         try {
             this.processingData = true;
             let requestData = this.parser.fromRESP(data);
@@ -118,17 +114,19 @@ class Connection extends EventEmitter {
             this.sock.write(resp);
             this.processingData = false;
         }
-        if (this.closing)
+        if (this.closing) {
             this.sock.end();
+        }
     }
     onSockError(err) {
         if (err.code !== 'ECONNRESET') {
-            this.logger.error('ERROR: ' + this.sock.remoteAddress + ' ' + this.sock.remotePort, err);
+            this.logger.error('ERROR: ' + this.getRemoteAddressPort(), err);
         }
     }
     onSockClose() {
-        this.logger.debug('CLOSED: ' + this.sock.remoteAddress + ' ' + this.sock.remotePort);
+        this.logger.debug('CLOSED: ' + this.getRemoteAddressPort());
         this.emit('close');
+        this.destroy();
     }
 }
 exports.Connection = Connection;

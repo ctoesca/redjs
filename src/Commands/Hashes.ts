@@ -170,10 +170,10 @@ export class Hashes extends AbstractCommands {
 		let r = []
 		let h: Map<string, any> = this.getDataset(conn.database, key)
 
-		for (let i = 0; i < fields.length; i ++) {
+		for (let field of fields) {
 			if (h) {
-				let field = fields[i]
-				if (h.has(field)) {
+				let value = h.get(field)
+				if (value !== undefined) {
 					r.push(h.get(field))
 				} else {
 					r.push(null)

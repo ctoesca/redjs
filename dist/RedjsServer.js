@@ -98,7 +98,6 @@ class RedjsServer extends EventEmitter {
     onConnectionClosed(conn) {
         this.emit('connection-close', conn);
         if (this.connections.has(conn.id)) {
-            this.connections.get(conn.id).destroy();
             this.connections.delete(conn.id);
         }
         this.monitoredConnections.delete(conn.id);
@@ -119,7 +118,7 @@ class RedjsServer extends EventEmitter {
     }
     onCommand(conn, cmd, ...args) {
         let timestamp = new Date().getTime() / 1000;
-        let data = timestamp + ' [0 ' + conn.getRemoteAddress() + ':' + conn.getRemotePort() + '] \'' + cmd + '\'';
+        let data = timestamp + ' [0 ' + conn.getRemoteAddressPort() + '] \'' + cmd + '\'';
         for (let arg of args) {
             data += ' "' + arg + '"';
         }

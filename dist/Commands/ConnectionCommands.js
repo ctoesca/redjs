@@ -43,11 +43,8 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         };
     }
     quit(conn) {
-        conn.on('close', () => {
-            console.log('Connection closed');
-        });
         conn.quit();
-        let r = "OK";
+        let r = 'OK';
         return {
             type: 'simpleString',
             value: r

@@ -22,7 +22,21 @@ describe('Timer', function()
 	    });
   	});
 
-  	  
+
+  	describe('reset timer', function() {
+
+	    it('should emit timer event', function( done ) {
+
+	    	var timerEvent = function(){
+  				timer.removeListener(utils.Timer.ON_TIMER, timerEvent)
+  				done()
+  			}
+	    	timer.on(utils.Timer.ON_TIMER, timerEvent)
+  			timer.reset()
+
+	    });
+  	});
+
   	describe('timer stopper: no event', function() {
 	    it('should not emit timer event', function( done ) {
 	    	this.timeout(5000);
@@ -41,5 +55,28 @@ describe('Timer', function()
 
 	    });
   	});
+
+  	describe('destroy and start timer', function() {
+
+	    it('should not emit timer event', function( done ) {
+	    	
+	    	this.timeout(5000);
+
+	    	var timerEvent = function(){
+  				timer.removeListener(utils.Timer.ON_TIMER, timerEvent)
+  				done("Timer send event but is destroyed")
+  			}
+  			timer.on(utils.Timer.ON_TIMER, timerEvent)
+	    	timer.destroy()
+  			timer.start()
+
+  			setTimeout( () => {
+	    		done()
+	    	}, 2000)
+
+
+	    });
+  	});
+
 
 });
