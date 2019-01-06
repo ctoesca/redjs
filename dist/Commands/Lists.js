@@ -145,18 +145,16 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     _pop(conn, key, type = null) {
         let r = null;
-        if (key !== undefined) {
-            let h = this.getDataset(conn.database, key);
-            if (h && h.length > 0) {
-                if (type === 'left') {
-                    r = h.shift();
-                }
-                else if (type === 'right') {
-                    r = h.pop();
-                }
-                else {
-                    throw "Invalid option: type='" + type + "'";
-                }
+        let h = this.getDataset(conn.database, key);
+        if (h && h.length > 0) {
+            if (type === 'left') {
+                r = h.shift();
+            }
+            else if (type === 'right') {
+                r = h.pop();
+            }
+            else {
+                throw "Invalid option: type='" + type + "'";
             }
         }
         return r;
