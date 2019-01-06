@@ -18,6 +18,8 @@ export class Connection extends EventEmitter {
 	public lastError: any = null
 	public database: Database = null
 
+
+
 	protected sock: net.Socket = null
 	protected commander: Commander = null
 	protected server: RedjsServer = null
@@ -26,6 +28,8 @@ export class Connection extends EventEmitter {
 	protected parser: Parser = null
 	protected closing = false
 	protected processingData = false
+	// internal used by server:
+	protected onCommand: Function = null
 
 	constructor(server: RedjsServer, sock: net.Socket, commander: Commander) {
 		super();
@@ -60,6 +64,19 @@ export class Connection extends EventEmitter {
 		this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort() )
 
 		this.parser = new Parser()
+	}
+
+	public setCommandListener( v: Function = null ) {
+		if (!v) {
+			throw 'setCommandListener: cannot set null value'
+		}
+		this.onCommand = v
+	}
+	public removeCommandListener() {
+		this.onCommand = null
+	}
+	public getCommandListener() {
+		return this.onCommand
 	}
 
 	public getRemoteAddressPort() {
@@ -156,7 +173,7 @@ export class Connection extends EventEmitter {
 					requestData[i].shift()
 
 					if (this.listenerCount('command') > 0) {
-						this.emit('command', this, cmd, ...requestData[i])
+						this.onCommand(this, cmd, ...requestData[i])
 					}
 					let responseData = this.commander.execCommand(cmd, this, ...requestData[i])
 					responses.push( responseData )
@@ -170,7 +187,7 @@ export class Connection extends EventEmitter {
 				let cmd = requestData[0].toLowerCase()
 				requestData.shift()
 				if (this.listenerCount('command') > 0) {
-					this.emit('command', this, cmd, ...requestData)
+					this.onCommand(this, cmd, ...requestData)
 				}
 				let responseData = this.commander.execCommand(cmd, this, ...requestData)
 				let resp = this.parser.toRESP( responseData )

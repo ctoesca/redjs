@@ -32,7 +32,8 @@ export declare class RedjsServer extends EventEmitter {
     protected parseOptions(...args: any[]): void;
     protected logConnectionsCount(): void;
     protected onConnectionClosed(conn: Connection): void;
-    protected onMonitoredConnection(conn: Connection): void;
-    protected onCommand(conn: Connection, cmd: string, ...args: any[]): void;
+    protected monitorConnection(conn: Connection): void;
+    protected unmonitorConnection(conn: Connection): void;
+    protected onCommand(sentBy: Connection, cmd: string, ...args: any[]): void;
     protected createServer(): Promise<{}>;
 }

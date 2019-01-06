@@ -18,6 +18,7 @@ class Connection extends EventEmitter {
         this.parser = null;
         this.closing = false;
         this.processingData = false;
+        this.onCommand = null;
         this.id = uuid();
         this.sock = sock;
         this.server = server;
@@ -38,6 +39,17 @@ class Connection extends EventEmitter {
         });
         this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort());
         this.parser = new Parser_1.Parser();
+    }
+    setCommandListener(v = null) {
+        if (!v)
+            throw "setCommandListener: cannot set null value";
+        this.onCommand = v;
+    }
+    removeCommandListener() {
+        this.onCommand = null;
+    }
+    getCommandListener() {
+        return this.onCommand;
     }
     getRemoteAddressPort() {
         return this.sock.remoteAddress + ':' + this.sock.remotePort;
@@ -84,7 +96,7 @@ class Connection extends EventEmitter {
                     let cmd = requestData[i][0].toLowerCase();
                     requestData[i].shift();
                     if (this.listenerCount('command') > 0) {
-                        this.emit('command', this, cmd, ...requestData[i]);
+                        this.onCommand(this, cmd, ...requestData[i]);
                     }
                     let responseData = this.commander.execCommand(cmd, this, ...requestData[i]);
                     responses.push(responseData);
@@ -97,7 +109,7 @@ class Connection extends EventEmitter {
                 let cmd = requestData[0].toLowerCase();
                 requestData.shift();
                 if (this.listenerCount('command') > 0) {
-                    this.emit('command', this, cmd, ...requestData);
+                    this.onCommand(this, cmd, ...requestData);
                 }
                 let responseData = this.commander.execCommand(cmd, this, ...requestData);
                 let resp = this.parser.toRESP(responseData);

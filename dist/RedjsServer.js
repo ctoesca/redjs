@@ -94,25 +94,32 @@ class RedjsServer extends EventEmitter {
         if (this.connections.has(conn.id)) {
             this.connections.delete(conn.id);
         }
-        this.monitoredConnections.delete(conn.id);
+        this.unmonitorConnection(conn);
         this.logConnectionsCount();
-        if (this.getMonitoredConnectionsCount() === 0) {
+    }
+    monitorConnection(conn) {
+        if (!this.monitoredConnections.has(conn.id)) {
+            this.monitoredConnections.set(conn.id, conn);
             this.connections.forEach((connection, connId) => {
-                connection.removeAllListeners('command');
+                if (!connection.getCommandListener()) {
+                    connection.setCommandListener(this.onCommand.bind(this));
+                }
             });
         }
     }
-    onMonitoredConnection(conn) {
-        this.monitoredConnections.set(conn.id, conn);
-        this.connections.forEach((connection, connId) => {
-            connection.on('command', (sentBy, cmd, ...args) => {
-                this.onCommand(sentBy, cmd, ...args);
-            });
-        });
+    unmonitorConnection(conn) {
+        if (this.monitoredConnections.has(conn.id)) {
+            this.connections.delete(conn.id);
+            if (this.getMonitoredConnectionsCount() === 0) {
+                this.connections.forEach((connection, connId) => {
+                    connection.removeCommandListener();
+                });
+            }
+        }
     }
-    onCommand(conn, cmd, ...args) {
+    onCommand(sentBy, cmd, ...args) {
         let timestamp = new Date().getTime() / 1000;
-        let data = timestamp + ' [0 ' + conn.getRemoteAddressPort() + '] \'' + cmd + '\'';
+        let data = timestamp + ' [0 ' + sentBy.getRemoteAddressPort() + '] \'' + cmd + '\'';
         for (let arg of args) {
             data += ' "' + arg + '"';
         }
@@ -122,22 +129,18 @@ class RedjsServer extends EventEmitter {
     }
     createServer() {
         return new Promise((resolve, reject) => {
-            let HOST = this.options.host;
-            let PORT = this.options.port;
             this.server = net.createServer((sock) => {
                 let conn = new Connection_1.Connection(this, sock, this.commander);
                 conn.on('close', () => {
                     this.onConnectionClosed(conn);
                 });
                 conn.on('monitor', () => {
-                    this.onMonitoredConnection(conn);
+                    this.monitorConnection(conn);
                 });
                 this.connections.set(conn.id, conn);
                 this.logConnectionsCount();
                 if (this.getMonitoredConnectionsCount() > 0) {
-                    conn.on('command', (sentBy, cmd, ...args) => {
-                        this.onCommand(sentBy, cmd, ...args);
-                    });
+                    conn.setCommandListener(this.onCommand.bind(this));
                 }
             });
             this.server.on('error', (e) => {
@@ -145,8 +148,8 @@ class RedjsServer extends EventEmitter {
                 reject(e);
                 process.exit(1);
             });
-            this.server.listen(PORT, HOST, () => {
-                this.logger.info('Server listening on ' + HOST + ':' + PORT);
+            this.server.listen(this.options.port, this.options.host, () => {
+                this.logger.info('Server listening on ' + this.options.host + ':' + this.options.port);
                 resolve();
             });
         });

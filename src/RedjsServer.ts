@@ -128,30 +128,40 @@ export class RedjsServer extends EventEmitter {
 			this.connections.delete(conn.id)
 		}
 
-		this.monitoredConnections.delete(conn.id)
+		this.unmonitorConnection(conn)
 
 		this.logConnectionsCount()
 
-		if (this.getMonitoredConnectionsCount() === 0) {
+	}
+
+	protected monitorConnection(conn: Connection) {
+
+		if (!this.monitoredConnections.has(conn.id)) {
+			this.monitoredConnections.set(conn.id, conn)
+
 			this.connections.forEach( ( connection: Connection, connId: string ) => {
-				connection.removeAllListeners('command')
+				if (!connection.getCommandListener()) {
+					connection.setCommandListener( this.onCommand.bind(this) )
+				}
 			})
 		}
 	}
+	protected unmonitorConnection(conn: Connection) {
 
-	protected onMonitoredConnection(conn: Connection) {
-		this.monitoredConnections.set(conn.id, conn)
+		if (this.monitoredConnections.has(conn.id)) {
+			this.connections.delete(conn.id)
+			if (this.getMonitoredConnectionsCount() === 0) {
+				this.connections.forEach( ( connection: Connection, connId: string ) => {
+					connection.removeCommandListener()
+				})
+			}
 
-		this.connections.forEach( ( connection: Connection, connId: string ) => {
-			connection.on('command', (sentBy: Connection, cmd: string, ...args) => {
-				this.onCommand(sentBy, cmd, ...args)
-			})
-		})
+		}
 	}
 
-	protected onCommand(conn: Connection, cmd: string, ...args: any[]) {
+	protected onCommand(sentBy: Connection, cmd: string, ...args: any[]) {
 		let timestamp: number = new Date().getTime() / 1000
-		let data: string = timestamp + ' [0 ' + conn.getRemoteAddressPort() + '] \'' + cmd + '\''
+		let data: string = timestamp + ' [0 ' + sentBy.getRemoteAddressPort() + '] \'' + cmd + '\''
 		for (let arg of args) {
 			data += ' "' + arg + '"'
 		}
@@ -171,7 +181,7 @@ export class RedjsServer extends EventEmitter {
 					this.onConnectionClosed(conn)
 				})
 				conn.on('monitor', () => {
-					this.onMonitoredConnection(conn)
+					this.monitorConnection(conn)
 				})
 
 				this.connections.set(conn.id, conn)
@@ -179,9 +189,7 @@ export class RedjsServer extends EventEmitter {
 				this.logConnectionsCount()
 
 				if (this.getMonitoredConnectionsCount() > 0) {
-					conn.on('command', (sentBy: Connection, cmd: string, ...args) => {
-						this.onCommand(sentBy, cmd, ...args)
-					})
+					conn.setCommandListener(this.onCommand.bind(this) )
 				}
 			})
 			this.server.on('error', (e) => {

@@ -18,7 +18,11 @@ export declare class Connection extends EventEmitter {
     protected parser: Parser;
     protected closing: boolean;
     protected processingData: boolean;
+    protected onCommand: Function;
     constructor(server: RedjsServer, sock: net.Socket, commander: Commander);
+    setCommandListener(v?: Function): void;
+    removeCommandListener(): void;
+    getCommandListener(): Function;
     getRemoteAddressPort(): string;
     writeMonitorData(data: any): void;
     writeChannelMessage(channel: string, payload: any): void;
