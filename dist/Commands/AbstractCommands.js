@@ -20,6 +20,9 @@ class AbstractCommands extends EventEmitter {
         this.mainTimer = new Timer_1.Timer({ delay: 10000 });
         this.mainTimer.on(Timer_1.Timer.ON_TIMER, this.onTimer.bind(this));
     }
+    destroy() {
+        this.removeAllListeners();
+    }
     getCommandsNames() {
         return [];
     }

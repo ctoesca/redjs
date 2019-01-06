@@ -128,6 +128,8 @@ export class RedjsServer extends EventEmitter {
 
 	protected onConnectionClosed(conn: Connection) {
 
+		this.emit('connection-close', conn)
+
 		if (this.connections.has(conn.id)) {
 			this.connections.get(conn.id).destroy()
 			this.connections.delete(conn.id)

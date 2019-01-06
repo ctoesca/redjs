@@ -9,9 +9,19 @@ export class PubSub extends AbstractCommands {
 
 	protected channels: Map<string, Map<string, Connection>> = new Map<string,  Map<string, Connection>>()
 	protected patternsSubscriptions: Map<string,  Map<string, Connection>> = new Map<string,  Map<string, Connection>>()
+	protected _onConnectionClose: any = this.onConnectionClosed.bind(this)
 
 	constructor(opt: any) {
 		super(opt);
+
+		this.server.on('connection-close', this._onConnectionClose)
+	}
+
+	public destroy(){
+		this.server.removeListener('connection-close', this._onConnectionClose)
+		this.channels.clear();
+		this.patternsSubscriptions.clear();
+		super.destroy()
 	}
 
 	public getCommandsNames(): string[] {
@@ -19,18 +29,14 @@ export class PubSub extends AbstractCommands {
 	}
 
 	public getSubscriptionsCount(conn: Connection) {
-		let r = 0
-		this.channels.forEach( ( connections: Map<string, Connection>, channel: string ) => {
+		
+		let r = 0;
+		this.iterateAllSubscriptions( ( connections: Map<string, Connection>, channel: string ) => {
 			if (connections.has(conn.id)) {
 				r ++
 			}
 		})
-		this.patternsSubscriptions.forEach( ( connections: Map<string, Connection>, pattern: string ) => {
-			if (connections.has(conn.id)) {
-				r ++
-			}
-		})
-		return r
+		return r		
 	}
 
 	/*
@@ -45,36 +51,12 @@ export class PubSub extends AbstractCommands {
 	public subscribe(conn: Connection, ...channels: string[]) {
 
 		this.checkMinArgCount('subscribe', arguments, 2)
+	
 		let r: any[] = ['subscribe']
 
-		if ((channels.length < 1) || (channels[0] === undefined)) {
-			throw 'ERR wrong number of arguments for \'psubscribe\' command'
-		} else {
-
-			for (let i = 0; i < channels.length; i++) {
-				let channel = channels[i]
-
-				let channelMap
-				if (!this.channels.has(channel)) {
-					channelMap = new Map()
-					this.channels.set(channel, channelMap)
-				} else {
-					channelMap = this.channels.get(channel)
-				}
-
-				channelMap.set(conn.id, conn)
-
-				r.push(channel)
-
-				conn.on('close', () => {
-					this.onConnectionClosed(conn)
-				})
-
-			}
-		}
+		r.concat( this._subscribe(conn, this.channels, channels) )
+		
 		r.push( this.getSubscriptionsCount(conn) )
-
-		// conn.pause()
 
 		return r
 	}
@@ -83,33 +65,10 @@ export class PubSub extends AbstractCommands {
 		let r: any[] = ['psubscribe']
 
 		this.checkMinArgCount('psubscribe', arguments, 2)
-
-		if ((patterns.length < 1) || (patterns[0] === undefined)) {
-			throw 'ERR wrong number of arguments for \'psubscribe\' command'
-		} else {
-			for (let i = 0; i < patterns.length; i ++) {
-				let pattern = patterns[i]
-				let channelMap
-				if (!this.patternsSubscriptions.has(pattern)) {
-					channelMap = new Map()
-					this.patternsSubscriptions.set(pattern, channelMap)
-				} else {
-					channelMap = this.patternsSubscriptions.get(pattern)
-				}
-
-				channelMap.set(conn.id, conn)
-				r.push(pattern)
-
-				conn.on('close', () => {
-					this.onConnectionClosed(conn)
-				})
-
-			}
-		}
-
+			
+		r.concat( this._subscribe(conn, this.patternsSubscriptions, patterns) )
+		
 		r.push( this.getSubscriptionsCount(conn) )
-
-		// conn.pause()
 
 		return r
 	}
@@ -117,27 +76,10 @@ export class PubSub extends AbstractCommands {
 	public unsubscribe(conn: Connection, ...channels: string[]) {
 
 		let r: any[] = ['unsubscribe']
+		
+		this.checkMinArgCount('punsubscribe', arguments, 1)
 
-		this.checkMinArgCount('unsubscribe', arguments, 2)
-
-		if ((channels.length === 0) || (channels[0] === undefined)) {
-
-			this.channels.forEach( ( connections: Map<string, Connection>, channel: string ) => {
-				if (connections.has(conn.id)) {
-					connections.delete(conn.id)
-					r.push(channel)
-				}
-			})
-
-		} else {
-			for (let i = 0; i < channels.length; i ++) {
-				let channelMap = this.channels.get(channels[i])
-				if (typeof channelMap !== 'undefined') {
-					channelMap.delete(conn.id)
-					r.push(channels[i])
-				}
-			}
-		}
+		r = r.concat( this._unsubscribe(conn, this.patternsSubscriptions, channels) )
 
 		r.push( this.getSubscriptionsCount(conn) )
 		return r
@@ -146,36 +88,18 @@ export class PubSub extends AbstractCommands {
 	public punsubscribe(conn: Connection, ...patterns: string[]) {
 		let r: any[] = ['punsubscribe']
 
-		this.checkMinArgCount('punsubscribe', arguments, 2)
+		this.checkMinArgCount('punsubscribe', arguments, 1)
 
 		/*
 		Unsubscribes the client from the given patterns, or from all of them if none is given.
 		When no patterns are specified, the client is unsubscribed from all the previously subscribed patterns.
 		In this case, a message for every unsubscribed pattern will be sent to the client.
 		*/
-
-		if ((patterns.length === 0) || (patterns[0] === undefined)) {
-			this.patternsSubscriptions.forEach( ( connections: Map<string, Connection>, channel: string ) => {
-				if (connections.has(conn.id)) {
-					connections.delete(conn.id)
-					r.push(channel)
-				}
-			})
-		} else {
-			for (let i = 0; i < patterns.length; i ++) {
-				let channelMap = this.patternsSubscriptions.get(patterns[i])
-				if (typeof channelMap !== 'undefined') {
-					channelMap.delete(conn.id)
-					r.push(patterns[i])
-				}
-			}
-
-		}
+		r = r.concat( this._unsubscribe(conn, this.patternsSubscriptions, patterns) )
 
 		r.push( this.getSubscriptionsCount(conn) )
 		return r
 	}
-
 
 	public publish(conn: Connection, channel: string, message: any) {
 
@@ -206,18 +130,62 @@ export class PubSub extends AbstractCommands {
 		return r
 	}
 
-	protected onConnectionClosed(conn: Connection) {
+	protected _subscribe(conn: Connection, map: Map<string,  Map<string, Connection>>, channels: string[])
+	{
+		let r : string[] = []
+		for (let channel of channels) {			
+			let channelMap = map.get(channel)
+			if (typeof channelMap === "undefined") {
+				channelMap = new Map()
+				map.set(channel, channelMap)
+			}
+			
+			channelMap.set(conn.id, conn)
+			r.push(channel)
+		}
+		return r
+	}
+
+	protected iterateAllSubscriptions( cb: Function ) {
 		this.channels.forEach( ( connections: Map<string, Connection>, channel: string ) => {
-			connections.delete(conn.id)
+			cb(connections, channel, this.channels)
 		})
 		this.patternsSubscriptions.forEach( ( connections: Map<string, Connection>, channel: string ) => {
-			connections.delete(conn.id)
+			cb(connections, channel, this.patternsSubscriptions)
 		})
 	}
 
+	protected _unsubscribe( conn: Connection, map: Map<string,  Map<string, Connection>>, channels: string[]){
 
+		let r : string[] = []
+		let channelsToRemove : string[] = []
 
-	protected onTimer() {
+		map.forEach( ( connections: Map<string, Connection>, channel: string ) => {
+			if (connections.has(conn.id)) {
+				if (( channels.length === 0 ) ||  ( channels.indexOf(channel) >= 0 ))
+				{
+					connections.delete(conn.id)
+					r.push(channel)
+				}
+				if (connections.size == 0) {
+					channelsToRemove.push(channel)
+				}
+			}
+		})
 
+		for (let channel of channelsToRemove)
+			map.delete(channel)
+
+		return r
 	}
+	protected onConnectionClosed(conn: Connection) {
+		
+		this.iterateAllSubscriptions( ( connections: Map<string, Connection>, channel: string, map: Map<string, Map<string, Connection>> ) => {
+			connections.delete(conn.id)
+			if (connections.size == 0) {
+				map.delete( channel )
+			}
+		})
+	}
+
 }

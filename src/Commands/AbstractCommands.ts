@@ -35,10 +35,14 @@ export class AbstractCommands extends EventEmitter {
 
 	}
 
+	public destroy(){
+		this.removeAllListeners()
+	}
+
 	public getCommandsNames(): string[] {
 		return []
 	}
-
+	
 	protected checkArgCount(cmd: string, args: IArguments, expected: number) {
 		if (args.length !== expected) {
 			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')

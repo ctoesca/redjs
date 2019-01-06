@@ -6,18 +6,21 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
         super(opt);
         this.channels = new Map();
         this.patternsSubscriptions = new Map();
+        this._onConnectionClose = this.onConnectionClosed.bind(this);
+        this.server.on('connection-close', this._onConnectionClose);
+    }
+    destroy() {
+        this.server.removeListener('connection-close', this._onConnectionClose);
+        this.channels.clear();
+        this.patternsSubscriptions.clear();
+        super.destroy();
     }
     getCommandsNames() {
         return ['unsubscribe', 'subscribe', 'publish', 'PSUBSCRIBE', 'PUBSUB', 'PUNSUBSCRIBE'];
     }
     getSubscriptionsCount(conn) {
         let r = 0;
-        this.channels.forEach((connections, channel) => {
-            if (connections.has(conn.id)) {
-                r++;
-            }
-        });
-        this.patternsSubscriptions.forEach((connections, pattern) => {
+        this.iterateAllSubscriptions((connections, channel) => {
             if (connections.has(conn.id)) {
                 r++;
             }
@@ -27,100 +30,28 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
     subscribe(conn, ...channels) {
         this.checkMinArgCount('subscribe', arguments, 2);
         let r = ['subscribe'];
-        if ((channels.length < 1) || (channels[0] === undefined)) {
-            throw 'ERR wrong number of arguments for \'psubscribe\' command';
-        }
-        else {
-            for (let i = 0; i < channels.length; i++) {
-                let channel = channels[i];
-                let channelMap;
-                if (!this.channels.has(channel)) {
-                    channelMap = new Map();
-                    this.channels.set(channel, channelMap);
-                }
-                else {
-                    channelMap = this.channels.get(channel);
-                }
-                channelMap.set(conn.id, conn);
-                r.push(channel);
-                conn.on('close', () => {
-                    this.onConnectionClosed(conn);
-                });
-            }
-        }
+        r.concat(this._subscribe(conn, this.channels, channels));
         r.push(this.getSubscriptionsCount(conn));
         return r;
     }
     psubscribe(conn, ...patterns) {
         let r = ['psubscribe'];
         this.checkMinArgCount('psubscribe', arguments, 2);
-        if ((patterns.length < 1) || (patterns[0] === undefined)) {
-            throw 'ERR wrong number of arguments for \'psubscribe\' command';
-        }
-        else {
-            for (let i = 0; i < patterns.length; i++) {
-                let pattern = patterns[i];
-                let channelMap;
-                if (!this.patternsSubscriptions.has(pattern)) {
-                    channelMap = new Map();
-                    this.patternsSubscriptions.set(pattern, channelMap);
-                }
-                else {
-                    channelMap = this.patternsSubscriptions.get(pattern);
-                }
-                channelMap.set(conn.id, conn);
-                r.push(pattern);
-                conn.on('close', () => {
-                    this.onConnectionClosed(conn);
-                });
-            }
-        }
+        r.concat(this._subscribe(conn, this.patternsSubscriptions, patterns));
         r.push(this.getSubscriptionsCount(conn));
         return r;
     }
     unsubscribe(conn, ...channels) {
         let r = ['unsubscribe'];
-        this.checkMinArgCount('unsubscribe', arguments, 2);
-        if ((channels.length === 0) || (channels[0] === undefined)) {
-            this.channels.forEach((connections, channel) => {
-                if (connections.has(conn.id)) {
-                    connections.delete(conn.id);
-                    r.push(channel);
-                }
-            });
-        }
-        else {
-            for (let i = 0; i < channels.length; i++) {
-                let channelMap = this.channels.get(channels[i]);
-                if (typeof channelMap !== 'undefined') {
-                    channelMap.delete(conn.id);
-                    r.push(channels[i]);
-                }
-            }
-        }
+        this.checkMinArgCount('punsubscribe', arguments, 1);
+        r = r.concat(this._unsubscribe(conn, this.patternsSubscriptions, channels));
         r.push(this.getSubscriptionsCount(conn));
         return r;
     }
     punsubscribe(conn, ...patterns) {
         let r = ['punsubscribe'];
-        this.checkMinArgCount('punsubscribe', arguments, 2);
-        if ((patterns.length === 0) || (patterns[0] === undefined)) {
-            this.patternsSubscriptions.forEach((connections, channel) => {
-                if (connections.has(conn.id)) {
-                    connections.delete(conn.id);
-                    r.push(channel);
-                }
-            });
-        }
-        else {
-            for (let i = 0; i < patterns.length; i++) {
-                let channelMap = this.patternsSubscriptions.get(patterns[i]);
-                if (typeof channelMap !== 'undefined') {
-                    channelMap.delete(conn.id);
-                    r.push(patterns[i]);
-                }
-            }
-        }
+        this.checkMinArgCount('punsubscribe', arguments, 1);
+        r = r.concat(this._unsubscribe(conn, this.patternsSubscriptions, patterns));
         r.push(this.getSubscriptionsCount(conn));
         return r;
     }
@@ -144,15 +75,52 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
         r += this.server.broadcast(channel, message, destConnections);
         return r;
     }
-    onConnectionClosed(conn) {
+    _subscribe(conn, map, channels) {
+        let r = [];
+        for (let channel of channels) {
+            let channelMap = map.get(channel);
+            if (typeof channelMap === "undefined") {
+                channelMap = new Map();
+                map.set(channel, channelMap);
+            }
+            channelMap.set(conn.id, conn);
+            r.push(channel);
+        }
+        return r;
+    }
+    iterateAllSubscriptions(cb) {
         this.channels.forEach((connections, channel) => {
-            connections.delete(conn.id);
+            cb(connections, channel, this.channels);
         });
         this.patternsSubscriptions.forEach((connections, channel) => {
-            connections.delete(conn.id);
+            cb(connections, channel, this.patternsSubscriptions);
         });
     }
-    onTimer() {
+    _unsubscribe(conn, map, channels) {
+        let r = [];
+        let channelsToRemove = [];
+        map.forEach((connections, channel) => {
+            if (connections.has(conn.id)) {
+                if ((channels.length === 0) || (channels.indexOf(channel) >= 0)) {
+                    connections.delete(conn.id);
+                    r.push(channel);
+                }
+                if (connections.size == 0) {
+                    channelsToRemove.push(channel);
+                }
+            }
+        });
+        for (let channel of channelsToRemove)
+            map.delete(channel);
+        return r;
+    }
+    onConnectionClosed(conn) {
+        this.iterateAllSubscriptions((connections, channel, map) => {
+            connections.delete(conn.id);
+            if (connections.size == 0) {
+                map.delete(channel);
+            }
+        });
     }
 }
 exports.PubSub = PubSub;
