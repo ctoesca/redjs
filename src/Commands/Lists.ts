@@ -29,10 +29,8 @@ export class Lists extends AbstractCommands {
 			let stopIndx: number = this.normalizeIndex( stop, data )
 
 			if ((startIndx >= 0) && (startIndx < data.length) && (startIndx <= stopIndx)) {
-				for (let i = startIndx; i <= stopIndx; i++ ) {
-					if (i < data.length) {
-						r.push( data[i])
-					}
+				for (let i = startIndx; (i <= stopIndx) && (i < data.length); i++ ) {
+					r.push( data[i])
 				}
 			}
 		}

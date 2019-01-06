@@ -40,12 +40,12 @@ export class Parser extends EventEmitter {
 		let r = null;
 		if (typeof data === 'string') {
 			r = this.stringToResp(data, type)
+		} else if (data === null) {
+			r = '$-1\r\n'
 		} else if (typeof data === 'object') {
 			r = this.objectToResp(data, type)
 		} else if (typeof data === 'number') {
 			r = this.numberToResp(data, type)
-		} else if (data === null) {
-			r = '$-1\r\n'
 		} else {
 			throw ('ERR Unknown response type for response \'' + data + '\'')
 		}
