@@ -76,16 +76,22 @@ export class Lists extends AbstractCommands {
 
 		if (h) {
 			// !!verifier qu'il s'agit d'une liste
-			for (let i = 0; i < h.length; i ++) {
-				if (h[i] === pivot) {
-					if (position === 'BEFORE') {
-						h.splice(i, 0, value)
-					} else {
-						h.splice(i + 1, 0, value)
+			
+			let added = false
+			for (let i = 0; i< h.length; i++) {
+				let v = h[i]
+				if (v === pivot) {
+					let spliceIndx = i
+					if (position === 'AFTER') {
+						spliceIndx = i + 1
 					}
+					h.splice(spliceIndx, 0, value)
+					added = true
 					i ++
-					r = h.length
 				}
+			}
+			if (added) {
+				r = h.length
 			}
 		} else {
 			r = 0

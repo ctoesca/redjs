@@ -50,17 +50,21 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         let r = -1;
         let h = this.getDataset(conn.database, key);
         if (h) {
+            let added = false;
             for (let i = 0; i < h.length; i++) {
-                if (h[i] === pivot) {
-                    if (position === 'BEFORE') {
-                        h.splice(i, 0, value);
+                let v = h[i];
+                if (v === pivot) {
+                    let spliceIndx = i;
+                    if (position === 'AFTER') {
+                        spliceIndx = i + 1;
                     }
-                    else {
-                        h.splice(i + 1, 0, value);
-                    }
+                    h.splice(spliceIndx, 0, value);
+                    added = true;
                     i++;
-                    r = h.length;
                 }
+            }
+            if (added) {
+                r = h.length;
             }
         }
         else {
