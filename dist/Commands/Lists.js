@@ -53,7 +53,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
             if (h[i] === pivot) {
                 let spliceIndx;
                 (position === 'AFTER') ? spliceIndx = i + 1 : spliceIndx = i;
-                h[i].splice(spliceIndx, 0, value);
+                h.splice(spliceIndx, 0, value);
                 r = h.length;
                 break;
             }
