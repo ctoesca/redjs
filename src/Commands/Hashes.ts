@@ -236,14 +236,15 @@ export class Hashes extends AbstractCommands {
 		this.checkMinArgCount('hdel', arguments, 3)
 
 		let h: Map<string, any> = this.getDataset(conn.database, key)
+		if (!h)
+			return 0
+		
 		let r = 0
-		if (h) {
-			for (let i = 0; i < fields.length; i ++) {
-				let field = fields[i]
-				if (h.has(field)) {
-					h.delete(field)
-					r ++
-				}
+		
+		for (let field of fields) {
+			if (h.has(field)) {
+				h.delete(field)
+				r ++
 			}
 		}
 		return r
