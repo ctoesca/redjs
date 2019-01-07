@@ -14,6 +14,8 @@ export class ServerCommands extends AbstractCommands {
 	}
 
 	public flushdb( conn: Connection, async: string) {
+		this.checkArgCount('llen', arguments, 1, 2)
+
 		conn.database.clear()
 		return {
 			value: 'OK',
@@ -22,6 +24,7 @@ export class ServerCommands extends AbstractCommands {
 	}
 
 	public monitor(conn: Connection) {
+		this.checkArgCount('llen', arguments, 1)
 		conn.emit('monitor')
 		return {
 			value: 'OK',
@@ -30,6 +33,8 @@ export class ServerCommands extends AbstractCommands {
 	}
 
 	public info(conn: Connection, section = 'all') {
+		this.checkArgCount('llen', arguments, 1, 2)
+
 		// !!
 		/*
 		# Server

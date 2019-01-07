@@ -14,7 +14,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
             'HKEYS', 'HLEN', 'HMGET', 'HMSET', 'HSETNX', 'HSTRLEN', 'HVALS', 'HSCAN'];
     }
     hscan(conn, key, cursor, ...options) {
-        this.checkMinArgCount('hscan', arguments, 3);
+        this.checkArgCount('hscan', arguments, 3, 7);
         let argsNames = ['match', 'count'];
         let args = {};
         try {
@@ -123,7 +123,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     hmget(conn, key, ...fields) {
-        this.checkMinArgCount('hmget', arguments, 3);
+        this.checkArgCount('hmget', arguments, 3, -1);
         let r = [];
         r.length = fields.length;
         let h = this.getDataset(conn.database, key);
@@ -146,7 +146,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     hmset(conn, key, field, value, ...fieldsValues) {
-        this.checkMinArgCount('hmset', arguments, 4);
+        this.checkArgCount('hmset', arguments, 4, -1);
         let r = 'OK';
         let h = this.getOrCreate(conn.database, key);
         this.hset(conn, key, field, value);
@@ -178,7 +178,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     hdel(conn, key, ...fields) {
-        this.checkMinArgCount('hdel', arguments, 3);
+        this.checkArgCount('hdel', arguments, 3, -1);
         let h = this.getDataset(conn.database, key);
         if (!h) {
             return 0;

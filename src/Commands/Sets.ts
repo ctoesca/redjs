@@ -17,7 +17,7 @@ export class Sets extends AbstractCommands {
 
 	public srem(conn: Connection, key: string, ...members: string[]) {
 
-		this.checkMinArgCount('srem', arguments, 3)
+		this.checkArgCount('srem', arguments, 3, -1)
 
 		let set = this.getDataset(conn.database, key)
 		let r = 0
@@ -33,7 +33,7 @@ export class Sets extends AbstractCommands {
 
 	public sadd(conn: Connection, key: string, ...members: string[]) {
 
-		this.checkMinArgCount('sadd', arguments, 3)
+		this.checkArgCount('sadd', arguments, 3, -1)
 
 		let r = 0
 		let set = this.getOrCreate(conn.database, key)

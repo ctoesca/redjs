@@ -20,7 +20,7 @@ class StringsCommands extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     set(conn, key, value, ...options) {
-        this.checkMinArgCount('set', arguments, 3);
+        this.checkArgCount('set', arguments, 3, -1);
         let r = 'OK';
         let data = this.getOrCreate(conn.database, key);
         data.value = value;

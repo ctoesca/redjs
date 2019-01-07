@@ -10,7 +10,7 @@ class Keys extends AbstractCommands_1.AbstractCommands {
             'PEXPIRE', 'PEXPIREAT', 'PTTL', 'RANDOMKEY', 'RENAME', 'RENAMENX', 'RESTORE', 'SORT', 'TOUCH', 'TTL', 'TYPE', 'UNLINK', 'WAIT', 'SCAN'];
     }
     scan(conn, cursor, MATCH, pattern, COUNT, count) {
-        this.checkArgCount('scan', arguments, 6);
+        this.checkArgCount('scan', arguments, 2, 6);
         let r = [0, []];
         conn.database.keys.forEach((value, key) => {
             if (this.match(key, pattern)) {
@@ -20,7 +20,7 @@ class Keys extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     del(conn, key, ...keys) {
-        this.checkMinArgCount('get', arguments, 2);
+        this.checkArgCount('get', arguments, 2, -1);
         let r = 0;
         if (conn.database.keys.has(key)) {
             conn.database.keys.delete(key);
@@ -35,7 +35,7 @@ class Keys extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     exists(conn, key, ...keys) {
-        this.checkMinArgCount('exists', arguments, 2);
+        this.checkArgCount('exists', arguments, 2, -1);
         let r = 0;
         if (conn.database.keys.has(key)) {
             r = 1;

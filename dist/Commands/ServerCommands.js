@@ -9,6 +9,7 @@ class ServerCommands extends AbstractCommands_1.AbstractCommands {
         return ['info', 'monitor', 'flushdb'];
     }
     flushdb(conn, async) {
+        this.checkArgCount('llen', arguments, 1, 2);
         conn.database.clear();
         return {
             value: 'OK',
@@ -16,6 +17,7 @@ class ServerCommands extends AbstractCommands_1.AbstractCommands {
         };
     }
     monitor(conn) {
+        this.checkArgCount('llen', arguments, 1);
         conn.emit('monitor');
         return {
             value: 'OK',
@@ -23,6 +25,7 @@ class ServerCommands extends AbstractCommands_1.AbstractCommands {
         };
     }
     info(conn, section = 'all') {
+        this.checkArgCount('llen', arguments, 1, 2);
         let r = '';
         for (let type of ['Server', 'Clients', 'Memory', 'Persistence', 'Stats', 'Replication', 'CPU', 'Commandstats', 'Cluster', 'Keyspace']) {
             let f = 'get' + type + 'Info';

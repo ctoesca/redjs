@@ -10,7 +10,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
             'SMOVE', 'SPOP', 'SRANDMEMBER', 'SREM', 'SUNION', 'SUNIONSTORE', 'SSCAN'];
     }
     srem(conn, key, ...members) {
-        this.checkMinArgCount('srem', arguments, 3);
+        this.checkArgCount('srem', arguments, 3, -1);
         let set = this.getDataset(conn.database, key);
         let r = 0;
         if (set) {
@@ -23,7 +23,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     sadd(conn, key, ...members) {
-        this.checkMinArgCount('sadd', arguments, 3);
+        this.checkArgCount('sadd', arguments, 3, -1);
         let r = 0;
         let set = this.getOrCreate(conn.database, key);
         for (let member of members) {

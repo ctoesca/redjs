@@ -15,9 +15,8 @@ export declare class AbstractCommands extends EventEmitter {
     destroy(): void;
     getCommandsNames(): string[];
     protected checkType(obj: any, type: any): void;
-    protected checkArgCount(cmd: string, args: IArguments, expected: number): void;
+    protected checkArgCount(cmd: string, args: IArguments, valueOrMin: number, max?: number): void;
     protected checkInt(v: any): void;
-    protected checkMinArgCount(cmd: string, args: IArguments, expected: number): void;
     protected createNewKey(db: Database, key: string): any;
     protected getDataset(db: Database, key: string): any;
     protected getOrCreate(db: Database, key: string): any;

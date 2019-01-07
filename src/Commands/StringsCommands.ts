@@ -49,7 +49,7 @@ export class StringsCommands extends AbstractCommands {
 
 		*/
 
-		this.checkMinArgCount('set', arguments, 3)
+		this.checkArgCount('set', arguments, 3, -1)
 
 		let r = 'OK'
 		let data = this.getOrCreate(conn.database, key)

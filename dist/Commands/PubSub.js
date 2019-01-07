@@ -28,7 +28,7 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     subscribe(conn, ...channels) {
-        this.checkMinArgCount('subscribe', arguments, 2);
+        this.checkArgCount('subscribe', arguments, 2, -1);
         let r = ['subscribe'];
         r.concat(this._subscribe(conn, this.channels, channels));
         r.push(this.getSubscriptionsCount(conn));
@@ -36,21 +36,21 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
     }
     psubscribe(conn, ...patterns) {
         let r = ['psubscribe'];
-        this.checkMinArgCount('psubscribe', arguments, 2);
+        this.checkArgCount('psubscribe', arguments, 2, -1);
         r.concat(this._subscribe(conn, this.patternsSubscriptions, patterns));
         r.push(this.getSubscriptionsCount(conn));
         return r;
     }
     unsubscribe(conn, ...channels) {
         let r = ['unsubscribe'];
-        this.checkMinArgCount('punsubscribe', arguments, 1);
+        this.checkArgCount('punsubscribe', arguments, 2, -1);
         r = r.concat(this._unsubscribe(conn, this.channels, channels));
         r.push(this.getSubscriptionsCount(conn));
         return r;
     }
     punsubscribe(conn, ...patterns) {
         let r = ['punsubscribe'];
-        this.checkMinArgCount('punsubscribe', arguments, 1);
+        this.checkArgCount('punsubscribe', arguments, 2, -1);
         r = r.concat(this._unsubscribe(conn, this.patternsSubscriptions, patterns));
         r.push(this.getSubscriptionsCount(conn));
         return r;

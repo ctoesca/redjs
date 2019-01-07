@@ -49,7 +49,7 @@ export class PubSub extends AbstractCommands {
 
 	public subscribe(conn: Connection, ...channels: string[]) {
 
-		this.checkMinArgCount('subscribe', arguments, 2)
+		this.checkArgCount('subscribe', arguments, 2, -1)
 
 		let r: any[] = ['subscribe']
 
@@ -63,7 +63,7 @@ export class PubSub extends AbstractCommands {
 	public psubscribe(conn: Connection, ...patterns: string[]) {
 		let r: any[] = ['psubscribe']
 
-		this.checkMinArgCount('psubscribe', arguments, 2)
+		this.checkArgCount('psubscribe', arguments, 2, -1)
 
 		r.concat( this._subscribe(conn, this.patternsSubscriptions, patterns) )
 
@@ -76,7 +76,7 @@ export class PubSub extends AbstractCommands {
 
 		let r: any[] = ['unsubscribe']
 
-		this.checkMinArgCount('punsubscribe', arguments, 1)
+		this.checkArgCount('punsubscribe', arguments, 2, -1)
 
 		r = r.concat( this._unsubscribe(conn, this.channels, channels) )
 
@@ -87,7 +87,7 @@ export class PubSub extends AbstractCommands {
 	public punsubscribe(conn: Connection, ...patterns: string[]) {
 		let r: any[] = ['punsubscribe']
 
-		this.checkMinArgCount('punsubscribe', arguments, 1)
+		this.checkArgCount('punsubscribe', arguments, 2, -1)
 
 		/*
 		Unsubscribes the client from the given patterns, or from all of them if none is given.

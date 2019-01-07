@@ -22,7 +22,7 @@ export class Hashes extends AbstractCommands {
 	public hscan(conn: Connection, key: string, cursor: number, ...options: any[]): string	{
 		// options:  [MATCH pattern] [COUNT count]
 
-		this.checkMinArgCount('hscan', arguments, 3)
+		this.checkArgCount('hscan', arguments, 3, 7)
 
 		let argsNames = ['match', 'count']
 		let args: any = {}
@@ -165,7 +165,7 @@ export class Hashes extends AbstractCommands {
 
 	public hmget(conn: Connection, key: string, ...fields: string[]) {
 
-		this.checkMinArgCount('hmget', arguments, 3)
+		this.checkArgCount('hmget', arguments, 3, -1)
 
 		let r: any[] = []
 		r.length = fields.length
@@ -191,7 +191,7 @@ export class Hashes extends AbstractCommands {
 
 	public hmset(conn: Connection, key: string, field: string, value: string, ...fieldsValues: string[]) {
 
-		this.checkMinArgCount('hmset', arguments, 4)
+		this.checkArgCount('hmset', arguments, 4, -1)
 
 		let r = 'OK'
 		let h: Map<string, any> = this.getOrCreate(conn.database, key)
@@ -233,7 +233,7 @@ export class Hashes extends AbstractCommands {
 
 	public hdel(conn: Connection, key: string, ...fields: string[]) {
 
-		this.checkMinArgCount('hdel', arguments, 3)
+		this.checkArgCount('hdel', arguments, 3, -1)
 
 		let h: Map<string, any> = this.getDataset(conn.database, key)
 		if (!h) {

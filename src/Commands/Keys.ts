@@ -39,7 +39,7 @@ export class Keys extends AbstractCommands {
 
 		// !!
 
-		this.checkArgCount('scan', arguments, 6)
+		this.checkArgCount('scan', arguments, 2, 6)
 
 		let r: any[] = [0, []]
 
@@ -53,7 +53,7 @@ export class Keys extends AbstractCommands {
 	}
 
 	public del(conn: Connection, key: string, ...keys: string[]) {
-		this.checkMinArgCount('get', arguments, 2)
+		this.checkArgCount('get', arguments, 2, -1)
 		let r = 0
 		if (conn.database.keys.has(key)) {
 			conn.database.keys.delete(key)
@@ -69,7 +69,7 @@ export class Keys extends AbstractCommands {
 	}
 
 	public exists(conn: Connection, key: string, ...keys: string[]) {
-		this.checkMinArgCount('exists', arguments, 2)
+		this.checkArgCount('exists', arguments, 2, - 1)
 		let r = 0
 		if (conn.database.keys.has(key)) {
 			r = 1

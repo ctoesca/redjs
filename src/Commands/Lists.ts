@@ -113,7 +113,7 @@ export class Lists extends AbstractCommands {
 
 	public lpush(conn: Connection, key: string, ...values: string[]) {
 
-		this.checkMinArgCount('lpush', arguments, 3)
+		this.checkArgCount('lpush', arguments, 3, -1)
 
 		let h = this.getOrCreate(conn.database, key)
 
@@ -126,7 +126,7 @@ export class Lists extends AbstractCommands {
 
 	public rpush(conn: Connection, key: string, ...values: string[]) {
 
-		this.checkMinArgCount('rpush', arguments, 3)
+		this.checkArgCount('rpush', arguments, 3, -1)
 
 		let h = this.getOrCreate(conn.database, key)
 

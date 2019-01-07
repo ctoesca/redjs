@@ -31,7 +31,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         this.checkInt(index);
         let data = this.getDataset(conn.database, key);
         if (!data) {
-            throw "ERR no such key";
+            throw 'ERR no such key';
         }
         let r = null;
         let indx = this.normalizeIndex(index, data);
@@ -43,10 +43,10 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     lset(conn, key, index, value) {
         this.checkArgCount('lindex', arguments, 4);
         this.checkInt(index);
-        let r = "OK";
+        let r = 'OK';
         let data = this.getDataset(conn.database, key);
         if (!data) {
-            throw "ERR no such key";
+            throw 'ERR no such key';
         }
         let indx = this.normalizeIndex(index, data);
         if ((indx >= 0) && (indx < data.length)) {
@@ -59,7 +59,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
     }
     linsert(conn, key, position, pivot, value) {
         this.checkArgCount('linsert', arguments, 5);
-        if (['BEFORE', 'AFTER'].indexOf(position) == -1) {
+        if (['BEFORE', 'AFTER'].indexOf(position) === -1) {
             throw 'ERR syntax error';
         }
         let h = this.getDataset(conn.database, key);
@@ -79,7 +79,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     lpush(conn, key, ...values) {
-        this.checkMinArgCount('lpush', arguments, 3);
+        this.checkArgCount('lpush', arguments, 3, -1);
         let h = this.getOrCreate(conn.database, key);
         for (let v of values) {
             h.splice(0, 0, v);
@@ -87,7 +87,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         return h.length;
     }
     rpush(conn, key, ...values) {
-        this.checkMinArgCount('rpush', arguments, 3);
+        this.checkArgCount('rpush', arguments, 3, -1);
         let h = this.getOrCreate(conn.database, key);
         for (let v of values) {
             h.push(v);

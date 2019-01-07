@@ -47,22 +47,21 @@ export class AbstractCommands extends EventEmitter {
 			throw 'WRONGTYPE Operation against a key holding the wrong kind of value'
 		}
 	}
-	protected checkArgCount(cmd: string, args: IArguments, expected: number) {
-		if (args.length !== expected) {
+	protected checkArgCount(cmd: string, args: IArguments, valueOrMin: number, max = -1) {
+		if (arguments.length === 3) {
+			if (args.length !== valueOrMin) {
+				throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')
+			}
+		} else if ( (args.length < valueOrMin) || ((args.length > max) && (max > -1)) ) {
 			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')
 		}
+
 	}
 	protected checkInt( v: any ) {
 		if (!utils.isInt(v)) {
 			throw 'ERR value is not an integer or out of range'
 		}
 	}
-	protected checkMinArgCount(cmd: string, args: IArguments, expected: number) {
-		if (args.length < expected) {
-			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')
-		}
-	}
-
 
 	protected createNewKey(db: Database, key: string ) {
 		return db.createNewKey( key, {} )

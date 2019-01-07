@@ -1,7 +1,7 @@
 
 const assert = require('assert');
 
-describe('Lists', function() 
+describe('Keys', function() 
 {
 	var redis = getRedis()
 

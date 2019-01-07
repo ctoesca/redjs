@@ -1,7 +1,7 @@
 
 const assert = require('assert');
 
-describe('Strings', function() 
+describe('Pipeline', function() 
 {
 
 	var redis = getRedis()

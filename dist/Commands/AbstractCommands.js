@@ -29,19 +29,19 @@ class AbstractCommands extends EventEmitter {
             throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
         }
     }
-    checkArgCount(cmd, args, expected) {
-        if (args.length !== expected) {
+    checkArgCount(cmd, args, valueOrMin, max = -1) {
+        if (arguments.length === 3) {
+            if (args.length !== valueOrMin) {
+                throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command');
+            }
+        }
+        else if ((args.length < valueOrMin) || ((args.length > max) && (max > -1))) {
             throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command');
         }
     }
     checkInt(v) {
         if (!utils.isInt(v)) {
             throw 'ERR value is not an integer or out of range';
-        }
-    }
-    checkMinArgCount(cmd, args, expected) {
-        if (args.length < expected) {
-            throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command');
         }
     }
     createNewKey(db, key) {
