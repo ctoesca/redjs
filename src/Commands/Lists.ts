@@ -78,16 +78,16 @@ export class Lists extends AbstractCommands {
 		// !!verifier qu'il s'agit d'une liste
 
 		let r = -1
-		for (let i = 0; i < h.length; i++) {
-			if (h[i] === pivot) {
-				let spliceIndx
-				(position === 'AFTER') ? spliceIndx = i + 1 :  spliceIndx = i
-				h.splice(spliceIndx, 0, value)
-				r = h.length
-				break;
-			}
+		let indx = h.indexOf(pivot)
+		if (indx >= 0) {
+			if (position === 'AFTER') {
+				h.splice(indx+1, 0, value)
+			} else {
+				h.splice(indx, 0, value)
+			} 
+			r = h.length
 		}
-				
+						
 		return r
 	}
 	public lset(conn: Connection, key: string, index: any, value: string) {
