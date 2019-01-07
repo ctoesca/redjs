@@ -49,7 +49,6 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         if (!h)
             return 0;
         let r = -1;
-        let added = false;
         for (let i = 0; i < h.length; i++) {
             if (h[i] === pivot) {
                 let spliceIndx;
