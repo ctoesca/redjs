@@ -69,7 +69,6 @@ export class Lists extends AbstractCommands {
 			throw 'Invalid argument'
 		}
 
-		
 		let h = this.getDataset(conn.database, key)
 
 		if (!h)
@@ -77,7 +76,6 @@ export class Lists extends AbstractCommands {
 
 		// !!verifier qu'il s'agit d'une liste
 
-		let r = -1
 		let added = false
 		for (let i = 0; i < h.length; i++) {
 			if (h[i] === pivot) {
@@ -89,11 +87,12 @@ export class Lists extends AbstractCommands {
 			}
 		}
 		if (added) {
-			r = h.length
+			return h.length
+		}else{
+			return -1
 		}
-		
-		return r
 	}
+
 	public lset(conn: Connection, key: string, index: any, value: string) {
 
 		this.checkArgCount('lset', arguments, 4)
