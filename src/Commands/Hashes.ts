@@ -177,10 +177,9 @@ export class Hashes extends AbstractCommands {
 			if (h) 
 			{
 				let field = fields[i]
-				let value = h.get(field)
-				if (value !== undefined) {
+				if (h.has(field)) {
 					r[i] = h.get(field)
-				} 
+				}
 			} 
 		}
 		return r

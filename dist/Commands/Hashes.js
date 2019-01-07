@@ -131,8 +131,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
             r[i] = null;
             if (h) {
                 let field = fields[i];
-                let value = h.get(field);
-                if (value !== undefined) {
+                if (h.has(field)) {
                     r[i] = h.get(field);
                 }
             }
