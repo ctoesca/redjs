@@ -51,12 +51,11 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         let r = -1;
         let indx = h.indexOf(pivot);
         if (indx >= 0) {
+            let spliceIndex = indx;
             if (position === 'AFTER') {
-                h.splice(indx + 1, 0, value);
+                spliceIndex = indx + 1;
             }
-            else {
-                h.splice(indx, 0, value);
-            }
+            h.splice(spliceIndex, 0, value);
             r = h.length;
         }
         return r;

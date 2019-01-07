@@ -64,27 +64,25 @@ export class Lists extends AbstractCommands {
 
 		this.checkArgCount('linsert', arguments, 5)
 
+		// !!verifier qu'il s'agit d'une liste
 		// LINSERT key BEFORE|AFTER pivot value
 		if (['BEFORE','AFTER'].indexOf(position) == -1) {
 			throw 'Invalid argument'
 		}
 
-		
 		let h = this.getDataset(conn.database, key)
 
 		if (!h)
 			return 0;
 
-		// !!verifier qu'il s'agit d'une liste
-
 		let r = -1
 		let indx = h.indexOf(pivot)
 		if (indx >= 0) {
+			let spliceIndex = indx
 			if (position === 'AFTER') {
-				h.splice(indx+1, 0, value)
-			} else {
-				h.splice(indx, 0, value)
-			} 
+				spliceIndex = indx + 1
+			}
+			h.splice(spliceIndex, 0, value)
 			r = h.length
 		}
 						
