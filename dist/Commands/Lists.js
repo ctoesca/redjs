@@ -45,26 +45,19 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         if (['BEFORE', 'AFTER'].indexOf(position) == -1) {
             throw 'Invalid argument';
         }
-        let r = -1;
         let h = this.getDataset(conn.database, key);
-        if (h) {
-            let added = false;
-            for (let i = 0; i < h.length; i++) {
-                let v = h[i];
-                if (v === pivot) {
-                    let spliceIndx;
-                    (position === 'AFTER') ? spliceIndx = i + 1 : spliceIndx = i;
-                    h.splice(spliceIndx, 0, value);
-                    added = true;
-                    i++;
-                }
-            }
-            if (added) {
+        if (!h)
+            return 0;
+        let r = -1;
+        let added = false;
+        for (let i = 0; i < h.length; i++) {
+            if (h[i] === pivot) {
+                let spliceIndx;
+                (position === 'AFTER') ? spliceIndx = i + 1 : spliceIndx = i;
+                h[i].splice(spliceIndx, 0, value);
                 r = h.length;
+                break;
             }
-        }
-        else {
-            r = 0;
         }
         return r;
     }
