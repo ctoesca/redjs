@@ -14,16 +14,4 @@ export class BaseDataset extends EventEmitter {
 		return []
 	}
 
-	protected checkArgCount(cmd: string, args: IArguments, expected: number) {
-		if (args.length !== expected) {
-			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')
-		}
-	}
-
-	protected checkMinArgCount(cmd: string, args: IArguments, expected: number) {
-		if (args.length < expected) {
-			throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command')
-		}
-	}
-
 }
