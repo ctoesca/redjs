@@ -69,29 +69,29 @@ export class Lists extends AbstractCommands {
 			throw 'Invalid argument'
 		}
 
-		let r = -1
+		
 		let h = this.getDataset(conn.database, key)
 
-		if (h) {
-			// !!verifier qu'il s'agit d'une liste
+		if (!h)
+			return 0;
 
-			let added = false
-			for (let i = 0; i < h.length; i++) {
-				let v = h[i]
-				if (v === pivot) {
-					let spliceIndx
-					(position === 'AFTER') ? spliceIndx = i + 1 :  spliceIndx = i
-					h.splice(spliceIndx, 0, value)
-					added = true
-					i ++
-				}
+		// !!verifier qu'il s'agit d'une liste
+
+		let r = -1
+		let added = false
+		for (let i = 0; i < h.length; i++) {
+			if (h[i] === pivot) {
+				let spliceIndx
+				(position === 'AFTER') ? spliceIndx = i + 1 :  spliceIndx = i
+				h[i].splice(spliceIndx, 0, value)
+				added = true
+				i ++
 			}
-			if (added) {
-				r = h.length
-			}
-		} else {
-			r = 0
 		}
+		if (added) {
+			r = h.length
+		}
+		
 		return r
 	}
 	public lset(conn: Connection, key: string, index: any, value: string) {
