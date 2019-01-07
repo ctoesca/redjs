@@ -167,20 +167,21 @@ export class Hashes extends AbstractCommands {
 
 		this.checkMinArgCount('hmget', arguments, 3)
 
-		let r = []
+		let r: any[] = []
+		r.length = fields.length
+		
 		let h: Map<string, any> = this.getDataset(conn.database, key)
 
-		for (let field of fields) {
-			if (h) {
+		for (let i = 0; i< fields.length; i++) {
+			r[i] = null
+			if (h) 
+			{
+				let field = fields[i]
 				let value = h.get(field)
 				if (value !== undefined) {
-					r.push(h.get(field))
-				} else {
-					r.push(null)
-				}
-			} else {
-				r.push(null)
-			}
+					r[i] = h.get(field)
+				} 
+			} 
 		}
 		return r
 	}
