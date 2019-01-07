@@ -121,6 +121,7 @@ redis-cli -p 6379
 - lset
 - linsert
 - lrange
+- lset
 
 ### Hashes
 

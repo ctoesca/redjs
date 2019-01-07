@@ -46,7 +46,7 @@ export class Lists extends AbstractCommands {
 
 		let data = this.getDataset(conn.database, key)
 		if (!data) {
-			throw key + ' is not a list'
+			throw 'ERR no such key'
 		}
 
 		let r = null
@@ -60,20 +60,42 @@ export class Lists extends AbstractCommands {
 		return r
 	}
 
+	public lset(conn: Connection, key: string, index: number, value: any) {
+		this.checkArgCount('lindex', arguments, 4);
+		this.checkInt(index);
+
+		let r = 'OK'
+
+		let data = this.getDataset(conn.database, key);
+		if (!data) {
+			throw 'ERR no such key'
+		}
+
+		let indx = this.normalizeIndex(index, data);
+
+		if ((indx >= 0) && (indx < data.length)) {
+			data[indx] = value;
+		} else {
+			throw 'ERR value is not an integer or out of range';
+		}
+		return r;
+	}
+
 	public linsert(conn: Connection, key: string, position: string, pivot: string, value: string) {
 
 		this.checkArgCount('linsert', arguments, 5)
 
 		// !!verifier qu'il s'agit d'une liste
 		// LINSERT key BEFORE|AFTER pivot value
-		if (['BEFORE','AFTER'].indexOf(position) == -1) {
-			throw 'Invalid argument'
+		if (['BEFORE', 'AFTER'].indexOf(position) === -1) {
+			throw 'ERR syntax error'
 		}
 
 		let h = this.getDataset(conn.database, key)
 
-		if (!h)
+		if (!h) {
 			return 0;
+		}
 
 		let r = -1
 		let indx = h.indexOf(pivot)
@@ -84,27 +106,6 @@ export class Lists extends AbstractCommands {
 			}
 			h.splice(spliceIndex, 0, value)
 			r = h.length
-		}
-						
-		return r
-	}
-	public lset(conn: Connection, key: string, index: any, value: string) {
-
-		this.checkArgCount('lset', arguments, 4)
-		this.checkInt(index)
-
-		let r = 'OK'
-		let data = this.getDataset(conn.database, key)
-		if (!data) {
-			throw key + ' is not a list'
-		}
-
-		let indx: number = this.normalizeIndex( index, data )
-
-		if ((indx >= 0) && (indx < data.length)) {
-			data[indx] = value
-		} else {
-			throw 'Out of range'
 		}
 
 		return r
@@ -190,7 +191,7 @@ export class Lists extends AbstractCommands {
 			} else if (type === 'right') {
 				r = h.pop();
 			} else {
-				throw "Invalid option: type='" + type + "'"
+				throw 'ERR syntax error'
 			}
 		}
 

@@ -6,8 +6,8 @@ export declare class Lists extends AbstractCommands {
     getCommandsNames(): string[];
     lrange(conn: Connection, key: string, start: any, stop: any): any[];
     lindex(conn: Connection, key: string, index: any): any;
+    lset(conn: Connection, key: string, index: number, value: any): string;
     linsert(conn: Connection, key: string, position: string, pivot: string, value: string): number;
-    lset(conn: Connection, key: string, index: any, value: string): string;
     lpush(conn: Connection, key: string, ...values: string[]): any;
     rpush(conn: Connection, key: string, ...values: string[]): any;
     rpop(conn: Connection, key: string): any;

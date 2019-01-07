@@ -31,7 +31,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         this.checkInt(index);
         let data = this.getDataset(conn.database, key);
         if (!data) {
-            throw key + ' is not a list';
+            throw "ERR no such key";
         }
         let r = null;
         let indx = this.normalizeIndex(index, data);
@@ -40,14 +40,32 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         }
         return r;
     }
+    lset(conn, key, index, value) {
+        this.checkArgCount('lindex', arguments, 4);
+        this.checkInt(index);
+        let r = "OK";
+        let data = this.getDataset(conn.database, key);
+        if (!data) {
+            throw "ERR no such key";
+        }
+        let indx = this.normalizeIndex(index, data);
+        if ((indx >= 0) && (indx < data.length)) {
+            data[indx] = value;
+        }
+        else {
+            throw 'ERR value is not an integer or out of range';
+        }
+        return r;
+    }
     linsert(conn, key, position, pivot, value) {
         this.checkArgCount('linsert', arguments, 5);
         if (['BEFORE', 'AFTER'].indexOf(position) == -1) {
-            throw 'Invalid argument';
+            throw 'ERR syntax error';
         }
         let h = this.getDataset(conn.database, key);
-        if (!h)
+        if (!h) {
             return 0;
+        }
         let r = -1;
         let indx = h.indexOf(pivot);
         if (indx >= 0) {
@@ -57,23 +75,6 @@ class Lists extends AbstractCommands_1.AbstractCommands {
             }
             h.splice(spliceIndex, 0, value);
             r = h.length;
-        }
-        return r;
-    }
-    lset(conn, key, index, value) {
-        this.checkArgCount('lset', arguments, 4);
-        this.checkInt(index);
-        let r = 'OK';
-        let data = this.getDataset(conn.database, key);
-        if (!data) {
-            throw key + ' is not a list';
-        }
-        let indx = this.normalizeIndex(index, data);
-        if ((indx >= 0) && (indx < data.length)) {
-            data[indx] = value;
-        }
-        else {
-            throw 'Out of range';
         }
         return r;
     }
@@ -142,7 +143,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
                 r = h.pop();
             }
             else {
-                throw "Invalid option: type='" + type + "'";
+                throw 'ERR syntax error';
             }
         }
         return r;

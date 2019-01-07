@@ -371,4 +371,70 @@ describe('Lists', function()
 	    });
   	});
 
+
+
+
+
+
+
+
+  	/* LSET */
+  	describe('lset list4 0 var0', function() {
+
+	    it('should return ERR no such key', function( done ) {
+	    	redis.lset('list4', 3, "tutu")
+	    	.then( function(r){
+	    		done("response does not contains error: "+r)	
+	    	})
+	    	.catch( function(err){
+	    		if (err.toString().toLowerCase().indexOf('no such key') >= 0)
+	    			done()
+	    		else
+	    			done(err)
+	    	})
+	    });
+  	});
+
+  	describe('lpush list4 toto', function() {
+	    it('should return 1', function( done ) {
+	    	redis.lpush('list4', "toto")
+	    	.then( function(r){
+	    		assert.equal(r, 1);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('lset list4 0 tutu', function() {
+	    it('should return OK', function( done ) {
+	    	redis.lset('list4', 0, "tutu")
+	    	.then( function(r){
+	    		assert.equal(r, "OK");
+	    		return redis.lindex('list4', 0)
+	    	})
+	    	.then( function(r){
+	    		assert.equal(r, "tutu");
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('lset list4 1 var0', function() {
+
+	    it('should return ERR range error', function( done ) {
+	    	redis.lset('list4', 1, "tutu")
+	    	.then( function(r){
+	    		done("response does not contains error: "+r)	
+	    	})
+	    	.catch( function(err){
+	    		if (err.toString().toLowerCase().indexOf('out of range') >= 0)
+	    			done()
+	    		else
+	    			done(err)
+	    	})
+	    });
+  	});
+
 });

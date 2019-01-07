@@ -168,21 +168,21 @@ export class Hashes extends AbstractCommands {
 		this.checkMinArgCount('hmget', arguments, 3)
 
 		let r: any[] = []
-		r.length = fields.length	
+		r.length = fields.length
 
 		let h: Map<string, any> = this.getDataset(conn.database, key)
 
 		if (h) {
-			for (let i = 0; i< fields.length; i++) {		
+			for (let i = 0; i < fields.length; i++) {
 				let value = h.get(fields[i])
 				if (value === undefined) {
 					r[i] = null
-				}else{
+				} else {
 					r[i] = value
 				}
-			} 
+			}
 		} else {
-			for (let i = 0; i< fields.length; i++) {
+			for (let i = 0; i < fields.length; i++) {
 				r[i] = null
 			}
 		}
@@ -236,11 +236,12 @@ export class Hashes extends AbstractCommands {
 		this.checkMinArgCount('hdel', arguments, 3)
 
 		let h: Map<string, any> = this.getDataset(conn.database, key)
-		if (!h)
+		if (!h) {
 			return 0
-		
+		}
+
 		let r = 0
-		
+
 		for (let field of fields) {
 			if (h.has(field)) {
 				h.delete(field)
