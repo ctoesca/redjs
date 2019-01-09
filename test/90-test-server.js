@@ -13,7 +13,9 @@ describe('Server commands', function()
         .then( function(r){
           if (r.length ===2)
           {
-            if (  r[0].match(/[0-9]{13}/) && r[1].match(/[0-9]{6}/) )
+            //1546998696
+            //652000
+            if (  r[0].match(/[0-9]{10}/) && r[1].match(/[0-9]{6}/) )
               done()
           }else{
             done('Incorrect response: '+JSON.stringify(r))
