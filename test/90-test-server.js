@@ -121,7 +121,34 @@ describe('Server commands', function()
         .catch( done )
       });
   });
-  
+
+
+
+  describe('select toto', function() {
+      it('should return error', function( done ) {
+        redis.select('toto')
+        .then( function(r){         
+          done("no error returned")
+        })
+        .catch( (err) => {
+          console.log(err.toString()
+          done()
+        })
+      });
+  }); 
+
+  describe('select 1000', function() {
+      it('should return error', function( done ) {
+        redis.select(1000)
+        .then( function(r){         
+          done("no error returned")
+        })
+        .catch( (err) => {
+          console.log(err.toString())
+          done()
+        })
+      });
+  }); 
 
 	describe('monitor', function() {
 	    it('should receive monitor command "keys test-monitor" on DB 0', function( done ) {

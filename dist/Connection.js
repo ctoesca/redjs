@@ -50,7 +50,6 @@ class Connection extends EventEmitter {
         this.onCommand = v;
     }
     removeCommandListener() {
-        console.log('removeCommandListener');
         this.onCommand = null;
     }
     getCommandListener() {

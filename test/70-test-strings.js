@@ -4,7 +4,20 @@ const assert = require('assert');
 describe('Strings', function() 
 {
 
+	var redis = getRedis()
 	
+	describe('flushdb', function() {
+	    it('should return OK', function( done ) {
+	    	redis.flushdb()
+	    	.then( function(r){
+	    		assert.equal(r, "OK");
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+
 	describe('set string1 toto', function() {
 	    it('should return OK', function( done ) {
 	    	redis.set('string1', 'toto')

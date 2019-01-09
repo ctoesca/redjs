@@ -79,8 +79,8 @@ export class Connection extends EventEmitter {
 	public setCommandListener( v: Function = null ) {
 		this.onCommand = v
 	}
+	
 	public removeCommandListener() {
-		console.log('removeCommandListener')
 		this.onCommand = null
 	}
 	public getCommandListener() {
