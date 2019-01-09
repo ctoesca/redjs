@@ -20,6 +20,7 @@ export declare class Connection extends EventEmitter {
     protected processingData: boolean;
     protected onCommand: Function;
     constructor(server: RedjsServer, sock: net.Socket, commander: Commander);
+    setDatabase(index: number): Database;
     setCommandListener(v?: Function): void;
     removeCommandListener(): void;
     getCommandListener(): Function;

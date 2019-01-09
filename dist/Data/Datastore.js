@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Database_1 = require("./Database");
 const RedjsServer_1 = require("../RedjsServer");
 const EventEmitter = require("events");
+const utils = require("../utils");
 class Datastore extends EventEmitter {
     constructor(opt) {
         super();
@@ -25,7 +26,14 @@ class Datastore extends EventEmitter {
         }
     }
     getDb(index = 0) {
+        if (!utils.isInt(index) || (index >= this.databases.length))
+            throw 'ERR value is not an integer or out of range';
         return this.databases[index];
+    }
+    clear() {
+        for (let db of this.databases) {
+            db.clear();
+        }
     }
 }
 exports.Datastore = Datastore;

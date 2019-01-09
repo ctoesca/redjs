@@ -7,7 +7,6 @@ import {Parser} from './utils/Parser'
 import {Commander} from './Commander'
 import Promise = require('bluebird')
 import EventEmitter = require('events')
-import _ = require('lodash')
 import net = require('net')
 import uuid = require('uuid/v4')
 
@@ -39,7 +38,7 @@ export class Connection extends EventEmitter {
 		this.server = server
 		this.commander = commander
 
-		this.database = this.server.datastore.getDb(0)
+		
 
 		let constructor: any = this.constructor
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
@@ -54,7 +53,7 @@ export class Connection extends EventEmitter {
 		this.sock.on('close', () => {
 			this.onSockClose()
 		})
-		
+
 		this.sock.on('data', (data) => {
 			this.onSockData(data)
 		})
@@ -68,12 +67,20 @@ export class Connection extends EventEmitter {
 		this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort() )
 
 		this.parser = new Parser()
+
+		this.setDatabase(0);
+	}
+
+	public setDatabase( index: number ){
+		this.database = this.server.datastore.getDb(index)
+		return this.database
 	}
 
 	public setCommandListener( v: Function = null ) {
 		this.onCommand = v
 	}
 	public removeCommandListener() {
+		console.log('removeCommandListener')
 		this.onCommand = null
 	}
 	public getCommandListener() {
@@ -97,12 +104,12 @@ export class Connection extends EventEmitter {
 		// this.mainTimer.destroy()
 		this.closing = false;
 		this.processingData = false;
+		this.removeCommandListener()
 		this.removeAllListeners()
 		this.sock.removeAllListeners()
 		this.sock.destroy();
 		this.sock = null
 		this.commander = null
-		this.onCommand = null
 	}
 
 	public quit() {

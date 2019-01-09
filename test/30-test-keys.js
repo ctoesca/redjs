@@ -5,17 +5,6 @@ describe('Keys', function()
 {
 	var redis = getRedis()
 
-	describe('flushdb', function() {
-	    it('should return OK', function( done ) {
-	    	redis.flushdb()
-	    	.then( function(r){
-	    		assert.equal(r, "OK");
-	    		done()
-	    	})
-	    	.catch( done )
-	    });
-  	});
-
 	describe('hset key1 var1 toto', function() {
 	    it('should return 1', function( done ) {
 	    	redis.hset('key1', 'var1', 'toto')

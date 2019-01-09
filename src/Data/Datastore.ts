@@ -4,6 +4,7 @@ import {RedjsServer} from '../RedjsServer';
 import Promise = require('bluebird');
 import EventEmitter = require('events');
 import net = require('net');
+import * as utils from '../utils';
 
 export class Datastore extends EventEmitter {
 
@@ -40,9 +41,17 @@ export class Datastore extends EventEmitter {
 	}
 
 	public getDb(index = 0) {
+
+		if ( !utils.isInt(index) || (index >= this.databases.length ))
+			throw 'ERR value is not an integer or out of range'
+
 		return this.databases[index]
 	}
-
+	clear(){
+		for (let db of this.databases) {
+			db.clear()
+		}
+	}
 	/* protected onTimer() {
 
 	}

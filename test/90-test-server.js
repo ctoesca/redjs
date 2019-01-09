@@ -25,6 +25,103 @@ describe('Server commands', function()
       });
   });
 
+ 
+  describe('select 0', function() {
+      it('should receive "OK"', function( done ) {        
+        redis.select(0)
+        .then( function(r){
+          assert.equal(r, "OK");
+          done()
+        })
+      });
+  });
+
+  describe('hset flushtest var1 testflush', function() {
+      it('should return 1', function( done ) {
+        redis.hset('key1', 'var1', 'toto')
+        .then( function(r){
+          assert.equal(r, 1);
+          done()
+        })
+        .catch( done )
+      });
+  });
+
+  describe('select 1', function() {
+      it('should receive "OK"', function( done ) {        
+        redis.select(1)
+        .then( function(r){
+          assert.equal(r, "OK");
+          done()
+        })
+      });
+    });
+
+  describe('hset flushtest var1 testflush', function() {
+      it('should return 1', function( done ) {
+        redis.hset('key1', 'var1', 'toto')
+        .then( function(r){
+          assert.equal(r, 1);
+          done()
+        })
+        .catch( done )
+      });
+  });
+
+  describe('flushdb', function() {
+      it('should return OK', function( done ) {
+        redis.flushdb()
+        .then( function(r){
+          assert.equal(r, "OK");
+          done()
+        })
+        .catch( done )
+      });
+  });
+
+  describe('hget flushtest var1', function() {
+      it('should return null', function( done ) {
+        redis.hget('key1', 'var1')
+        .then( function(r){
+          assert.equal(r, null);
+          done()
+        })
+        .catch( done )
+      });
+  });
+
+    describe('flushall', function() {
+      it('should return OK', function( done ) {
+        redis.flushall()
+        .then( function(r){
+          assert.equal(r, "OK");
+          done()
+        })
+        .catch( done )
+      });
+  });
+
+   describe('select 0', function() {
+      it('should receive "OK"', function( done ) {        
+        redis.select(0)
+        .then( function(r){
+          assert.equal(r, "OK");
+          done()
+        })
+      });
+  });
+
+  describe('hget flushtest var1', function() {
+      it('should return null', function( done ) {
+        redis.hget('key1', 'var1')
+        .then( function(r){
+          assert.equal(r, null);
+          done()
+        })
+        .catch( done )
+      });
+  });
+  
 
 	describe('monitor', function() {
 	    it('should receive monitor command "keys test-monitor" on DB 0', function( done ) {

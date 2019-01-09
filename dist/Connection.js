@@ -23,7 +23,6 @@ class Connection extends EventEmitter {
         this.sock = sock;
         this.server = server;
         this.commander = commander;
-        this.database = this.server.datastore.getDb(0);
         let constructor = this.constructor;
         this.logger = RedjsServer_1.RedjsServer.createLogger({ name: constructor.name });
         this.logger.debug(constructor.name + ' created');
@@ -41,11 +40,17 @@ class Connection extends EventEmitter {
         });
         this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort());
         this.parser = new Parser_1.Parser();
+        this.setDatabase(0);
+    }
+    setDatabase(index) {
+        this.database = this.server.datastore.getDb(index);
+        return this.database;
     }
     setCommandListener(v = null) {
         this.onCommand = v;
     }
     removeCommandListener() {
+        console.log('removeCommandListener');
         this.onCommand = null;
     }
     getCommandListener() {
@@ -64,12 +69,12 @@ class Connection extends EventEmitter {
     destroy() {
         this.closing = false;
         this.processingData = false;
+        this.removeCommandListener();
         this.removeAllListeners();
         this.sock.removeAllListeners();
         this.sock.destroy();
         this.sock = null;
         this.commander = null;
-        this.onCommand = null;
     }
     quit() {
         if (this.processingData) {

@@ -10,7 +10,7 @@ export class ServerCommands extends AbstractCommands {
 	}
 
 	public getCommandsNames(): string[] {
-		return ['info', 'monitor', 'flushdb', 'time']
+		return ['info', 'monitor', 'flushdb', 'time', 'flushall']
 	}
 
 	public flushdb( conn: Connection, async: string) {
@@ -22,7 +22,15 @@ export class ServerCommands extends AbstractCommands {
 			type: 'simpleString'
 		}
 	}
+	public flushall( conn: Connection, async: string) {
+		this.checkArgCount('llen', arguments, 1, 2)
 
+		this.datastore.clear()
+		return {
+			value: 'OK',
+			type: 'simpleString'
+		}
+	}
 	public time( conn: Connection) {
 		this.checkArgCount('llen', arguments, 1, 1)
 		let r: string[] = []

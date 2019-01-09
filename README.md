@@ -161,6 +161,7 @@ redis-cli -p 6379
 ### Server
 - monitor
 - flushdb
+- flushall
 - info
 - time
 

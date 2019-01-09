@@ -4,6 +4,7 @@ import {RedjsServer} from '../RedjsServer';
 import Promise = require('bluebird');
 import EventEmitter = require('events');
 import net = require('net');
+import * as utils from '../utils';
 
 import {Connection} from '../Connection';
 

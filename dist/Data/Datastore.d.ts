@@ -11,4 +11,5 @@ export declare class Datastore extends EventEmitter {
     protected databases: Database[];
     constructor(opt: any);
     getDb(index?: number): Database;
+    clear(): void;
 }

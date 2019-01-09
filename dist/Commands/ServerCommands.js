@@ -6,11 +6,19 @@ class ServerCommands extends AbstractCommands_1.AbstractCommands {
         super(opt);
     }
     getCommandsNames() {
-        return ['info', 'monitor', 'flushdb', 'time'];
+        return ['info', 'monitor', 'flushdb', 'time', 'flushall'];
     }
     flushdb(conn, async) {
         this.checkArgCount('llen', arguments, 1, 2);
         conn.database.clear();
+        return {
+            value: 'OK',
+            type: 'simpleString'
+        };
+    }
+    flushall(conn, async) {
+        this.checkArgCount('llen', arguments, 1, 2);
+        this.datastore.clear();
         return {
             value: 'OK',
             type: 'simpleString'
