@@ -112,7 +112,6 @@ class Connection extends EventEmitter {
         try {
             this.processingData = true;
             let requestData = this.parser.fromRESP(data);
-            let commands = [];
             if (typeof requestData[0] === 'object') {
                 this.processPipelineRequest(requestData);
             }
@@ -126,8 +125,7 @@ class Connection extends EventEmitter {
                 this.lastError = err.toString();
                 this.logger.error('REQUEST: ' + data.toString().replace(/\r\n/g, '\\r\\n') + ', ERROR: ', err);
             }
-            let resp = this.parser.toRESP(err.toString(), 'error');
-            this.sock.write(resp);
+            this.sock.write(this.parser.toRESP(this.lastError, 'error'));
             this.processingData = false;
         }
         if (this.closing) {
