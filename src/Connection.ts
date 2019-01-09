@@ -115,46 +115,53 @@ export class Connection extends EventEmitter {
 	public resume() {
 		this.sock.resume()
 	}
+
+	protected processPipelineRequest( requestData: any ){
+		/*
+		pipeline
+		*/
+		let responses = []
+		for (let data of requestData) {
+			let cmd = data[0].toLowerCase()
+			data.shift()
+
+			if (this.onCommand) {
+				this.onCommand(this, cmd, ...data)
+			}
+			let responseData = this.commander.execCommand(cmd, this, ...data)
+			responses.push( responseData )
+		}
+
+		for (let i = 0; i < responses.length; i++) {
+			this.sock.write( this.parser.toRESP( responses[i] ) )
+		}
+	}
+
+	protected processSingleRequest( requestData: any ){
+		let cmd = requestData[0].toLowerCase()
+		requestData.shift()
+		if (this.onCommand) {
+			this.onCommand(this, cmd, ...requestData)
+		}
+		let responseData = this.commander.execCommand(cmd, this, ...requestData)
+		let resp = this.parser.toRESP( responseData )
+		this.sock.write( resp )
+	}
+
 	protected onSockData(data: any) {
 
 		//this.logger.debug('onSockData', data)
 
 		try {
 			this.processingData = true;
-
+			
 			let requestData = this.parser.fromRESP(data)
-		
 			let commands = []
 
 			if (typeof requestData[0] === 'object') {
-				/*
-				pipeline
-				*/
-				let responses = []
-				for (let data of requestData) {
-					let cmd = data[0].toLowerCase()
-					data.shift()
-
-					if (this.onCommand) {
-						this.onCommand(this, cmd, ...data)
-					}
-					let responseData = this.commander.execCommand(cmd, this, ...data)
-					responses.push( responseData )
-				}
-
-				for (let i = 0; i < responses.length; i++) {
-					this.sock.write( this.parser.toRESP( responses[i] ) )
-				}
-
+				this.processPipelineRequest(requestData);
 			} else {
-				let cmd = requestData[0].toLowerCase()
-				requestData.shift()
-				if (this.onCommand) {
-					this.onCommand(this, cmd, ...requestData)
-				}
-				let responseData = this.commander.execCommand(cmd, this, ...requestData)
-				let resp = this.parser.toRESP( responseData )
-				this.sock.write( resp )
+				this.processSingleRequest(requestData)	
 			}
 
 			this.processingData = false;
