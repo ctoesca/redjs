@@ -131,7 +131,7 @@ describe('Server commands', function()
           done("no error returned")
         })
         .catch( (err) => {
-          console.log(err.toString()
+          console.log(err.toString())
           done()
         })
       });
