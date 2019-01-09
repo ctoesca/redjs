@@ -35,7 +35,9 @@ class Connection extends EventEmitter {
             this.onSockData(data);
         });
         this.sock.on('error', (err) => {
-            this.onSockError(err);
+            if (err.code !== 'ECONNRESET') {
+                this.logger.error('ERROR: ' + this.getRemoteAddressPort(), err);
+            }
         });
         this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort());
         this.parser = new Parser_1.Parser();
@@ -130,11 +132,6 @@ class Connection extends EventEmitter {
         }
         if (this.closing) {
             this.sock.end();
-        }
-    }
-    onSockError(err) {
-        if (err.code !== 'ECONNRESET') {
-            this.logger.error('ERROR: ' + this.getRemoteAddressPort(), err);
         }
     }
     onSockClose() {

@@ -146,6 +146,7 @@ export class RedjsServer extends EventEmitter {
 	protected unmonitorConnection(conn: Connection) {
 
 		if (this.monitoredConnections.has(conn.id)) {
+
 			this.monitoredConnections.delete(conn.id)
 
 			if (this.getMonitoredConnectionsCount() === 0) {

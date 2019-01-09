@@ -20,7 +20,6 @@ class ServerCommands extends AbstractCommands_1.AbstractCommands {
         this.checkArgCount('llen', arguments, 1, 1);
         let r = [];
         let now = Date.now().toString();
-        console.log(now);
         r.push(now.substr(0, now.length - 3));
         r.push(now.substr(r[0].length) + '000');
         return r;

@@ -33,6 +33,5 @@ export declare class Connection extends EventEmitter {
     protected processPipelineRequest(requestData: any): void;
     protected processSingleRequest(requestData: any): void;
     protected onSockData(data: any): void;
-    protected onSockError(err: any): void;
     protected onSockClose(): void;
 }
