@@ -162,6 +162,7 @@ redis-cli -p 6379
 - monitor
 - flushdb
 - info
+- time
 
 ### Connection
 - ping

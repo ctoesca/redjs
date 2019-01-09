@@ -14,6 +14,7 @@ export class ConnectionCommands extends AbstractCommands {
 	}
 
 	public ping( conn: Connection, responseExpected: string = null) {
+		this.checkArgCount('echo', arguments, 1, 2)
 		let r = 'PONG'
 		if (responseExpected) {
 			r = responseExpected

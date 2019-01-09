@@ -117,63 +117,28 @@ export class Connection extends EventEmitter {
 	}
 	protected onSockData(data: any) {
 
-		this.logger.debug('onSockData', data)
+		//this.logger.debug('onSockData', data)
 
 		try {
-				this.processingData = true;
+			this.processingData = true;
 
-			// console.log('request: '+data.toString().replace(/\r\n/g, '\\r\\n').replace(/\n/g, '\\n'))
-			/* pipeline:
-			*3\r\n
-				$3\r\nset\r\n
-				$3\r\nfoo\r\n
-				$3\r\nbar\r\n
-			*2\r\n
-				$3\r\ndel\r\n
-				$2\r\ncc\r\n
-				*/
+			let requestData = this.parser.fromRESP(data)
+		
+			let commands = []
 
-				let requestData = this.parser.fromRESP(data)
-				// console.log('requestData=', requestData)
-
-			/* !!
-			[2019-01-05T16:36:28.421Z] ERROR: Connection/21572 on PC:
-				REQUEST:
-				*3\r\n
-					$5\r\nlpush\r\n
-					$6\r\nmylist\r\n
-					$4\r\ntoto\r\n
-				*3\r\n
-					$5\r\nlpush\r\n
-					$6\r\nmylist\r\n
-					$4\r\ntoto\r\n
-
-				ERROR:  TypeError: requestData[0].toLowerCase is not a function
-				at Connection.onSockData (G:\dev\nexilearn\redjs\dist\Connection.js:69:38)
-				at Socket.Connection.sock.on (G:\dev\nexilearn\redjs\dist\Connection.js:36:18)
-				at emitOne (events.js:116:13)
-				at Socket.emit (events.js:211:7)
-				at addChunk (_stream_readable.js:263:12)
-				at readableAddChunk (_stream_readable.js:250:11)
-				at Socket.Readable.push (_stream_readable.js:208:10)
-				at TCP.onread (net.js:597:20)
-				*/
-
-				let commands = []
-
-				if (typeof requestData[0] === 'object') {
+			if (typeof requestData[0] === 'object') {
 				/*
 				pipeline
 				*/
 				let responses = []
-				for (let i = 0; i < requestData.length ; i++) {
-					let cmd = requestData[i][0].toLowerCase()
-					requestData[i].shift()
+				for (let data of requestData) {
+					let cmd = data[0].toLowerCase()
+					data.shift()
 
 					if (this.onCommand) {
-						this.onCommand(this, cmd, ...requestData[i])
+						this.onCommand(this, cmd, ...data)
 					}
-					let responseData = this.commander.execCommand(cmd, this, ...requestData[i])
+					let responseData = this.commander.execCommand(cmd, this, ...data)
 					responses.push( responseData )
 				}
 

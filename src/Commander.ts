@@ -87,6 +87,7 @@ export class Commander extends EventEmitter {
 		if (this.commands[cmd]) {
 			let command = this.commands[cmd]
 			if (command.manager[cmd]) {
+				command.manager.checkArgs( cmd, ...args )
 				return command.manager[cmd](conn, ...args)
 			} else {
 				throw 'ERR \'' + cmd + '\' command is not implemented'

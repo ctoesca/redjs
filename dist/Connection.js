@@ -84,20 +84,19 @@ class Connection extends EventEmitter {
         this.sock.resume();
     }
     onSockData(data) {
-        this.logger.debug('onSockData', data);
         try {
             this.processingData = true;
             let requestData = this.parser.fromRESP(data);
             let commands = [];
             if (typeof requestData[0] === 'object') {
                 let responses = [];
-                for (let i = 0; i < requestData.length; i++) {
-                    let cmd = requestData[i][0].toLowerCase();
-                    requestData[i].shift();
+                for (let data of requestData) {
+                    let cmd = data[0].toLowerCase();
+                    data.shift();
                     if (this.onCommand) {
-                        this.onCommand(this, cmd, ...requestData[i]);
+                        this.onCommand(this, cmd, ...data);
                     }
-                    let responseData = this.commander.execCommand(cmd, this, ...requestData[i]);
+                    let responseData = this.commander.execCommand(cmd, this, ...data);
                     responses.push(responseData);
                 }
                 for (let i = 0; i < responses.length; i++) {

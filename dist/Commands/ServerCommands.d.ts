@@ -7,6 +7,7 @@ export declare class ServerCommands extends AbstractCommands {
         value: string;
         type: string;
     };
+    time(conn: Connection): string[];
     monitor(conn: Connection): {
         value: string;
         type: string;

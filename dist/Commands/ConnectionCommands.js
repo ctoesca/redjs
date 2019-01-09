@@ -9,6 +9,7 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         return ['ping', 'auth', 'echo', 'quit', 'select', 'swapdb'];
     }
     ping(conn, responseExpected = null) {
+        this.checkArgCount('echo', arguments, 1, 2);
         let r = 'PONG';
         if (responseExpected) {
             r = responseExpected;

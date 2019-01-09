@@ -13,6 +13,7 @@ export declare class AbstractCommands extends EventEmitter {
     protected data: any;
     constructor(opt: any);
     destroy(): void;
+    checkArgs(cmd: string, ...args: any[]): void;
     getCommandsNames(): string[];
     protected checkType(obj: any, type: any): void;
     protected checkArgCount(cmd: string, args: IArguments, valueOrMin: number, max?: number): void;

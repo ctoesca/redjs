@@ -21,6 +21,8 @@ class AbstractCommands extends EventEmitter {
     destroy() {
         this.removeAllListeners();
     }
+    checkArgs(cmd, ...args) {
+    }
     getCommandsNames() {
         return [];
     }

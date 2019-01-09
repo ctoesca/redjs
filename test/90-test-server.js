@@ -5,14 +5,29 @@ const assert = require('assert');
 describe('Server commands', function() 
 {
 	
-				
+	var redis = getRedis()
+
+  describe('time', function() {
+      it('should return [secondes, milli]', function( done ) {
+        redis.time()
+        .then( function(r){
+          if (r.length ===2)
+          {
+            if (  r[0].match(/[0-9]{13}/) && r[1].match(/[0-9]{6}/) )
+              done()
+          }else{
+            done('Incorrect response: '+JSON.stringify(r))
+          }
+        })
+        .catch( done )
+      });
+  });
+
 
 	describe('monitor', function() {
 	    it('should receive monitor command "keys test-monitor" on DB 0', function( done ) {
 
 	    	this.timeout(3000);
-
-			var redis = getRedis()
 
 	    	redis.monitor(function (err, monitor) {
   				if (err){
