@@ -27,7 +27,6 @@
     "bunyan": "^1.8.12",
     "lodash": "^4.17.11",
     "minimatch": "^3.0.4",
-    "mocha": "^5.2.0",
     "redis-parser": "^3.0.0",
     "uuid": "^3.3.2"
   },
@@ -47,9 +46,11 @@
     "gulp-typescript": "^5.0.0",
     "ioredis": "^4.3.0",
     "merge2": "^1.2.3",
+    "mocha": "^5.2.0",
+    "mochawesome": "^3.1.1",
+    "nyc": "^13.1.0",
     "run-sequence": "^2.2.1",
     "tslint": "^5.12.0",
-    "typescript": "^3.2.2",
-    "nyc": "^13.1.0"
+    "typescript": "^3.2.2"
   }
 }

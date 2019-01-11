@@ -52,7 +52,8 @@ if (cluster.isMaster)
 	var testDir = __dirname
 
 	var mocha = new Mocha({
-	    reporter: 'spec'
+	    //reporter: 'spec'
+	    reporter: 'mochawesome'
 	});
 
 	fs.readdirSync(testDir).filter(function(file) {
