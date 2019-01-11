@@ -49,19 +49,20 @@ class Sets extends AbstractCommands_1.AbstractCommands {
     spop(conn, key, count = 1) {
         this.checkArgCount('spop', arguments, 2, 3);
         let set = this.getDataset(conn.database, key);
-        if ((set == null) || (set.size == 0))
+        if (!set || (set.size === 0)) {
             return null;
+        }
         this.checkInt(count);
-        if ((count <= 0) || (count > set.size))
+        if ((count <= 0) || (count > set.size)) {
             throw 'ERR value out of range';
+        }
         let r = [];
-        let iterator = set.keys();
+        let iterator = set.values();
         let toDelete = [];
-        for (let member of iterator) {
+        for (var i = 1; i <= count; i++) {
+            let member = iterator.next().value;
             r.push(member);
             toDelete.push(member);
-            if (r.length >= count)
-                break;
         }
         for (let member of toDelete) {
             set.delete(member);

@@ -68,7 +68,7 @@ export class Sets extends AbstractCommands {
 		this.checkArgCount('spop', arguments, 2, 3)
 
 		let set = this.getDataset(conn.database, key)
-		if ((set === null) || (set.size === 0)) {
+		if ( !set || (set.size === 0)) {
 			return null;
 		}
 
@@ -78,16 +78,14 @@ export class Sets extends AbstractCommands {
 		}
 
 		let r: any[] = []
-
-		let iterator = set.keys()
+		let iterator = set.values()
 		let toDelete = []
-		for (let member of iterator) {
+		for (var i=1; i<=count; i++){
+			let member = iterator.next().value
 			r.push(member)
 			toDelete.push(member)
-			if (r.length >= count) {
-				break;
-			}
 		}
+		
 		for (let member of toDelete) {
 			set.delete(member)
 		}
