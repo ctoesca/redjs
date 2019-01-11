@@ -7,6 +7,7 @@ export declare class Sets extends AbstractCommands {
     srem(conn: Connection, key: string, ...members: string[]): number;
     sadd(conn: Connection, key: string, ...members: string[]): number;
     smembers(conn: Connection, key: string): any[];
+    spop(conn: Connection, key: string, count?: number): any[];
     protected getDataset(db: Database, key: string): any;
     protected createNewKey(db: Database, key: string): any;
 }

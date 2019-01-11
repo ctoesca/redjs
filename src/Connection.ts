@@ -38,7 +38,7 @@ export class Connection extends EventEmitter {
 		this.server = server
 		this.commander = commander
 
-		
+
 
 		let constructor: any = this.constructor
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
@@ -71,7 +71,7 @@ export class Connection extends EventEmitter {
 		this.setDatabase(0);
 	}
 
-	public setDatabase( index: number ){
+	public setDatabase( index: number ) {
 		this.database = this.server.datastore.getDb(index)
 		return this.database
 	}
@@ -79,7 +79,7 @@ export class Connection extends EventEmitter {
 	public setCommandListener( v: Function = null ) {
 		this.onCommand = v
 	}
-	
+
 	public removeCommandListener() {
 		this.onCommand = null
 	}
@@ -127,7 +127,7 @@ export class Connection extends EventEmitter {
 		this.sock.resume()
 	}
 
-	protected processPipelineRequest( requestData: any ){
+	protected processPipelineRequest( requestData: any ) {
 		/*
 		pipeline
 		*/
@@ -148,7 +148,7 @@ export class Connection extends EventEmitter {
 		}
 	}
 
-	protected processSingleRequest( requestData: any ){
+	protected processSingleRequest( requestData: any ) {
 		let cmd = requestData[0].toLowerCase()
 		requestData.shift()
 		if (this.onCommand) {
@@ -161,17 +161,17 @@ export class Connection extends EventEmitter {
 
 	protected onSockData(data: any) {
 
-		//this.logger.debug('onSockData', data)
+		// this.logger.debug('onSockData', data)
 
 		try {
 			this.processingData = true;
 
 			let requestData = this.parser.fromRESP(data)
-			
+
 			if (typeof requestData[0] === 'object') {
 				this.processPipelineRequest(requestData);
 			} else {
-				this.processSingleRequest(requestData)	
+				this.processSingleRequest(requestData)
 			}
 
 			this.processingData = false;

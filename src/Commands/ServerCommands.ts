@@ -36,8 +36,8 @@ export class ServerCommands extends AbstractCommands {
 		let r: string[] = []
 		let now = Date.now().toString()
 		// 1546997952162
-		r.push(   now.substr(0, now.length - 3) ) //1546997952
-		r.push(  now.substr( r[0].length )+'000' )   //162000
+		r.push(   now.substr(0, now.length - 3) ) // 1546997952
+		r.push(  now.substr( r[0].length ) + '000' )   // 162000
 		return r
 	}
 

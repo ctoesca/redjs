@@ -42,12 +42,13 @@ export class Datastore extends EventEmitter {
 
 	public getDb(index = 0) {
 
-		if ( !utils.isInt(index) || (index >= this.databases.length ))
+		if ( !utils.isInt(index) || (index >= this.databases.length )) {
 			throw 'ERR value is not an integer or out of range'
+		}
 
 		return this.databases[index]
 	}
-	clear(){
+	public clear() {
 		for (let db of this.databases) {
 			db.clear()
 		}

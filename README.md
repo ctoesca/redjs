@@ -151,6 +151,7 @@ redis-cli -p 6379
 - sadd
 - srem
 - smembers
+- spop
 
 ### Strings
 

@@ -26,7 +26,7 @@ export class ConnectionCommands extends AbstractCommands {
 	}
 
 	public select ( conn: Connection, index = 0) {
-	
+
 		this.checkArgCount('echo', arguments, 2)
 		conn.setDatabase(index)
 		let r = 'OK'

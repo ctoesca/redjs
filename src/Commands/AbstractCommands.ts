@@ -38,8 +38,8 @@ export class AbstractCommands extends EventEmitter {
 	public destroy() {
 		this.removeAllListeners()
 	}
-	public checkArgs(cmd: string, ...args: any[]){
-		//console.log(cmd, args)
+	public checkArgs(cmd: string, ...args: any[]) {
+		// console.log(cmd, args)
 	}
 	public getCommandsNames(): string[] {
 		return []

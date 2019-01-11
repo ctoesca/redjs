@@ -63,6 +63,38 @@ export class Sets extends AbstractCommands {
 		return r
 	}
 
+	public spop(conn: Connection, key: string, count = 1) {
+
+		this.checkArgCount('spop', arguments, 2, 3)
+
+		let set = this.getDataset(conn.database, key)
+		if ((set === null) || (set.size === 0)) {
+			return null;
+		}
+
+		this.checkInt(count)
+		if ((count <= 0) || (count > set.size)) {
+			throw 'ERR value out of range'
+		}
+
+		let r: any[] = []
+
+		let iterator = set.keys()
+		let toDelete = []
+		for (let member of iterator) {
+			r.push(member)
+			toDelete.push(member)
+			if (r.length >= count) {
+				break;
+			}
+		}
+		for (let member of toDelete) {
+			set.delete(member)
+		}
+
+		return r
+	}
+
 	protected getDataset(db: Database, key: string) {
 		let r = db.getDataset(key)
 		this.checkType(r, Set)
