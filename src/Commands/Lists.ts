@@ -23,18 +23,18 @@ export class Lists extends AbstractCommands {
 		let data = this.getDataset(conn.database, key)
 		let r: any[] = []
 
-		if (data) {
+		if (!data)
+			return r
 
-			let startIndx: number = this.normalizeIndex( start, data )
-			let stopIndx: number = this.normalizeIndex( stop, data )
+		let startIndx: number = this.normalizeIndex( start, data )
+		let stopIndx: number = this.normalizeIndex( stop, data )
 
-			if ((startIndx >= 0) && (startIndx < data.length) && (startIndx <= stopIndx)) {
-				for (let i = startIndx; (i <= stopIndx) && (i < data.length); i++ ) {
-					r.push( data[i])
-				}
+		if ((startIndx >= 0) && (startIndx < data.length) && (startIndx <= stopIndx)) {
+			for (let i = startIndx; (i <= stopIndx) && (i < data.length); i++ ) {
+				r.push( data[i])
 			}
 		}
-
+		
 		return r
 	}
 
