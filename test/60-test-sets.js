@@ -160,4 +160,17 @@ describe('Sets', function()
 	    	.catch( done )
 	    });
   	});
+
+  	describe('spop set3 toto', function() {
+	    it('should return error', function( done ) {
+	    	redis.spop('set3', 'toto')
+	    	.then( function(r){
+	    		done("no error: result = "+r)
+	    	})
+	    	.catch( err => {
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
 });
