@@ -21,13 +21,15 @@ export class Sets extends AbstractCommands {
 
 		let set = this.getDataset(conn.database, key)
 		let r = 0
-		if (set) {
-			for (let member of members) {
-				if (set.delete(member)) {
-					r++
-				}
+		if (!set) 
+			return r
+
+		for (let member of members) {
+			if (set.delete(member)) {
+				r++
 			}
 		}
+		
 		return r
 	}
 
@@ -37,6 +39,9 @@ export class Sets extends AbstractCommands {
 
 		let r = 0
 		let set = this.getOrCreate(conn.database, key)
+		if (!set) 
+			return r
+
 		for (let member of members) {
 			if (!set.has(member)) {
 				set.add( member )
