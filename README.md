@@ -152,6 +152,7 @@ redis-cli -p 6379
 - srem
 - smembers
 - spop
+- sismember
 
 ### Strings
 

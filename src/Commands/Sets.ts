@@ -15,6 +15,20 @@ export class Sets extends AbstractCommands {
 		'SMOVE', 'SPOP', 'SRANDMEMBER', 'SREM', 'SUNION', 'SUNIONSTORE', 'SSCAN']
 	}
 
+	public sismember(conn: Connection, key: string, member: any) {
+
+		this.checkArgCount('srem', arguments, 3, 3)
+
+		let set: Set<any> = this.getDataset(conn.database, key)
+		if (!set)
+			return 0
+
+		let r = 0
+		if (set.has(member)) 
+			r = 1 
+		return r
+	}
+
 	public srem(conn: Connection, key: string, ...members: string[]) {
 
 		this.checkArgCount('srem', arguments, 3, -1)
@@ -71,15 +85,19 @@ export class Sets extends AbstractCommands {
 	public spop(conn: Connection, key: string, count = 1) {
 
 		this.checkArgCount('spop', arguments, 2, 3)
+		this.checkInt(count)
 
 		let set = this.getDataset(conn.database, key)
-		if ( !set || (set.size === 0)) {
-			return null;
-		}
+		
+		if (!set)
+			return null
 
-		this.checkInt(count)
 		if ((count <= 0) || (count > set.size)) {
 			throw 'ERR value out of range'
+		}
+		
+		if (set.size === 0) {
+			return null;
 		}
 
 		let r: any[] = []

@@ -9,6 +9,16 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         return ['SADD', 'SCARD', 'SDIFF', 'SDIFFSTORE', 'SINTER', 'SINTERSTORE', 'SISMEMBER', 'SMEMBERS',
             'SMOVE', 'SPOP', 'SRANDMEMBER', 'SREM', 'SUNION', 'SUNIONSTORE', 'SSCAN'];
     }
+    sismember(conn, key, member) {
+        this.checkArgCount('srem', arguments, 3, 3);
+        let set = this.getDataset(conn.database, key);
+        if (!set)
+            return 0;
+        let r = 0;
+        if (set.has(member))
+            r = 1;
+        return r;
+    }
     srem(conn, key, ...members) {
         this.checkArgCount('srem', arguments, 3, -1);
         let set = this.getDataset(conn.database, key);
@@ -50,13 +60,15 @@ class Sets extends AbstractCommands_1.AbstractCommands {
     }
     spop(conn, key, count = 1) {
         this.checkArgCount('spop', arguments, 2, 3);
-        let set = this.getDataset(conn.database, key);
-        if (!set || (set.size === 0)) {
-            return null;
-        }
         this.checkInt(count);
+        let set = this.getDataset(conn.database, key);
+        if (!set)
+            return null;
         if ((count <= 0) || (count > set.size)) {
             throw 'ERR value out of range';
+        }
+        if (set.size === 0) {
+            return null;
         }
         let r = [];
         let iterator = set.values();

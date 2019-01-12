@@ -161,13 +161,58 @@ describe('Sets', function()
 	    });
   	});
 
-  	describe('spop set3 toto', function() {
+  	describe('spop set2 toto', function() {
 	    it('should return error', function( done ) {
 	    	redis.spop('set3', 'toto')
 	    	.then( function(r){
 	    		done("no error: result = "+r)
 	    	})
 	    	.catch( err => {
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	/* sismember */
+  	describe('sadd set4 var1 var2', function() {
+	    it('should return 2', function( done ) {
+	    	redis.sadd('set4', 'var1', 'var2')
+	    	.then( function(r){
+	    		assert.equal(r, 2);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('sismember set4 var1', function() {
+	    it('should return 1', function( done ) {
+	    	redis.sismember('set4', 'var1')
+	    	.then( function(r){
+	    		assert.equal(r, 1);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('sismember set4 toto', function() {
+	    it('should return 1', function( done ) {
+	    	redis.sismember('set4', 'toto')
+	    	.then( function(r){
+	    		assert.equal(r, 0);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('sismember set5 toto', function() {
+	    it('should return 1', function( done ) {
+	    	redis.sismember('set5', 'toto')
+	    	.then( function(r){
+	    		assert.equal(r, 0);
 	    		done()
 	    	})
 	    	.catch( done )
