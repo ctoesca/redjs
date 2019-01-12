@@ -52,6 +52,15 @@ class AbstractCommands extends EventEmitter {
     getDataset(db, key) {
         return db.getDataset(key);
     }
+    getDatasets(db, ...keys) {
+        let r = [];
+        for (let key of keys) {
+            let ds = db.getDataset(key);
+            if (ds)
+                r.push(ds);
+        }
+        return r;
+    }
     getOrCreate(db, key) {
         let r = this.getDataset(db, key);
         if (!r) {

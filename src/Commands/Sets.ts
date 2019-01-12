@@ -37,14 +37,13 @@ export class Sets extends AbstractCommands {
 		let r : any[] = []
 		let rTmp: Map<string, any> = new Map<string, any>()
 
-		for (let key of keys) {
-			let set = this.getDataset(conn.database, key)
-			if (set) {				
-				let iterator = set.values()
-				for (let v of iterator) {
-					let hash: string = sha1( v ).toString()
-					rTmp.set(hash, v )
-				}
+		let sets = this.getDatasets(conn.database, ...keys)
+
+		for (let set of sets) {		
+			let iterator = set.values()
+			for (let v of iterator) {
+				let hash: string = sha1( v ).toString()
+				rTmp.set(hash, v )
 			}
 		}
 

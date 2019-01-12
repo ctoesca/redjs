@@ -24,14 +24,12 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         this.checkArgCount('sinter', arguments, 3, -1);
         let r = [];
         let rTmp = new Map();
-        for (let key of keys) {
-            let set = this.getDataset(conn.database, key);
-            if (set) {
-                let iterator = set.values();
-                for (let v of iterator) {
-                    let hash = sha1(v).toString();
-                    rTmp.set(hash, v);
-                }
+        let sets = this.getDatasets(conn.database, ...keys);
+        for (let set of sets) {
+            let iterator = set.values();
+            for (let v of iterator) {
+                let hash = sha1(v).toString();
+                rTmp.set(hash, v);
             }
         }
         rTmp.forEach((value, field) => {

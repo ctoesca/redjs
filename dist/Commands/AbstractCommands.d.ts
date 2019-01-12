@@ -20,6 +20,7 @@ export declare class AbstractCommands extends EventEmitter {
     protected checkInt(v: any): void;
     protected createNewKey(db: Database, key: string): any;
     protected getDataset(db: Database, key: string): any;
+    protected getDatasets(db: Database, ...keys: string[]): any[];
     protected getOrCreate(db: Database, key: string): any;
     protected match(value: string, pattern: string): boolean;
 }

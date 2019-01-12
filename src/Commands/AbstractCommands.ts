@@ -72,6 +72,15 @@ export class AbstractCommands extends EventEmitter {
 	protected getDataset(db: Database, key: string) {
 		return db.getDataset(key)
 	}
+	protected getDatasets(db: Database, ...keys: string[]) {
+		let r : any[] = []
+		for (let key of keys) {
+			let ds = db.getDataset(key)
+			if (ds)
+				r.push( ds )
+		}
+		return r
+	}
 
 	protected getOrCreate( db: Database, key: string ) {
 		let r = this.getDataset( db, key )
