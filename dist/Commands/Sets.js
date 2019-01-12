@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractCommands_1 = require("./AbstractCommands");
+const sha1 = require("sha1");
 class Sets extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
@@ -17,6 +18,25 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         let r = 0;
         if (set.has(member))
             r = 1;
+        return r;
+    }
+    sunion(conn, ...keys) {
+        this.checkArgCount('sinter', arguments, 3, -1);
+        let r = [];
+        let rTmp = new Map();
+        for (let key of keys) {
+            let set = this.getDataset(conn.database, key);
+            if (set) {
+                let iterator = set.values();
+                for (let v of iterator) {
+                    let hash = sha1(v).toString();
+                    rTmp.set(hash, v);
+                }
+            }
+        }
+        rTmp.forEach((value, field) => {
+            r.push(value);
+        });
         return r;
     }
     srem(conn, key, ...members) {

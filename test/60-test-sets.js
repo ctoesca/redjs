@@ -218,4 +218,66 @@ describe('Sets', function()
 	    	.catch( done )
 	    });
   	});
+
+
+  	/* sunion */
+  	describe('sadd set5 var1 var2', function() {
+	    it('should return 2', function( done ) {
+	    	redis.sadd('set5', 'var1', 'var2')
+	    	.then( function(r){
+	    		assert.equal(r, 2);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('sadd set6 var2 var3', function() {
+	    it('should return 2', function( done ) {
+	    	redis.sadd('set6', 'var2', 'var3')
+	    	.then( function(r){
+	    		assert.equal(r, 2);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+
+  	describe('sunion set5 set6', function() {
+	    it('should return [var1,var2,var3]', function( done ) {
+	    	redis.sunion('set5', 'set6')
+	    	.then( function(r){
+	    		assert.deepEqual(r, ['var1','var2','var3']);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('sunion set6 set7', function() {
+	    it('should return [var2,var3]', function( done ) {
+	    	redis.sunion('set6', 'set7')
+	    	.then( function(r){
+	    		assert.deepEqual(r, ['var2','var3']);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('sunion set6', function() {
+	    it('should return error', function( done ) {
+	    	redis.sunion('set6')
+	    	.then( function(r){
+	    		done("no error: result = "+r)
+	    	})
+	    	.catch( err => {
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	
 });

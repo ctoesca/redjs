@@ -28,12 +28,14 @@
     "lodash": "^4.17.11",
     "minimatch": "^3.0.4",
     "redis-parser": "^3.0.0",
+    "sha1": "^1.1.1",
     "uuid": "^3.3.2"
   },
   "engines": {
     "node": ">=8"
   },
   "devDependencies": {
+    "@types/sha1": "^1.1.1",
     "@types/bluebird": "^3.5.25",
     "@types/bunyan": "^1.8.5",
     "@types/lodash": "^4.14.119",

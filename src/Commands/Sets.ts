@@ -3,6 +3,7 @@ import {Connection} from '../Connection';
 import {Database} from '../data/Database';
 import * as utils from '../utils';
 import Promise = require('bluebird');
+import sha1 = require('sha1');
 
 export class Sets extends AbstractCommands {
 
@@ -29,6 +30,30 @@ export class Sets extends AbstractCommands {
 		return r
 	}
 
+	public sunion(conn: Connection, ...keys: any[]) {
+
+		this.checkArgCount('sinter', arguments, 3, -1)
+
+		let r : any[] = []
+		let rTmp: Map<string, any> = new Map<string, any>()
+
+		for (let key of keys) {
+			let set = this.getDataset(conn.database, key)
+			if (set) {				
+				let iterator = set.values()
+				for (let v of iterator) {
+					let hash: string = sha1( v ).toString()
+					rTmp.set(hash, v )
+				}
+			}
+		}
+
+		rTmp.forEach( ( value: any, field: string ) => {
+			r.push( value )
+		})
+
+		return r
+	}
 	public srem(conn: Connection, key: string, ...members: string[]) {
 
 		this.checkArgCount('srem', arguments, 3, -1)

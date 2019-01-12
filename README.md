@@ -153,6 +153,7 @@ redis-cli -p 6379
 - smembers
 - spop
 - sismember
+- sunion
 
 ### Strings
 
