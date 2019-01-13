@@ -5,6 +5,7 @@ export declare class Sets extends AbstractCommands {
     constructor(opt: any);
     getCommandsNames(): string[];
     sismember(conn: Connection, key: string, member: any): number;
+    srandmember(conn: Connection, key: string, count?: number): any;
     scard(conn: Connection, key: string): number;
     sunion(conn: Connection, ...keys: string[]): any[];
     srem(conn: Connection, key: string, ...members: string[]): number;

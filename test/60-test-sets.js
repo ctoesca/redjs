@@ -284,7 +284,7 @@ describe('Sets', function()
 	    it('should return 0', function( done ) {
 	    	redis.scard('set10')
 	    	.then( function(r){
-	    		assert.deepEqual(r, 0);
+	    		assert.equal(r, 0);
 	    		done()
 	    	})
 	    	.catch( done )
@@ -294,7 +294,7 @@ describe('Sets', function()
 	    it('should return 2', function( done ) {
 	    	redis.scard('set6')
 	    	.then( function(r){
-	    		assert.deepEqual(r, 2);
+	    		assert.equal(r, 2);
 	    		done()
 	    	})
 	    	.catch( done )
@@ -312,4 +312,89 @@ describe('Sets', function()
 	    	.catch( done )
 	    });
   	});
+
+
+
+  	/* srandmember */
+  	describe('sadd set8 toto tutu tata', function() {
+	    it('should return 3', function( done ) {
+	    	redis.sadd('set8', 'toto', 'tutu', 'tata')
+	    	.then( function(r){
+	    		assert.equal(r, 3);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('srandmember set8', function() {
+	    it('should return string toto or tutu or tata', function( done ) {
+	    	redis.srandmember('set8')
+	    	.then( function(r){
+	    		assert.equal( (typeof r == 'string'), true); 
+	    		assert.equal(  (r == 'toto') || (r == 'tutu') || (r == 'tata'), true); 
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('srandmember set8 1', function() {
+	    it('should return [toto] or [tutu] or [tata]', function( done ) {
+	    	redis.srandmember('set8', 1)
+	    	.then( function(r){
+	    		assert.equal( (typeof r == 'object'), true); 
+	    		assert.equal(  (r.length == 1), true); 
+	    		assert.equal(  (r[0] == 'toto') || (r[0] == 'tutu') || (r[0] == 'tata'), true); 
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('srandmember set8 2', function() {
+	    it('should return array of length 2', function( done ) {
+	    	redis.srandmember('set8', 2)
+	    	.then( function(r){
+	    		assert.equal( (typeof r == 'object'), true); 
+	    		assert.equal(  (r.length == 2), true); 
+	    		for (let i=0; i< r.length; i++)
+	    			assert.equal(  (r[i] == 'toto') || (r[i] == 'tutu') || (r[i] == 'tata'), true); 
+	    		assert.equal(  (r[0] != r[1]) && (r[1] != r[2]), true); 
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('srandmember set8 4', function() {
+	    it('should return array of length 3', function( done ) {
+	    	redis.srandmember('set8', 4)
+	    	.then( function(r){
+	    		assert.equal( (typeof r == 'object'), true); 
+	    		assert.equal(  (r.length == 3), true); 
+	    		for (let i=0; i< r.length; i++)
+	    			assert.equal(  (r[i] == 'toto') || (r[i] == 'tutu') || (r[i] == 'tata'), true); 
+	    		assert.equal(  (r[0] != r[1]) && (r[1] != r[2]) && (r[0] != r[2]), true); 
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+
+  	describe('srandmember set8 -4', function() {
+	    it('should return array of length 4', function( done ) {
+	    	redis.srandmember('set8', -4)
+	    	.then( function(r){
+	    		assert.equal( (typeof r == 'object'), true); 
+	    		assert.equal(  (r.length == 4), true); 
+	    		for (let i=0; i< r.length; i++)
+	    			assert.equal(  (r[i] == 'toto') || (r[i] == 'tutu') || (r[i] == 'tata'), true); 
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
 });

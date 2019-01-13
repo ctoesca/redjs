@@ -21,34 +21,100 @@ export class Sets extends AbstractCommands {
 		this.checkArgCount('srem', arguments, 3, 3)
 
 		let set: Set<any> = this.getDataset(conn.database, key)
-		if (!set)
+		if (!set) {
 			return 0
+		}
 
 		let r = 0
-		if (set.has(member)) 
-			r = 1 
+		if (set.has(member)) {
+			r = 1
+		}
 		return r
 	}
-	
+
+	public srandmember(conn: Connection, key: string, count: number = null) {
+
+		this.checkArgCount('srandmember', arguments, 2, 3 )
+
+		let expectArray = false
+		let countWasNegative = false
+
+		if (count !== null) {
+			this.checkInt(count)
+			expectArray = true
+			if (count < 0) {
+				count = Math.abs( count)
+				countWasNegative = true;
+			}
+		} else {
+			count = 1
+		}
+
+
+		let set: Set<any> = this.getDataset(conn.database, key)
+
+		let r: any[] = []
+
+		if ((!set) || (set.size === 0)) {
+			if (expectArray) {
+				return []
+			} else {
+				return null
+			}
+		}
+
+		let iterator = set.values()
+		let values: any[] = []
+		for (let value of iterator) {
+			values.push(value)
+		}
+
+		for (let i = 1; i <= count; i++) {
+			let indx = utils.randomBetween(0, values.length)
+			r.push(values[indx])
+
+			if (count == 1) {
+				break
+			} else {
+
+				if (!countWasNegative) {
+					values.splice(indx, 1)
+					if (values.length === 0) {
+						break;
+					}
+				}
+
+			}
+		}
+
+		if (expectArray) {
+			return r
+		} else {
+			return r[0]
+		}
+
+	}
+
 	public scard(conn: Connection, key: string) {
 		this.checkArgCount('sinter', arguments, 2 )
-		let set : Set<any> = this.getDataset(conn.database, key)
+		let set: Set<any> = this.getDataset(conn.database, key)
 		let r = 0
-		if (set)
+		if (set) {
 			r = set.size
+		}
 		return r
 	}
-	
+
 	public sunion(conn: Connection, ...keys: string[]) {
 
 		this.checkArgCount('sinter', arguments, 3, -1)
 
-		let r : any[] = []
+		let r: any[] = []
 		let rTmp: Map<string, any> = new Map<string, any>()
 
 		let sets = this.getDatasets(conn.database, ...keys)
 
-		for (let set of sets) {		
+		for (let set of sets) {
 			let iterator = set.values()
 			for (let v of iterator) {
 				let hash: string = sha1( v ).toString()
@@ -68,15 +134,16 @@ export class Sets extends AbstractCommands {
 
 		let set = this.getDataset(conn.database, key)
 		let r = 0
-		if (!set) 
+		if (!set) {
 			return r
+		}
 
 		for (let member of members) {
 			if (set.delete(member)) {
 				r++
 			}
 		}
-		
+
 		return r
 	}
 
@@ -86,8 +153,9 @@ export class Sets extends AbstractCommands {
 
 		let r = 0
 		let set = this.getOrCreate(conn.database, key)
-		if (!set) 
+		if (!set) {
 			return r
+		}
 
 		for (let member of members) {
 			if (!set.has(member)) {
@@ -121,14 +189,15 @@ export class Sets extends AbstractCommands {
 		this.checkInt(count)
 
 		let set = this.getDataset(conn.database, key)
-		
-		if (!set)
+
+		if (!set) {
 			return null
+		}
 
 		if ((count <= 0) || (count > set.size)) {
 			throw 'ERR value out of range'
 		}
-		
+
 		if (set.size === 0) {
 			return null;
 		}
@@ -136,12 +205,12 @@ export class Sets extends AbstractCommands {
 		let r: any[] = []
 		let iterator = set.values()
 		let toDelete = []
-		for (var i=1; i<=count; i++){
+		for (let i = 1; i <= count; i++) {
 			let member = iterator.next().value
 			r.push(member)
 			toDelete.push(member)
 		}
-		
+
 		for (let member of toDelete) {
 			set.delete(member)
 		}

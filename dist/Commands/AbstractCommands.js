@@ -56,8 +56,9 @@ class AbstractCommands extends EventEmitter {
         let r = [];
         for (let key of keys) {
             let ds = db.getDataset(key);
-            if (ds)
+            if (ds) {
                 r.push(ds);
+            }
         }
         return r;
     }

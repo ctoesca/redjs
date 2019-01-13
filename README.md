@@ -155,6 +155,7 @@ redis-cli -p 6379
 - sismember
 - sunion
 - scard
+- srandmember
 
 ### Strings
 

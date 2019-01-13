@@ -2,6 +2,10 @@ import urlParser = require('url')
 import _ = require('lodash')
 import { Timer} from './Timer'
 
+function randomBetween(min: number, max: number) {
+	return Math.floor(Math.random() * max) + min;
+}
+
 function parseURL(url: any) {
 	if (isInt(url)) {
 		return { port: url }
@@ -72,4 +76,4 @@ function parseURL(url: any) {
 	}
 
 
-export { isInt, isFloat, parseURL, Timer};
+export { isInt, isFloat, parseURL, Timer, randomBetween};

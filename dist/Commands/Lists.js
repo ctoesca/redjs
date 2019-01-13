@@ -15,8 +15,9 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         this.checkInt(stop);
         let data = this.getDataset(conn.database, key);
         let r = [];
-        if (!data)
+        if (!data) {
             return r;
+        }
         let startIndx = this.normalizeIndex(start, data);
         let stopIndx = this.normalizeIndex(stop, data);
         if ((startIndx >= 0) && (startIndx < data.length) && (startIndx <= stopIndx)) {

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractCommands_1 = require("./AbstractCommands");
+const utils = require("../utils");
 const sha1 = require("sha1");
 class Sets extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
@@ -13,19 +14,74 @@ class Sets extends AbstractCommands_1.AbstractCommands {
     sismember(conn, key, member) {
         this.checkArgCount('srem', arguments, 3, 3);
         let set = this.getDataset(conn.database, key);
-        if (!set)
+        if (!set) {
             return 0;
+        }
         let r = 0;
-        if (set.has(member))
+        if (set.has(member)) {
             r = 1;
+        }
         return r;
+    }
+    srandmember(conn, key, count = null) {
+        this.checkArgCount('srandmember', arguments, 2, 3);
+        let expectArray = false;
+        let countWasNegative = false;
+        if (count !== null) {
+            this.checkInt(count);
+            expectArray = true;
+            if (count < 0) {
+                count = Math.abs(count);
+                countWasNegative = true;
+            }
+        }
+        else {
+            count = 1;
+        }
+        let set = this.getDataset(conn.database, key);
+        let r = [];
+        if ((!set) || (set.size === 0)) {
+            if (expectArray) {
+                return [];
+            }
+            else {
+                return null;
+            }
+        }
+        let iterator = set.values();
+        let values = [];
+        for (let value of iterator) {
+            values.push(value);
+        }
+        for (let i = 1; i <= count; i++) {
+            let indx = utils.randomBetween(0, values.length);
+            r.push(values[indx]);
+            if (count == 1) {
+                break;
+            }
+            else {
+                if (!countWasNegative) {
+                    values.splice(indx, 1);
+                    if (values.length === 0) {
+                        break;
+                    }
+                }
+            }
+        }
+        if (expectArray) {
+            return r;
+        }
+        else {
+            return r[0];
+        }
     }
     scard(conn, key) {
         this.checkArgCount('sinter', arguments, 2);
         let set = this.getDataset(conn.database, key);
         let r = 0;
-        if (set)
+        if (set) {
             r = set.size;
+        }
         return r;
     }
     sunion(conn, ...keys) {
@@ -49,8 +105,9 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         this.checkArgCount('srem', arguments, 3, -1);
         let set = this.getDataset(conn.database, key);
         let r = 0;
-        if (!set)
+        if (!set) {
             return r;
+        }
         for (let member of members) {
             if (set.delete(member)) {
                 r++;
@@ -62,8 +119,9 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         this.checkArgCount('sadd', arguments, 3, -1);
         let r = 0;
         let set = this.getOrCreate(conn.database, key);
-        if (!set)
+        if (!set) {
             return r;
+        }
         for (let member of members) {
             if (!set.has(member)) {
                 set.add(member);
@@ -88,8 +146,9 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         this.checkArgCount('spop', arguments, 2, 3);
         this.checkInt(count);
         let set = this.getDataset(conn.database, key);
-        if (!set)
+        if (!set) {
             return null;
+        }
         if ((count <= 0) || (count > set.size)) {
             throw 'ERR value out of range';
         }
@@ -99,7 +158,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         let r = [];
         let iterator = set.values();
         let toDelete = [];
-        for (var i = 1; i <= count; i++) {
+        for (let i = 1; i <= count; i++) {
             let member = iterator.next().value;
             r.push(member);
             toDelete.push(member);

@@ -4,6 +4,10 @@ const urlParser = require("url");
 const _ = require("lodash");
 const Timer_1 = require("./Timer");
 exports.Timer = Timer_1.Timer;
+function randomBetween(min, max) {
+    return Math.floor(Math.random() * max) + min;
+}
+exports.randomBetween = randomBetween;
 function parseURL(url) {
     if (isInt(url)) {
         return { port: url };

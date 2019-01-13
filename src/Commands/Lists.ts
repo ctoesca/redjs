@@ -23,8 +23,9 @@ export class Lists extends AbstractCommands {
 		let data = this.getDataset(conn.database, key)
 		let r: any[] = []
 
-		if (!data)
+		if (!data) {
 			return r
+		}
 
 		let startIndx: number = this.normalizeIndex( start, data )
 		let stopIndx: number = this.normalizeIndex( stop, data )
@@ -34,7 +35,7 @@ export class Lists extends AbstractCommands {
 				r.push( data[i])
 			}
 		}
-		
+
 		return r
 	}
 
