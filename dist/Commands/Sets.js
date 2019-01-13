@@ -20,6 +20,14 @@ class Sets extends AbstractCommands_1.AbstractCommands {
             r = 1;
         return r;
     }
+    scard(conn, key) {
+        this.checkArgCount('sinter', arguments, 2);
+        let set = this.getDataset(conn.database, key);
+        let r = 0;
+        if (set)
+            r = set.size;
+        return r;
+    }
     sunion(conn, ...keys) {
         this.checkArgCount('sinter', arguments, 3, -1);
         let r = [];

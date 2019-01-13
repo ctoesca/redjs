@@ -279,5 +279,37 @@ describe('Sets', function()
 	    });
   	});
 
-  	
+  	/* scard */
+  	describe('scard set10', function() {
+	    it('should return 0', function( done ) {
+	    	redis.scard('set10')
+	    	.then( function(r){
+	    		assert.deepEqual(r, 0);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+  	describe('scard set6', function() {
+	    it('should return 2', function( done ) {
+	    	redis.scard('set6')
+	    	.then( function(r){
+	    		assert.deepEqual(r, 2);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+  	describe('scard set6 set7', function() {
+	    it('should return error', function( done ) {
+	    	redis.scard('set6', 'set7')
+	    	.then( function(r){
+	    		done("no error: result = "+r)
+	    	})
+	    	.catch( err => {
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
 });

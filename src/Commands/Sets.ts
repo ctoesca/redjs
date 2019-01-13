@@ -29,8 +29,17 @@ export class Sets extends AbstractCommands {
 			r = 1 
 		return r
 	}
-
-	public sunion(conn: Connection, ...keys: any[]) {
+	
+	public scard(conn: Connection, key: string) {
+		this.checkArgCount('sinter', arguments, 2 )
+		let set : Set<any> = this.getDataset(conn.database, key)
+		let r = 0
+		if (set)
+			r = set.size
+		return r
+	}
+	
+	public sunion(conn: Connection, ...keys: string[]) {
 
 		this.checkArgCount('sinter', arguments, 3, -1)
 
