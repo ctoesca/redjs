@@ -10,6 +10,18 @@ class StringsCommands extends AbstractCommands_1.AbstractCommands {
         return ['APPEND', 'BITCOUNT', 'BITFIELD', 'BITOP', 'BITPOS', 'DECR', 'DECRBY', 'GET', 'GETBIT', 'GETRANGE',
             'GETSET', 'INCR', 'INCRBY', 'INCRBYFLOAT', 'MGET', 'MSET', 'MSETNX', 'PSETEX', 'SET', 'SETBIT', 'SETEX', 'SETNX', 'SETRANGE', 'STRLEN'];
     }
+    strlen(conn, key) {
+        this.checkArgCount('get', arguments, 2);
+        let data = this.getDataset(conn.database, key);
+        if (!data)
+            return 0;
+        let r = 0;
+        if (typeof data.value !== 'string') {
+            throw 'ERR value is not a string or out of range';
+        }
+        r = data.value.toString().length;
+        return r;
+    }
     get(conn, key) {
         this.checkArgCount('get', arguments, 2);
         let r = null;

@@ -16,6 +16,24 @@ export class StringsCommands extends AbstractCommands {
 		'GETSET', 'INCR', 'INCRBY', 'INCRBYFLOAT', 'MGET', 'MSET', 'MSETNX', 'PSETEX', 'SET', 'SETBIT', 'SETEX', 'SETNX', 'SETRANGE', 'STRLEN']
 	}
 
+	public strlen(conn: Connection, key: string) {
+
+		this.checkArgCount('get', arguments, 2)
+
+		let data = this.getDataset(conn.database, key)
+		if (!data) 
+			return 0;
+		
+		let r = 0
+		if (typeof data.value !== 'string') {
+			throw 'ERR value is not a string or out of range'		
+		}
+
+		r = data.value.toString().length
+
+		return r
+	}
+
 	public get(conn: Connection, key: string) {
 
 		this.checkArgCount('get', arguments, 2)
@@ -29,7 +47,7 @@ export class StringsCommands extends AbstractCommands {
 		return r
 	}
 
-	public set(conn: Connection, key: string, value: string, ...options: any[]) {
+	public set(conn: Connection, key: string, value: any, ...options: any[]) {
 		/* SET key value [expiration EX seconds|PX milliseconds] [NX|XX]
 
 		Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type. Any previous time to live associated with the key is discarded on successful SET operation.

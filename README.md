@@ -162,6 +162,7 @@ redis-cli -p 6379
 - get
 - set
 - incr
+- strlen
 
 ### Server
 - monitor

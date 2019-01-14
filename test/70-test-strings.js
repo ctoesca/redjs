@@ -107,4 +107,41 @@ describe('Strings', function()
 	    	.catch( done )
 	    });
   	});
+
+  	/* strlen */
+  	describe('set string2 toto', function() {
+	    it('should return OK', function( done ) {
+	    	redis.set('string2', 'toto')
+	    	.then( function(r){
+	    		assert.equal(r, "OK");
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('strlen string2', function() {
+	    it('should return 4', function( done ) {
+	    	redis.strlen('string2')
+	    	.then( function(r){
+	    		assert.equal(r, 4);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+  	describe('strlen string3', function() {
+	    it('should return 0', function( done ) {
+	    	redis.strlen('string3')
+	    	.then( function(r){
+	    		assert.equal(r, 0);
+	    		done()
+	    	})
+	    	.catch( done )
+	    });
+  	});
+
+
+  	
 });

@@ -68,7 +68,7 @@ export class Sets extends AbstractCommands {
 		for (let value of iterator) {
 			values.push(value)
 		}
-
+		
 		for (let i = 1; i <= count; i++) {
 			let indx = utils.randomBetween(0, values.length)
 			r.push(values[indx])
