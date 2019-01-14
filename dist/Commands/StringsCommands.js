@@ -19,7 +19,7 @@ class StringsCommands extends AbstractCommands_1.AbstractCommands {
         if (typeof data.value !== 'string') {
             throw 'ERR value is not a string or out of range';
         }
-        r = data.value.toString().length;
+        r = data.value.length;
         return r;
     }
     get(conn, key) {

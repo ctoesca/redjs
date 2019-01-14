@@ -29,7 +29,7 @@ export class StringsCommands extends AbstractCommands {
 			throw 'ERR value is not a string or out of range'		
 		}
 
-		r = data.value.toString().length
+		r = data.value.length
 
 		return r
 	}
