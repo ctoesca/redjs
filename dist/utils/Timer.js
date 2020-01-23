@@ -51,6 +51,6 @@ class Timer extends EventEmitter {
         }
     }
 }
-Timer.ON_TIMER = 'ON_TIMER';
 exports.Timer = Timer;
+Timer.ON_TIMER = 'ON_TIMER';
 //# sourceMappingURL=Timer.js.map
