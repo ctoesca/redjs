@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Sets = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
 const utils = require("../utils");
 const sha1 = require("sha1");

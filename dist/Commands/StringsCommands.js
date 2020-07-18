@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.StringsCommands = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
 const utils = require("../utils");
 class StringsCommands extends AbstractCommands_1.AbstractCommands {

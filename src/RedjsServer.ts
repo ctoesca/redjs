@@ -168,7 +168,7 @@ export class RedjsServer extends EventEmitter {
 		this.monitoredConnections.forEach( ( connection: Connection, connId: string ) => {
 			connection.writeMonitorData(data)
 		})
-	}
+	} 
 
 	protected createServer() {
 

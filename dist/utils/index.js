@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.randomBetween = exports.Timer = exports.parseURL = exports.isFloat = exports.isInt = void 0;
 const urlParser = require("url");
 const _ = require("lodash");
 const Timer_1 = require("./Timer");
-exports.Timer = Timer_1.Timer;
+Object.defineProperty(exports, "Timer", { enumerable: true, get: function () { return Timer_1.Timer; } });
 function randomBetween(min, max) {
     return Math.floor(Math.random() * max) + min;
 }

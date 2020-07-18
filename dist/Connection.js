@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Connection = void 0;
 const RedjsServer_1 = require("./RedjsServer");
 const Parser_1 = require("./utils/Parser");
 const EventEmitter = require("events");

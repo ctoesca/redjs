@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Parser = void 0;
 const EventEmitter = require("events");
 const RedisParser = require('redis-parser');
 const utils = require("../utils");

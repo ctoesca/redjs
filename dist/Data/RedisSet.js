@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RedisSet = void 0;
 const BaseDataset_1 = require("./BaseDataset");
 class RedisSet extends BaseDataset_1.BaseDataset {
     constructor(opt) {

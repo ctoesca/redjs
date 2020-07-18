@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PubSub = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
 class PubSub extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {

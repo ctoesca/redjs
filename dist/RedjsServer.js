@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RedjsServer = void 0;
 const Datastore_1 = require("./Data/Datastore");
 const Commander_1 = require("./Commander");
 const Connection_1 = require("./Connection");

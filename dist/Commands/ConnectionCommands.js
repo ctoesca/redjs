@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConnectionCommands = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
 class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
