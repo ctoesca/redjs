@@ -105,7 +105,7 @@ class StringsCommands extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     createNewKey(db, key) {
-        return db.createStringsDataset(key);
+        return db.createDataset(key, StringsDataset_1.StringsDataset);
     }
 }
 exports.StringsCommands = StringsCommands;

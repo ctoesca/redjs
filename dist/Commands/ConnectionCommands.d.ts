@@ -12,7 +12,7 @@ export declare class ConnectionCommands extends AbstractCommands {
     check_select(conn: Connection, index?: number): void;
     select(conn: Connection, index?: number): string;
     check_auth(conn: Connection, password: string): void;
-    auth(conn: Connection, password: string): string;
+    auth(conn: Connection, password: string): void;
     check_echo(conn: Connection, message: string): void;
     echo(conn: Connection, message: string): {
         type: string;

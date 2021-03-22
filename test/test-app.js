@@ -5,7 +5,8 @@ const Mocha = require('mocha')
 const fs = require('fs')
 const path = require('path')
 
-global.PORT= 6300
+global.PORT= 6969
+global.redisVersion = '3.2'
 global.HOST= "127.0.0.1"
 
 // Use bluebird

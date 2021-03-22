@@ -141,7 +141,7 @@ export class StringsCommands extends AbstractCommands {
 	}
 
 	protected createNewKey( db: Database, key: string ): StringsDataset {
-		return db.createStringsDataset( key )
+		return db.createDataset( key, StringsDataset )
 	}
 
 }

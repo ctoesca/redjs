@@ -4,10 +4,6 @@ exports.Database = void 0;
 const RedjsServer_1 = require("../RedjsServer");
 const EventEmitter = require("events");
 const fs = require('fs-extra');
-const HashDataset_1 = require("./HashDataset");
-const ListDataset_1 = require("./ListDataset");
-const SetDataset_1 = require("./SetDataset");
-const StringsDataset_1 = require("./StringsDataset");
 class Database extends EventEmitter {
     constructor(opt) {
         super();
@@ -32,23 +28,8 @@ class Database extends EventEmitter {
     clear() {
         return this.keys.clear();
     }
-    createHashDataset(key) {
-        let r = new HashDataset_1.HashDataset();
-        this.keys.set(key, r);
-        return r;
-    }
-    createListDataset(key) {
-        let r = new ListDataset_1.ListDataset();
-        this.keys.set(key, r);
-        return r;
-    }
-    createSetDataset(key) {
-        let r = new SetDataset_1.SetDataset();
-        this.keys.set(key, r);
-        return r;
-    }
-    createStringsDataset(key) {
-        let r = new StringsDataset_1.StringsDataset();
+    createDataset(key, clazz) {
+        let r = new clazz();
         this.keys.set(key, r);
         return r;
     }

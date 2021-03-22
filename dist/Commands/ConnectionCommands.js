@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConnectionCommands = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
+const RedisError_1 = require("../Errors/RedisError");
 class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
@@ -40,7 +41,7 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         this.checkArgCount('auth', arguments, 2);
     }
     auth(conn, password) {
-        return 'OK';
+        throw new RedisError_1.RedisError("ERR Client sent AUTH, but no password is set");
     }
     check_echo(conn, message) {
         this.checkArgCount('echo', arguments, 2);

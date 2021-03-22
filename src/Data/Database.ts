@@ -51,26 +51,8 @@ export class Database extends EventEmitter {
 		return this.keys.clear()
 	}
 
-	public createHashDataset(key: string): HashDataset {
-		let r = new HashDataset()
-		this.keys.set(key, r)
-		return r
-	}
-
-	public createListDataset(key: string): ListDataset {
-		let r = new ListDataset()
-		this.keys.set(key, r)
-		return r
-	}
-
-	public createSetDataset(key: string): SetDataset {
-		let r = new SetDataset()
-		this.keys.set(key, r)
-		return r
-	}
-
-	public createStringsDataset(key: string): StringsDataset {
-		let r = new StringsDataset()
+	public createDataset(key: string, clazz: any): any {
+		let r = new clazz()
 		this.keys.set(key, r)
 		return r
 	}

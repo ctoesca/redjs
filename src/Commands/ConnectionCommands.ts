@@ -3,6 +3,7 @@ import {Connection} from '../Connection';
 import * as utils from '../utils';
 import Promise = require('bluebird');
 import {IDataset} from '../Data/IDataset'
+import {RedisError} from '../Errors/RedisError'
 
 export class ConnectionCommands extends AbstractCommands {
 
@@ -44,12 +45,11 @@ export class ConnectionCommands extends AbstractCommands {
 		return 'OK'
 	}
 
-	public check_auth( conn: Connection, password: string) {
+	public check_auth( conn: Connection, password: string) {	
 		this.checkArgCount('auth', arguments, 2)
 	}
 	public auth( conn: Connection, password: string) {
-		// !!
-		return 'OK'
+		throw new RedisError("ERR Client sent AUTH, but no password is set")
 	}
 
 	public check_echo( conn: Connection, message: string) {
