@@ -131,7 +131,6 @@ class RedjsServer extends EventEmitter {
     createServer() {
         return new Promise((resolve, reject) => {
             this.server = net.createServer((sock) => {
-                sock.setNoDelay(true);
                 let conn = new Connection_1.Connection(this, sock, this.commander);
                 conn.on('close', () => {
                     this.onConnectionClosed(conn);

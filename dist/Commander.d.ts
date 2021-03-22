@@ -1,5 +1,4 @@
 /// <reference types="node" />
-import { Timer } from './utils/Timer';
 import EventEmitter = require('events');
 import { RedjsServer } from './RedjsServer';
 import { Datastore } from './data/Datastore';
@@ -25,7 +24,6 @@ export declare class Commander extends EventEmitter {
     protected server: RedjsServer;
     protected datastore: Datastore;
     protected logger: any;
-    protected mainTimer: Timer;
     protected commands: any;
     protected hashesCommands: HashesCommands;
     protected keysCommands: KeysCommands;

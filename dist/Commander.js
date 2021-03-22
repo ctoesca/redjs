@@ -27,7 +27,6 @@ class Commander extends EventEmitter {
         this.server = null;
         this.datastore = null;
         this.logger = null;
-        this.mainTimer = null;
         this.commands = {};
         this.hashesCommands = null;
         this.keysCommands = null;

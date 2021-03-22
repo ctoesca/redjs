@@ -47,8 +47,6 @@ export class Connection extends EventEmitter {
 		this.server = server
 		this.commander = commander
 
-
-
 		let constructor: any = this.constructor
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')

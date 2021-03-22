@@ -37,7 +37,7 @@ export class Commander extends EventEmitter {
 	protected server: RedjsServer = null
 	protected datastore: Datastore = null
 	protected logger: any = null
-	protected mainTimer: Timer = null
+	//protected mainTimer: Timer = null
 	protected commands: any = {}
 
 	protected hashesCommands: HashesCommands = null
@@ -70,12 +70,6 @@ export class Commander extends EventEmitter {
 		this.logger = RedjsServer.createLogger({ name: constructor.name })
 		this.logger.debug(constructor.name + ' created')
 
-		/*
-		this.mainTimer = new Timer({delay: 10000})
-		this.mainTimer.on(Timer.ON_TIMER, this.onTimer.bind(this))
-		this.mainTimer.start()
-		*/
-
 		this.commands = {}
 
 		let commandsManagers = [
@@ -94,8 +88,6 @@ export class Commander extends EventEmitter {
 			{name: 'hyperLogLogCommands', clazz: HyperLogLogCommands},
 			{name: 'scriptingCommands', clazz: ScriptingCommands},
 			{name: 'streamsCommands', clazz: StreamsCommands}
-
-
 		]
 
 		for (let commandManager of commandsManagers) {
