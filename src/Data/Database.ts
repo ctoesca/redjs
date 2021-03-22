@@ -5,7 +5,7 @@ import Promise = require('bluebird');
 import EventEmitter = require('events');
 import net = require('net');
 import * as utils from '../utils';
-const fs = require('fs-extra');
+const fs = require('fs');
 import {Connection} from '../Connection';
 import {IDataset} from './IDataset'
 import {HashDataset} from './HashDataset'

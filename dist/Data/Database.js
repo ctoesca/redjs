@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Database = void 0;
 const RedjsServer_1 = require("../RedjsServer");
 const EventEmitter = require("events");
-const fs = require('fs-extra');
+const fs = require('fs');
 class Database extends EventEmitter {
     constructor(opt) {
         super();
