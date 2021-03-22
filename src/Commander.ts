@@ -7,16 +7,27 @@ import {RedjsServer} from './RedjsServer';
 import {Datastore} from './data/Datastore';
 
 import {Connection} from './Connection';
-import {Keys} from './Commands/Keys';
-import {Hashes} from './Commands/Hashes';
-import {PubSub} from './Commands/PubSub';
-import {Lists} from './Commands/Lists';
-import {Sets} from './Commands/Sets';
-import {SortedSets} from './Commands/SortedSets';
+import {KeysCommands} from './Commands/KeysCommands';
+import {HashesCommands} from './Commands/HashesCommands';
+import {PubSubCommands} from './Commands/PubSubCommands';
+import {ListsCommands} from './Commands/ListsCommands';
+import {SetsCommands} from './Commands/SetsCommands';
+import {SortedSetsCommnands} from './Commands/SortedSetsCommnands';
 import {ServerCommands} from './Commands/ServerCommands';
 import {ConnectionCommands} from './Commands/ConnectionCommands';
 import {StringsCommands} from './Commands/StringsCommands';
+import {TransactionsCommand} from './Commands/TransactionsCommand';
+import {ClusterCommands} from './Commands/ClusterCommands';
+import {GeoCommands} from './Commands/GeoCommands';
+import {HyperLogLogCommands} from './Commands/HyperLogLogCommands';
+import {ScriptingCommands} from './Commands/ScriptingCommands';
+import {StreamsCommands} from './Commands/StreamsCommands';
 
+
+
+
+import {RedisError} from './Errors/RedisError'
+import {NotImplementedError} from './Errors/NotImplementedError'
 
 import {AbstractCommands} from './Commands/AbstractCommands'
 
@@ -29,15 +40,22 @@ export class Commander extends EventEmitter {
 	protected mainTimer: Timer = null
 	protected commands: any = {}
 
-	protected hashes: Hashes = null
-	protected keys: Keys = null
-	protected pubsub: PubSub = null
-	protected sets: Sets = null
-	protected sortedSets: SortedSets = null
-	protected lists: Lists = null
+	protected hashesCommands: HashesCommands = null
+	protected keysCommands: KeysCommands = null
+	protected pubsubCommands: PubSubCommands = null
+	protected setsCommands: SetsCommands = null
+	protected sortedSetsCommnand: SortedSetsCommnands = null
+	protected listsCommands: ListsCommands = null
 	protected stringsCommands: StringsCommands = null
 	protected connectionCommands: ConnectionCommands = null;
 	protected serverCommands: ServerCommands = null;
+	protected transactionsCommands: TransactionsCommand = null;
+	protected clusterCommands: ClusterCommands = null;
+	protected geoCommands: GeoCommands = null;
+	protected hyperLogLogCommands: HyperLogLogCommands = null;
+	protected scriptingCommands: ScriptingCommands = null;
+	protected streamsCommands: StreamsCommands = null;
+	protected sortedSetsCommnands: SortedSetsCommnands = null
 
 
 	constructor(opt: any) {
@@ -61,15 +79,23 @@ export class Commander extends EventEmitter {
 		this.commands = {}
 
 		let commandsManagers = [
-			{name: 'hashes', clazz: Hashes},
-			{name: 'keys', clazz: Keys},
-			{name: 'pubsub', clazz: PubSub},
-			{name: 'lists', clazz: Lists},
-			{name: 'sets', clazz: Sets},
-			{name: 'sortedSets', clazz: SortedSets},
+			{name: 'hashesCommands', clazz: HashesCommands},
+			{name: 'keysCommands', clazz: KeysCommands},
+			{name: 'pubsubCommands', clazz: PubSubCommands},
+			{name: 'listsCommands', clazz: ListsCommands},
+			{name: 'setsCommands', clazz: SetsCommands},
+			{name: 'sortedSetsCommnands', clazz: SortedSetsCommnands},
 			{name: 'serverCommands', clazz: ServerCommands},
 			{name: 'connectionCommands', clazz: ConnectionCommands},
-			{name: 'stringsCommands', clazz: StringsCommands}
+			{name: 'stringsCommands', clazz: StringsCommands},
+			{name: 'transactionsCommands', clazz: TransactionsCommand},
+			{name: 'clusterCommands', clazz: ClusterCommands},
+			{name: 'geoCommands', clazz: GeoCommands},
+			{name: 'hyperLogLogCommands', clazz: HyperLogLogCommands},
+			{name: 'scriptingCommands', clazz: ScriptingCommands},
+			{name: 'streamsCommands', clazz: StreamsCommands}
+
+
 		]
 
 		for (let commandManager of commandsManagers) {
@@ -77,37 +103,58 @@ export class Commander extends EventEmitter {
 				server: this.server,
 				datastore: this.datastore
 			})
-			this.addComands( this[commandManager.name] )
+			this.addCommands( this[commandManager.name] )
 		}
 
 	}
 
-	public execCommand(cmd: string, conn: Connection, ...args: any[]) {
+	public execCommand(conn: Connection, checkOnly = false, cmd: string, ...args: any[]) {
 
 		if (this.commands[cmd]) {
 			let command = this.commands[cmd]
 			if (command.manager[cmd]) {
-				command.manager.checkArgs( cmd, ...args )
-				return command.manager[cmd](conn, ...args)
+				command.manager['check_' + cmd](conn, ...args )
+				if (!checkOnly) {
+					return command.manager[cmd](conn, ...args)
+				}
 			} else {
-				throw 'ERR \'' + cmd + '\' command is not implemented'
+				throw new NotImplementedError(cmd)
 			}
 		} else {
-			throw 'ERR Unknown command: \'' + cmd + '\''
+			throw new RedisError( 'ERR Unknown command: \'' + cmd + '\'')
 		}
 	}
 
-	protected addComands( manager: AbstractCommands ) {
+	protected addCommands( manager: AbstractCommands ) {
 
 		let commandsNames = manager.getCommandsNames()
+		let notImplementedCommands = manager.getNotImplementedCommands()
 
 		for (let i = 0; i < commandsNames.length; i ++) {
-			let commandName = commandsNames[i].toLowerCase()
-
+			let commandName = commandsNames[i]
+			if (!manager[commandName] ) {
+				manager[commandName] = (conn: Connection) => {
+					throw new NotImplementedError( commandName )
+				}
+			}
 			this.commands[commandName] = {
 				manager: manager
 			}
 		}
+
+
+		for (let i = 0; i < notImplementedCommands.length; i ++) {
+
+			let commandName = notImplementedCommands[i]
+			manager[commandName] = (conn: Connection) => {
+				throw new NotImplementedError(commandName)
+			}
+			this.commands[commandName] = {
+				manager: manager
+			}
+
+		}
+
 	}
 	/* protected onTimer() {
 

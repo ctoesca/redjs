@@ -5,7 +5,7 @@ const Mocha = require('mocha')
 const fs = require('fs')
 const path = require('path')
 
-global.PORT= 6970
+global.PORT= 6300
 global.HOST= "127.0.0.1"
 
 // Use bluebird
@@ -29,8 +29,8 @@ global.getRedis = function(){
 
 
 /* WORKER */
-var redjsServer = new RedjsServer(global.PORT, global.HOST, {})
-redjsServer.start()
+/*var redjsServer = new RedjsServer(global.PORT, global.HOST, {})
+redjsServer.start()*/
 
 console.log("************ WORKER CREATED **************")
 

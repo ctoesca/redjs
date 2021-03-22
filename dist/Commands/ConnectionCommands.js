@@ -7,10 +7,19 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
         super(opt);
     }
     getCommandsNames() {
-        return ['ping', 'auth', 'echo', 'quit', 'select', 'swapdb'];
+        return ['ping', 'auth', 'echo', 'quit', 'select'];
+    }
+    getNotImplementedCommands() {
+        return [
+            'client',
+            'hello',
+            'reset'
+        ];
+    }
+    check_ping(conn, responseExpected = null) {
+        this.checkArgCount('echo', arguments, 1, 2);
     }
     ping(conn, responseExpected = null) {
-        this.checkArgCount('echo', arguments, 1, 2);
         let r = 'PONG';
         if (responseExpected) {
             r = responseExpected;
@@ -20,38 +29,35 @@ class ConnectionCommands extends AbstractCommands_1.AbstractCommands {
             value: r
         };
     }
-    select(conn, index = 0) {
+    check_select(conn, index = 0) {
         this.checkArgCount('echo', arguments, 2);
+    }
+    select(conn, index = 0) {
         conn.setDatabase(index);
-        let r = 'OK';
-        return {
-            type: 'simpleString',
-            value: r
-        };
+        return 'OK';
+    }
+    check_auth(conn, password) {
+        this.checkArgCount('auth', arguments, 2);
     }
     auth(conn, password) {
-        this.checkArgCount('auth', arguments, 2);
-        let r = 'OK';
-        return {
-            type: 'simpleString',
-            value: r
-        };
+        return 'OK';
+    }
+    check_echo(conn, message) {
+        this.checkArgCount('echo', arguments, 2);
     }
     echo(conn, message) {
-        this.checkArgCount('echo', arguments, 2);
         let r = message;
         return {
             type: 'simpleString',
             value: r
         };
     }
+    check_quit(conn) {
+        this.checkArgCount('quit', arguments, 1);
+    }
     quit(conn) {
         conn.quit();
-        let r = 'OK';
-        return {
-            type: 'simpleString',
-            value: r
-        };
+        return 'OK';
     }
 }
 exports.ConnectionCommands = ConnectionCommands;

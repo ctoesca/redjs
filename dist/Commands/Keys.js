@@ -7,8 +7,11 @@ class Keys extends AbstractCommands_1.AbstractCommands {
         super(opt);
     }
     getCommandsNames() {
-        return ['DEL', 'DUMP', 'EXISTS', 'EXPIRE', 'EXPIREAT', 'KEYS', 'MIGRATE', 'MOVE', 'OBJECT', 'PERSIST',
-            'PEXPIRE', 'PEXPIREAT', 'PTTL', 'RANDOMKEY', 'RENAME', 'RENAMENX', 'RESTORE', 'SORT', 'TOUCH', 'TTL', 'TYPE', 'UNLINK', 'WAIT', 'SCAN'];
+        return ['del', 'exists', 'keys'];
+    }
+    getNotImplementedCommands() {
+        return ['copy', 'dump', 'expire', 'expireat', 'migrate', 'move', 'object', 'persist', 'pexpire',
+            'pexpireat', 'pttl', 'randomkey', 'rename', 'renamenx', 'restore', 'scan', 'sort', 'touch', 'ttl', 'type', 'unlink', 'wait'];
     }
     scan(conn, cursor, MATCH, pattern, COUNT, count) {
         this.checkArgCount('scan', arguments, 2, 6);

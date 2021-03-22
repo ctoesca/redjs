@@ -17,7 +17,10 @@ class PubSub extends AbstractCommands_1.AbstractCommands {
         super.destroy();
     }
     getCommandsNames() {
-        return ['unsubscribe', 'subscribe', 'publish', 'PSUBSCRIBE', 'PUBSUB', 'PUNSUBSCRIBE'];
+        return ['unsubscribe', 'subscribe', 'publish', 'psubscribe', 'punsubscribe'];
+    }
+    getNotImplementedCommands() {
+        return ['pubsub'];
     }
     getSubscriptionsCount(conn) {
         let r = 0;

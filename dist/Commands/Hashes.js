@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Hashes = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
 const utils = require("../utils");
+const MapDataset_1 = require("../Data/MapDataset");
+const RedisError_1 = require("../RedisError");
 class Hashes extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
@@ -11,40 +13,39 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
         this.lastCursorId = 1;
     }
     getCommandsNames() {
-        return ['hget', 'hset', 'HDEL', 'HEXISTS', 'HGETALL', 'HINCRBY', 'HINCRBYFLOAT',
-            'HKEYS', 'HLEN', 'HMGET', 'HMSET', 'HSETNX', 'HSTRLEN', 'HVALS', 'HSCAN'];
+        return ['hget', 'hset', 'hdel', 'hexists', 'hgetall', 'hincrby', 'hincrbyfloat',
+            'hkeys', 'hlen', 'hmget', 'hmset', 'hsetnx', 'hstrlen', 'hvals', 'hscan'];
+    }
+    getNotImplementedCommands() {
+        return [
+            'hrandfield'
+        ];
     }
     hscan(conn, key, cursor, ...options) {
         this.checkArgCount('hscan', arguments, 3, 7);
         let argsNames = ['match', 'count'];
         let args = {};
-        try {
-            if (options.length > argsNames.length * 2) {
-                throw 'ERR Too many arguments';
-            }
-            if (options.length % 2 !== 0) {
-                throw 'ERR Invalid arguments count';
-            }
-            for (let i = 0; i < options.length; i++) {
-                let opt = options[i];
-                if (typeof opt === 'string') {
-                    opt = opt.toLowerCase();
-                }
-                if (argsNames.indexOf(opt) >= 0) {
-                    if (typeof args[opt] !== 'undefined') {
-                        throw 'ERR Argument \'' + opt + '\' defined twice';
-                    }
-                    args[opt] = options[i + 1];
-                }
-                else {
-                    throw 'ERR unknown argument: \'' + opt + '\'';
-                }
-                i++;
-            }
+        if (options.length > argsNames.length * 2) {
+            throw new RedisError_1.RedisError('ERR Too many arguments');
         }
-        catch (err) {
-            let invalidArgumentsError = new Error('Invalid arguments: ' + err.toString() + '. Syntax: hscan key cursor [MATCH pattern] [COUNT count]');
-            throw invalidArgumentsError;
+        if (options.length % 2 !== 0) {
+            throw new RedisError_1.RedisError('ERR Invalid arguments count');
+        }
+        for (let i = 0; i < options.length; i++) {
+            let opt = options[i];
+            if (typeof opt === 'string') {
+                opt = opt.toLowerCase();
+            }
+            if (argsNames.indexOf(opt) >= 0) {
+                if (typeof args[opt] !== 'undefined') {
+                    throw new RedisError_1.RedisError('ERR Argument \'' + opt + '\' defined twice');
+                }
+                args[opt] = options[i + 1];
+            }
+            else {
+                throw new RedisError_1.RedisError('ERR unknown argument: \'' + opt + '\'');
+            }
+            i++;
         }
         let cursorObject;
         if (cursor === 0) {
@@ -65,7 +66,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
             cursorObject = this.clientsCursors[conn.id][cursor];
         }
         console.log('key=' + key + ', cursor=' + cursor + ', options=', args, 'cursorObject=', cursorObject);
-        throw 'ERR Not yet implemented';
+        throw new RedisError_1.RedisError('ERR Not yet implemented');
     }
     hget(conn, key, field) {
         this.checkArgCount('hget', arguments, 3);
@@ -216,7 +217,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
     hincrby(conn, key, field, incr) {
         this.checkArgCount('hincrby', arguments, 4);
         if (!utils.isInt(incr)) {
-            throw 'WRONGTYPE incr argument is not integer (' + incr + ')';
+            throw new RedisError_1.RedisError('ERR value is not an integer or out of range');
         }
         incr = parseInt(incr, 10);
         return this._incr(conn, key, field, incr);
@@ -224,7 +225,7 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
     hincrbyfloat(conn, key, field, incr) {
         this.checkArgCount('hincrbyfloat', arguments, 4);
         if (!utils.isFloat(incr)) {
-            throw 'WRONGTYPE incr argument is not float (' + incr + ')';
+            throw new RedisError_1.RedisError('WRONGTYPE incr argument is not float (' + incr + ')');
         }
         incr = parseFloat(incr);
         return this._incr(conn, key, field, incr);
@@ -235,17 +236,19 @@ class Hashes extends AbstractCommands_1.AbstractCommands {
         if (h.has(field)) {
             value = h.get(field);
         }
+        if (!utils.isInt(value))
+            throw new RedisError_1.RedisError('ERR hash value is not an integer');
         value += incr;
         h.set(field, value);
         return value;
     }
     getDataset(db, key) {
         let r = db.getDataset(key);
-        this.checkType(r, Map);
+        this.checkType(r, MapDataset_1.MapDataset);
         return r;
     }
     createNewKey(db, key) {
-        return db.createNewKey(key, new Map());
+        return db.createMapDataset(key);
     }
 }
 exports.Hashes = Hashes;

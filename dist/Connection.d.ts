@@ -6,6 +6,7 @@ import { Parser } from './utils/Parser';
 import { Commander } from './Commander';
 import EventEmitter = require('events');
 import net = require('net');
+import * as Logger from 'bunyan';
 export declare class Connection extends EventEmitter {
     id: string;
     lastError: any;
@@ -13,13 +14,20 @@ export declare class Connection extends EventEmitter {
     protected sock: net.Socket;
     protected commander: Commander;
     protected server: RedjsServer;
-    protected logger: any;
+    protected logger: Logger;
     protected mainTimer: Timer;
     protected parser: Parser;
     protected closing: boolean;
     protected processingData: boolean;
     protected onCommand: Function;
+    protected inTransaction: boolean;
+    protected transactionCommands: any[];
+    protected transactionErrors: any;
     constructor(server: RedjsServer, sock: net.Socket, commander: Commander);
+    beginTransaction(): void;
+    commitTransaction(): any[];
+    cancelTransaction(force?: boolean): void;
+    addTransactionCommand(name: string, args: any): void;
     setDatabase(index: number): Database;
     setCommandListener(v?: Function): void;
     removeCommandListener(): void;
@@ -31,8 +39,9 @@ export declare class Connection extends EventEmitter {
     quit(): void;
     pause(): void;
     resume(): void;
-    protected processPipelineRequest(requestData: any): void;
-    protected processSingleRequest(requestData: any): void;
+    protected execCommand(cmd: string, args: any[], force?: boolean): any;
+    protected processPipelineRequest(requestData: any[]): void;
+    protected processSingleRequest(requestData: any[], sendResponse?: boolean): void;
     protected onSockData(data: any): void;
     protected onSockClose(): void;
 }

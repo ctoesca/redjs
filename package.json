@@ -1,6 +1,6 @@
 {
   "name": "redjs",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Redjs is a Redis-like in-memory data store, for use in nodejs cluster. Ioredis compatible",
   "main": "dist/",
   "scripts": {
@@ -25,6 +25,7 @@
   "dependencies": {
     "bluebird": "^3.5.3",
     "bunyan": "^1.8.12",
+    "fs-extra": "^9.1.0",
     "lodash": "^4.17.19",
     "minimatch": "^3.0.4",
     "redis-parser": "^3.0.0",

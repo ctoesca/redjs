@@ -1,12 +1,14 @@
 import { AbstractCommands } from './AbstractCommands';
 import { Connection } from '../Connection';
 import { Database } from '../data/Database';
+import { MapDataset } from '../Data/MapDataset';
 export declare class Hashes extends AbstractCommands {
     protected clientsCursors: any;
     protected defaultScancount: number;
     protected lastCursorId: number;
     constructor(opt: any);
     getCommandsNames(): string[];
+    getNotImplementedCommands(): string[];
     hscan(conn: Connection, key: string, cursor: number, ...options: any[]): string;
     hget(conn: Connection, key: string, field: string): any;
     hvals(conn: Connection, key: string): any[];
@@ -23,6 +25,6 @@ export declare class Hashes extends AbstractCommands {
     hincrby(conn: Connection, key: string, field: string, incr: any): number;
     hincrbyfloat(conn: Connection, key: string, field: string, incr: any): number;
     protected _incr(conn: Connection, key: string, field: string, incr: number): number;
-    protected getDataset(db: Database, key: string): any;
-    protected createNewKey(db: Database, key: string): any;
+    protected getDataset(db: Database, key: string): MapDataset;
+    protected createNewKey(db: Database, key: string): MapDataset;
 }

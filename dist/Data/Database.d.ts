@@ -3,6 +3,10 @@ import { Timer } from '../utils/Timer';
 import { Datastore } from './Datastore';
 import EventEmitter = require('events');
 import net = require('net');
+import { HashDataset } from './HashDataset';
+import { ListDataset } from './ListDataset';
+import { SetDataset } from './SetDataset';
+import { StringsDataset } from './StringsDataset';
 export declare class Database extends EventEmitter {
     keys: Map<string, any>;
     protected config: any;
@@ -14,6 +18,10 @@ export declare class Database extends EventEmitter {
     constructor(opt: any);
     getIndex(): number;
     clear(): void;
-    createNewKey(key: string, object: any): any;
+    createHashDataset(key: string): HashDataset;
+    createListDataset(key: string): ListDataset;
+    createSetDataset(key: string): SetDataset;
+    createStringsDataset(key: string): StringsDataset;
     getDataset(key: string): any;
+    save(path: string): void;
 }

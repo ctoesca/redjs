@@ -5,6 +5,7 @@ const utils = require("../utils");
 const RedjsServer_1 = require("../RedjsServer");
 const EventEmitter = require("events");
 const minimatch = require("minimatch");
+const RedisError_1 = require("../Errors/RedisError");
 class AbstractCommands extends EventEmitter {
     constructor(opt) {
         super();
@@ -12,7 +13,6 @@ class AbstractCommands extends EventEmitter {
         this.datastore = null;
         this.logger = null;
         this.mainTimer = null;
-        this.data = {};
         this.server = opt.server;
         this.datastore = opt.datastore;
         let constructor = this.constructor;
@@ -22,33 +22,34 @@ class AbstractCommands extends EventEmitter {
     destroy() {
         this.removeAllListeners();
     }
-    checkArgs(cmd, ...args) {
-    }
     getCommandsNames() {
+        return [];
+    }
+    getNotImplementedCommands() {
         return [];
     }
     checkType(obj, type) {
         if (obj && !(obj instanceof type)) {
-            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
+            throw new RedisError_1.RedisError('WRONGTYPE Operation against a key holding the wrong kind of value');
         }
     }
     checkArgCount(cmd, args, valueOrMin, max = -1) {
         if (arguments.length === 3) {
             if (args.length !== valueOrMin) {
-                throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command');
+                throw new RedisError_1.RedisError('ERR wrong number of arguments for \'' + cmd + '\' command');
             }
         }
         else if ((args.length < valueOrMin) || ((args.length > max) && (max > -1))) {
-            throw new Error('ERR wrong number of arguments for \'' + cmd + '\' command');
+            throw new RedisError_1.RedisError('ERR wrong number of arguments for \'' + cmd + '\' command');
         }
     }
     checkInt(v) {
         if (!utils.isInt(v)) {
-            throw 'ERR value is not an integer or out of range';
+            throw new RedisError_1.RedisError('ERR value is not an integer or out of range');
         }
     }
     createNewKey(db, key) {
-        return db.createNewKey(key, {});
+        throw new RedisError_1.RedisError('ERR abstract method');
     }
     getDataset(db, key) {
         return db.getDataset(key);

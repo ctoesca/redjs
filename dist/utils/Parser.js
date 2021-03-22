@@ -4,6 +4,7 @@ exports.Parser = void 0;
 const EventEmitter = require("events");
 const RedisParser = require('redis-parser');
 const utils = require("../utils");
+const RedisError_1 = require("../Errors/RedisError");
 class Parser extends EventEmitter {
     constructor() {
         super();
@@ -28,7 +29,12 @@ class Parser extends EventEmitter {
             r = this.stringToResp(data, type);
         }
         else if (data === null) {
-            r = '$-1\r\n';
+            if (type === 'array') {
+                r = '*-1\r\n';
+            }
+            else {
+                r = '$-1\r\n';
+            }
         }
         else if (typeof data === 'object') {
             r = this.objectToResp(data, type);
@@ -37,7 +43,7 @@ class Parser extends EventEmitter {
             r = this.numberToResp(data, type);
         }
         else {
-            throw ('ERR Unknown response type for response \'' + data + '\'');
+            throw new RedisError_1.RedisError('ERR Unknown response type for response \'' + data + '\'');
         }
         return r;
     }
@@ -54,7 +60,12 @@ class Parser extends EventEmitter {
     stringToResp(data, forcedType = null) {
         let r = null;
         if (!forcedType) {
-            forcedType = 'bulkString';
+            if (data === 'OK') {
+                forcedType = 'simpleString';
+            }
+            else {
+                forcedType = 'bulkString';
+            }
         }
         if (forcedType === 'simpleString') {
             r = '+' + data + '\r\n';
@@ -67,19 +78,32 @@ class Parser extends EventEmitter {
         }
         return r;
     }
-    objectToResp(data, forcedType = null) {
-        let r = null;
-        if (typeof data.push === 'function') {
+    arrayToResp(data, forcedType = null) {
+        let r;
+        if (data === null) {
+            r = '*-1\r\n';
+        }
+        else {
             r = '*' + data.length + '\r\n';
             for (let value of data) {
                 r += this.toRESP(value);
             }
         }
+        return r;
+    }
+    objectToResp(data, forcedType = null) {
+        let r = null;
+        if (data instanceof Error) {
+            r = '-' + data.toString() + '\r\n';
+        }
+        else if ((typeof data.push === 'function') || (forcedType === 'array')) {
+            r = this.arrayToResp(data);
+        }
         else if (typeof data.value !== 'undefined') {
             r = this.toRESP(data.value, data.type);
         }
         else {
-            throw ('ERR Unknown response type for response \'' + data + '\'');
+            throw new RedisError_1.RedisError('ERR Unknown response type for response \'' + data + '\'');
         }
         return r;
     }

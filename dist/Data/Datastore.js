@@ -5,6 +5,7 @@ const Database_1 = require("./Database");
 const RedjsServer_1 = require("../RedjsServer");
 const EventEmitter = require("events");
 const utils = require("../utils");
+const RedisError_1 = require("../Errors/RedisError");
 class Datastore extends EventEmitter {
     constructor(opt) {
         super();
@@ -28,7 +29,7 @@ class Datastore extends EventEmitter {
     }
     getDb(index = 0) {
         if (!utils.isInt(index) || (index >= this.databases.length)) {
-            throw 'ERR value is not an integer or out of range';
+            throw new RedisError_1.RedisError('ERR value is not an integer or out of range');
         }
         return this.databases[index];
     }

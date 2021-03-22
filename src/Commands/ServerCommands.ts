@@ -2,6 +2,7 @@ import {AbstractCommands} from './AbstractCommands';
 import {Connection} from '../Connection';
 import {Database} from '../data/Database';
 import Promise = require('bluebird');
+import {IDataset} from '../Data/IDataset'
 
 export class ServerCommands extends AbstractCommands {
 
@@ -10,29 +11,60 @@ export class ServerCommands extends AbstractCommands {
 	}
 
 	public getCommandsNames(): string[] {
-		return ['info', 'monitor', 'flushdb', 'time', 'flushall']
+		return [
+		'flushall',
+		'flushdb',
+		'info',
+		'monitor',
+		'time']
+	}
+	public getNotImplementedCommands(): string[] {
+		return ['acl ', // cat deluser genpass getuser help list load log save setuser users whoami
+		'bgrewriteaof',
+		'bgsave',
+		'command', // count, getkeys, info
+		'config', // get, resetstat, rewrite, set
+		'dbsize',
+		'debug', // object, segfault
+		'failover',
+		'lastsave',
+		'latency', // doctor, graph, help, history, latest, reset
+		'lolwut',
+		'memory', // doctor, help, malloc-stats, purge, stats, usage
+		'module', // list, load, unload
+		'psync',
+		'replicaof',
+		'role',
+		'save',
+		'shutdown',
+		'slaveof',
+		'slowlog',
+		'swapdb',
+		'sync'
+		]
 	}
 
+	public check_flushdb( conn: Connection, async: string ) {
+		this.checkArgCount('flushdb', arguments, 1, 2)
+	}
 	public flushdb( conn: Connection, async: string) {
-		this.checkArgCount('llen', arguments, 1, 2)
-
 		conn.database.clear()
-		return {
-			value: 'OK',
-			type: 'simpleString'
-		}
+		return 'OK'
+	}
+
+	public check_flushall( conn: Connection, async: string ) {
+		this.checkArgCount('flushall', arguments, 1, 2)
 	}
 	public flushall( conn: Connection, async: string) {
-		this.checkArgCount('llen', arguments, 1, 2)
-
 		this.datastore.clear()
-		return {
-			value: 'OK',
-			type: 'simpleString'
-		}
+		return 'OK'
+	}
+
+
+	public check_time( conn: Connection ) {
+		this.checkArgCount('time', arguments, 1, 1)
 	}
 	public time( conn: Connection) {
-		this.checkArgCount('llen', arguments, 1, 1)
 		let r: string[] = []
 		let now = Date.now().toString()
 		// 1546997952162
@@ -41,17 +73,18 @@ export class ServerCommands extends AbstractCommands {
 		return r
 	}
 
+	public check_monitor( conn: Connection ) {
+		this.checkArgCount('monitor', arguments, 1)
+	}
 	public monitor(conn: Connection) {
-		this.checkArgCount('llen', arguments, 1)
 		conn.emit('monitor')
-		return {
-			value: 'OK',
-			type: 'simpleString'
-		}
+		return 'OK'
 	}
 
+	public check_info( conn: Connection, section = 'all' ) {
+		this.checkArgCount('info', arguments, 1, 2)
+	}
 	public info(conn: Connection, section = 'all') {
-		this.checkArgCount('llen', arguments, 1, 2)
 
 		// !!
 		/*

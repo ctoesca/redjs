@@ -2,13 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Lists = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
+const ListDataset_1 = require("../Data/ListDataset");
+const RedisError_1 = require("../RedisError");
 class Lists extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
     }
     getCommandsNames() {
-        return ['blpop', 'brpop', 'BRPOPLPUSH', 'LINDEX', 'LINSERT', 'LLEN', 'LPOP', 'LPUSH',
-            'LPUSH', 'LPUSHX', 'LRANGE', 'LREM', 'LSET', 'LTRIM', 'RPOP', 'RPOPLPUSH', 'RPUSH', 'RPUSHX'];
+        return ['lindex', 'linsert', 'llen', 'lpop', 'lpush', 'lrange', 'rpop', 'rpush', 'lset'];
+    }
+    getNotImplementedCommands() {
+        return ['blpop', 'brpop', 'brpoplpush', 'rpoplpush', 'blmove', 'lmove', 'lpushx', 'ltrim', 'lrem', 'lpos', 'rpushx'];
     }
     lrange(conn, key, start, stop) {
         this.checkArgCount('lrange', arguments, 4);
@@ -33,7 +37,7 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         this.checkInt(index);
         let data = this.getDataset(conn.database, key);
         if (!data) {
-            throw 'ERR no such key';
+            throw new RedisError_1.RedisError('ERR no such key');
         }
         let r = null;
         let indx = this.normalizeIndex(index, data);
@@ -48,21 +52,21 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         let r = 'OK';
         let data = this.getDataset(conn.database, key);
         if (!data) {
-            throw 'ERR no such key';
+            throw new RedisError_1.RedisError('ERR no such key');
         }
         let indx = this.normalizeIndex(index, data);
         if ((indx >= 0) && (indx < data.length)) {
             data[indx] = value;
         }
         else {
-            throw 'ERR value is not an integer or out of range';
+            throw new RedisError_1.RedisError('ERR value is not an integer or out of range');
         }
         return r;
     }
     linsert(conn, key, position, pivot, value) {
         this.checkArgCount('linsert', arguments, 5);
         if (['BEFORE', 'AFTER'].indexOf(position) === -1) {
-            throw 'ERR syntax error';
+            throw new RedisError_1.RedisError('ERR syntax error');
         }
         let h = this.getDataset(conn.database, key);
         if (!h) {
@@ -124,16 +128,6 @@ class Lists extends AbstractCommands_1.AbstractCommands {
         }
         return r;
     }
-    getDataset(db, key) {
-        let r = db.getDataset(key);
-        if (r && (typeof r.push === 'undefined')) {
-            throw 'WRONGTYPE Operation against a key holding the wrong kind of value';
-        }
-        return r;
-    }
-    createNewKey(db, key) {
-        return db.createNewKey(key, []);
-    }
     _pop(conn, key, type = null) {
         let r = null;
         let h = this.getDataset(conn.database, key);
@@ -145,10 +139,18 @@ class Lists extends AbstractCommands_1.AbstractCommands {
                 r = h.pop();
             }
             else {
-                throw 'ERR syntax error';
+                throw new RedisError_1.RedisError('ERR syntax error');
             }
         }
         return r;
+    }
+    getDataset(db, key) {
+        let r = db.getDataset(key);
+        this.checkType(r, ListDataset_1.ListDataset);
+        return r;
+    }
+    createNewKey(db, key) {
+        return db.createListDataset(key);
     }
 }
 exports.Lists = Lists;

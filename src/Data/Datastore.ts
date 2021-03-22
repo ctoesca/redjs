@@ -5,6 +5,7 @@ import Promise = require('bluebird');
 import EventEmitter = require('events');
 import net = require('net');
 import * as utils from '../utils';
+import {RedisError} from '../Errors/RedisError'
 
 export class Datastore extends EventEmitter {
 
@@ -43,7 +44,7 @@ export class Datastore extends EventEmitter {
 	public getDb(index = 0) {
 
 		if ( !utils.isInt(index) || (index >= this.databases.length )) {
-			throw 'ERR value is not an integer or out of range'
+			throw new RedisError( 'ERR value is not an integer or out of range' )
 		}
 
 		return this.databases[index]

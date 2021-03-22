@@ -7,42 +7,74 @@ class ServerCommands extends AbstractCommands_1.AbstractCommands {
         super(opt);
     }
     getCommandsNames() {
-        return ['info', 'monitor', 'flushdb', 'time', 'flushall'];
+        return [
+            'flushall',
+            'flushdb',
+            'info',
+            'monitor',
+            'time'
+        ];
+    }
+    getNotImplementedCommands() {
+        return ['acl ',
+            'bgrewriteaof',
+            'bgsave',
+            'command',
+            'config',
+            'dbsize',
+            'debug',
+            'failover',
+            'lastsave',
+            'latency',
+            'lolwut',
+            'memory',
+            'module',
+            'psync',
+            'replicaof',
+            'role',
+            'save',
+            'shutdown',
+            'slaveof',
+            'slowlog',
+            'swapdb',
+            'sync'
+        ];
+    }
+    check_flushdb(conn, async) {
+        this.checkArgCount('flushdb', arguments, 1, 2);
     }
     flushdb(conn, async) {
-        this.checkArgCount('llen', arguments, 1, 2);
         conn.database.clear();
-        return {
-            value: 'OK',
-            type: 'simpleString'
-        };
+        return 'OK';
+    }
+    check_flushall(conn, async) {
+        this.checkArgCount('flushall', arguments, 1, 2);
     }
     flushall(conn, async) {
-        this.checkArgCount('llen', arguments, 1, 2);
         this.datastore.clear();
-        return {
-            value: 'OK',
-            type: 'simpleString'
-        };
+        return 'OK';
+    }
+    check_time(conn) {
+        this.checkArgCount('time', arguments, 1, 1);
     }
     time(conn) {
-        this.checkArgCount('llen', arguments, 1, 1);
         let r = [];
         let now = Date.now().toString();
         r.push(now.substr(0, now.length - 3));
         r.push(now.substr(r[0].length) + '000');
         return r;
     }
+    check_monitor(conn) {
+        this.checkArgCount('monitor', arguments, 1);
+    }
     monitor(conn) {
-        this.checkArgCount('llen', arguments, 1);
         conn.emit('monitor');
-        return {
-            value: 'OK',
-            type: 'simpleString'
-        };
+        return 'OK';
+    }
+    check_info(conn, section = 'all') {
+        this.checkArgCount('info', arguments, 1, 2);
     }
     info(conn, section = 'all') {
-        this.checkArgCount('llen', arguments, 1, 2);
         let r = '';
         for (let type of ['Server', 'Clients', 'Memory', 'Persistence', 'Stats', 'Replication', 'CPU', 'Commandstats', 'Cluster', 'Keyspace']) {
             let f = 'get' + type + 'Info';

@@ -4,16 +4,38 @@ exports.Sets = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
 const utils = require("../utils");
 const sha1 = require("sha1");
+const SetDataset_1 = require("../Data/SetDataset");
+const RedisError_1 = require("../RedisError");
 class Sets extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
     }
     getCommandsNames() {
-        return ['SADD', 'SCARD', 'SDIFF', 'SDIFFSTORE', 'SINTER', 'SINTERSTORE', 'SISMEMBER', 'SMEMBERS',
-            'SMOVE', 'SPOP', 'SRANDMEMBER', 'SREM', 'SUNION', 'SUNIONSTORE', 'SSCAN'];
+        return [
+            'sadd',
+            'scard',
+            'sismember',
+            'smembers',
+            'spop',
+            'srandmember',
+            'srem',
+            'sunion'
+        ];
+    }
+    getNotImplementedCommands() {
+        return [
+            'sdiff',
+            'sdiffstore',
+            'sinter',
+            'sinterstore',
+            'smismember',
+            'smove',
+            'sscan',
+            'sunionstore'
+        ];
     }
     sismember(conn, key, member) {
-        this.checkArgCount('srem', arguments, 3, 3);
+        this.checkArgCount('sismember', arguments, 3, 3);
         let set = this.getDataset(conn.database, key);
         if (!set) {
             return 0;
@@ -77,7 +99,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         }
     }
     scard(conn, key) {
-        this.checkArgCount('sinter', arguments, 2);
+        this.checkArgCount('scard', arguments, 2);
         let set = this.getDataset(conn.database, key);
         let r = 0;
         if (set) {
@@ -86,7 +108,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
         return r;
     }
     sunion(conn, ...keys) {
-        this.checkArgCount('sinter', arguments, 3, -1);
+        this.checkArgCount('sunion', arguments, 3, -1);
         let r = [];
         let rTmp = new Map();
         let sets = this.getDatasets(conn.database, ...keys);
@@ -151,7 +173,7 @@ class Sets extends AbstractCommands_1.AbstractCommands {
             return null;
         }
         if ((count <= 0) || (count > set.size)) {
-            throw 'ERR value out of range';
+            throw new RedisError_1.RedisError('ERR value out of range');
         }
         if (set.size === 0) {
             return null;
@@ -171,11 +193,11 @@ class Sets extends AbstractCommands_1.AbstractCommands {
     }
     getDataset(db, key) {
         let r = db.getDataset(key);
-        this.checkType(r, Set);
+        this.checkType(r, SetDataset_1.SetDataset);
         return r;
     }
     createNewKey(db, key) {
-        return db.createNewKey(key, new Set());
+        return db.createSetDataset(key);
     }
 }
 exports.Sets = Sets;

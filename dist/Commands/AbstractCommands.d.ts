@@ -10,11 +10,10 @@ export declare class AbstractCommands extends EventEmitter {
     protected datastore: Datastore;
     protected logger: any;
     protected mainTimer: utils.Timer;
-    protected data: any;
     constructor(opt: any);
     destroy(): void;
-    checkArgs(cmd: string, ...args: any[]): void;
     getCommandsNames(): string[];
+    getNotImplementedCommands(): string[];
     protected checkType(obj: any, type: any): void;
     protected checkArgCount(cmd: string, args: IArguments, valueOrMin: number, max?: number): void;
     protected checkInt(v: any): void;

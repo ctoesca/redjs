@@ -5,6 +5,7 @@ const RedjsServer_1 = require("./RedjsServer");
 const Parser_1 = require("./utils/Parser");
 const EventEmitter = require("events");
 const uuid = require("uuid/v4");
+const RedisError_1 = require("./Errors/RedisError");
 class Connection extends EventEmitter {
     constructor(server, sock, commander) {
         super();
@@ -20,6 +21,9 @@ class Connection extends EventEmitter {
         this.closing = false;
         this.processingData = false;
         this.onCommand = null;
+        this.inTransaction = false;
+        this.transactionCommands = [];
+        this.transactionErrors = [];
         this.id = uuid();
         this.sock = sock;
         this.server = server;
@@ -42,6 +46,61 @@ class Connection extends EventEmitter {
         this.logger.debug('CONNECTED: ' + this.getRemoteAddressPort());
         this.parser = new Parser_1.Parser();
         this.setDatabase(0);
+    }
+    beginTransaction() {
+        if (this.inTransaction) {
+            throw new RedisError_1.RedisError('ERR MULTI calls can not be nested');
+        }
+        this.inTransaction = true;
+        this.transactionCommands = [];
+    }
+    commitTransaction() {
+        if (!this.inTransaction) {
+            throw new RedisError_1.RedisError('ERR EXEC without MULTI');
+        }
+        if (this.transactionErrors.length > 0) {
+            this.cancelTransaction(true);
+            throw new RedisError_1.RedisError('EXECABORT Transaction discarded because of previous errors.');
+        }
+        let responses = [];
+        for (let command of this.transactionCommands) {
+            try {
+                let responseData = this.execCommand(command.name, command.args, true);
+                responses.push(responseData);
+            }
+            catch (err) {
+                console.log('exec command error ' + err.toString());
+                responses.push(err);
+            }
+        }
+        this.inTransaction = false;
+        this.transactionCommands = [];
+        this.transactionErrors = [];
+        return responses;
+    }
+    cancelTransaction(force = false) {
+        if (!force && !this.inTransaction) {
+            throw new RedisError_1.RedisError('ERR DISCARD without MULTI');
+        }
+        this.inTransaction = false;
+        this.transactionCommands = [];
+        this.transactionErrors = [];
+    }
+    addTransactionCommand(name, args) {
+        try {
+            this.commander.execCommand(this, true, name, ...args);
+        }
+        catch (err) {
+            this.logger.error('addTransactionCommand', err);
+            this.transactionErrors.push(err);
+            throw err;
+        }
+        finally {
+            this.transactionCommands.push({
+                name: name,
+                args: args
+            });
+        }
     }
     setDatabase(index) {
         this.database = this.server.datastore.getDb(index);
@@ -90,49 +149,64 @@ class Connection extends EventEmitter {
     resume() {
         this.sock.resume();
     }
+    execCommand(cmd, args, force = false) {
+        if (this.onCommand) {
+            this.onCommand(this, cmd, ...args);
+        }
+        let resp;
+        if (!force && this.inTransaction && (cmd !== 'exec') && (cmd !== 'multi') && (cmd !== 'discard')) {
+            this.addTransactionCommand(cmd, args);
+            resp = 'QUEUED';
+        }
+        else {
+            let responseData = this.commander.execCommand(this, false, cmd, ...args);
+            resp = responseData;
+        }
+        return resp;
+    }
     processPipelineRequest(requestData) {
         let responses = [];
         for (let data of requestData) {
+            let resp;
             let cmd = data[0].toLowerCase();
             data.shift();
-            if (this.onCommand) {
-                this.onCommand(this, cmd, ...data);
+            try {
+                resp = this.execCommand(cmd, data);
             }
-            let responseData = this.commander.execCommand(cmd, this, ...data);
-            responses.push(responseData);
-        }
-        for (let i = 0; i < responses.length; i++) {
-            this.sock.write(this.parser.toRESP(responses[i]));
+            catch (err) {
+                resp = err;
+            }
+            responses.push(resp);
+            resp = this.parser.toRESP(resp);
+            this.sock.write(resp);
         }
     }
-    processSingleRequest(requestData) {
+    processSingleRequest(requestData, sendResponse = true) {
         let cmd = requestData[0].toLowerCase();
         requestData.shift();
-        if (this.onCommand) {
-            this.onCommand(this, cmd, ...requestData);
-        }
-        let responseData = this.commander.execCommand(cmd, this, ...requestData);
-        let resp = this.parser.toRESP(responseData);
+        let resp = this.parser.toRESP(this.execCommand(cmd, requestData));
         this.sock.write(resp);
     }
     onSockData(data) {
+        let requestData;
         try {
             this.processingData = true;
-            let requestData = this.parser.fromRESP(data);
+            requestData = this.parser.fromRESP(data);
             if (typeof requestData[0] === 'object') {
                 this.processPipelineRequest(requestData);
             }
             else {
                 this.processSingleRequest(requestData);
             }
-            this.processingData = false;
         }
         catch (err) {
-            if (this.lastError !== err.toString()) {
-                this.lastError = err.toString();
-                this.logger.error('REQUEST: ' + data.toString().replace(/\r\n/g, '\\r\\n') + ', ERROR: ', err);
-            }
-            this.sock.write(this.parser.toRESP(this.lastError, 'error'));
+            this.lastError = err;
+            this.logger.error('REQUEST: ', requestData);
+            this.logger.error('RESPONSE: ', err.toString());
+            let resp = this.parser.toRESP(err);
+            this.sock.write(resp);
+        }
+        finally {
             this.processingData = false;
         }
         if (this.closing) {

@@ -7,6 +7,7 @@ export declare class PubSub extends AbstractCommands {
     constructor(opt: any);
     destroy(): void;
     getCommandsNames(): string[];
+    getNotImplementedCommands(): string[];
     getSubscriptionsCount(conn: Connection): number;
     subscribe(conn: Connection, ...channels: string[]): any[];
     psubscribe(conn: Connection, ...patterns: string[]): any[];

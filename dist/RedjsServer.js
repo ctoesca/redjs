@@ -32,7 +32,7 @@ class RedjsServer extends EventEmitter {
         this.commander = new Commander_1.Commander({ server: this, datastore: this.datastore });
     }
     static createLogger(opt) {
-        return bunyan.createLogger({ name: opt.name });
+        return bunyan.createLogger({ name: 'RedJs-' + opt.name });
     }
     static getDefaultOptions() {
         return {
@@ -131,6 +131,7 @@ class RedjsServer extends EventEmitter {
     createServer() {
         return new Promise((resolve, reject) => {
             this.server = net.createServer((sock) => {
+                sock.setNoDelay(true);
                 let conn = new Connection_1.Connection(this, sock, this.commander);
                 conn.on('close', () => {
                     this.onConnectionClosed(conn);

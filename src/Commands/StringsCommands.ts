@@ -1,9 +1,12 @@
 import {AbstractCommands} from './AbstractCommands';
 import {Connection} from '../Connection';
 import * as utils from '../utils';
-
+import {IDataset} from '../Data/IDataset'
 import {Database} from '../data/Database';
 import Promise = require('bluebird');
+import {StringsDataset} from '../Data/StringsDataset'
+import {RedisError} from '../Errors/RedisError'
+import {NotImplementedError} from '../Errors/NotImplementedError'
 
 export class StringsCommands extends AbstractCommands {
 
@@ -12,21 +15,55 @@ export class StringsCommands extends AbstractCommands {
 	}
 
 	public getCommandsNames(): string[] {
-		return ['APPEND', 'BITCOUNT', 'BITFIELD', 'BITOP', 'BITPOS', 'DECR', 'DECRBY', 'GET', 'GETBIT', 'GETRANGE',
-		'GETSET', 'INCR', 'INCRBY', 'INCRBYFLOAT', 'MGET', 'MSET', 'MSETNX', 'PSETEX', 'SET', 'SETBIT', 'SETEX', 'SETNX', 'SETRANGE', 'STRLEN']
+		return [
+		'get',
+		'strlen',
+		'set',
+		'incr'
+		]
 	}
 
+	public getNotImplementedCommands(): string[] {
+		return [
+		'append',
+		'bitcount',
+		'bitfield',
+		'bitop',
+		'bitpos',
+		'decr',
+		'decrby',
+		'getbit',
+		'getdel',
+		'getex',
+		'getrange',
+		'getset',
+		'incrby',
+		'incrbyfloat',
+		'mget',
+		'mset',
+		'msetnx',
+		'psetex',
+		'setbit',
+		'setex',
+		'setnx',
+		'setrange',
+		'stralgo'
+		]
+	}
+
+	public check_strlen( conn: Connection, key: string ) {
+		this.checkArgCount('strlen', arguments, 2)
+	}
 	public strlen(conn: Connection, key: string) {
 
-		this.checkArgCount('get', arguments, 2)
-
-		let data = this.getDataset(conn.database, key)
-		if (!data) 
+		let data: StringsDataset = this.getDataset(conn.database, key)
+		if (!data) {
 			return 0;
-		
+		}
+
 		let r = 0
 		if (typeof data.value !== 'string') {
-			throw 'ERR value is not a string or out of range'		
+			throw new RedisError(  'ERR value is not a string or out of range' )
 		}
 
 		r = data.value.length
@@ -34,12 +71,12 @@ export class StringsCommands extends AbstractCommands {
 		return r
 	}
 
-	public get(conn: Connection, key: string) {
-
+	public check_get( conn: Connection, key: string ) {
 		this.checkArgCount('get', arguments, 2)
-
+	}
+	public get(conn: Connection, key: string) {
 		let r = null
-		let data = this.getDataset(conn.database, key)
+		let data: StringsDataset = this.getDataset(conn.database, key)
 		if (data) {
 			r = data.value
 		}
@@ -47,7 +84,13 @@ export class StringsCommands extends AbstractCommands {
 		return r
 	}
 
+	public check_set( conn: Connection, key: string, value: any, ...options: any[] ) {
+		this.checkArgCount('set', arguments, 3, -1)
+	}
 	public set(conn: Connection, key: string, value: any, ...options: any[]) {
+		if (options.length > 0) {
+			throw new NotImplementedError('set with options')
+		}
 		/* SET key value [expiration EX seconds|PX milliseconds] [NX|XX]
 
 		Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type. Any previous time to live associated with the key is discarded on successful SET operation.
@@ -67,22 +110,20 @@ export class StringsCommands extends AbstractCommands {
 
 		*/
 
-		this.checkArgCount('set', arguments, 3, -1)
-
-		let r = 'OK'
-		let data = this.getOrCreate(conn.database, key)
+		let data: StringsDataset = this.getOrCreate(conn.database, key)
 		data.value = value
-		return r
+		return 'OK'
 	}
 
-
+	public check_incr( conn: Connection, key: string ) {
+		this.checkArgCount('incr', arguments, 2)
+	}
 	public incr(conn: Connection, key: string) {
-		this.checkArgCount('exists', arguments, 2)
 
-		let data = this.getDataset(conn.database, key)
+		let data: StringsDataset = this.getDataset(conn.database, key)
 		if (data) {
 			if (!utils.isInt(data.value)) {
-				throw 'ERR value is not an integer or out of range'
+				throw new RedisError( 'ERR value is not an integer or out of range' )
 			}
 		} else {
 			data = this.createNewKey(conn.database, key)
@@ -93,8 +134,14 @@ export class StringsCommands extends AbstractCommands {
 		return data.value
 	}
 
-	protected createNewKey( db: Database, key: string ) {
-		return db.createNewKey( key, {value: ''} )
+	protected getDataset(db: Database, key: string): StringsDataset {
+		let r = db.getDataset(key)
+		this.checkType(r, StringsDataset)
+		return r
+	}
+
+	protected createNewKey( db: Database, key: string ): StringsDataset {
+		return db.createStringsDataset( key )
 	}
 
 }

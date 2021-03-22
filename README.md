@@ -12,7 +12,7 @@ Redis is a good solution to do that, but sometime you want to provide a standalo
 
 Notes: 
 - The purpose of this module is not to compete with Redis (the performance of Redjs is about 2 to 3 times less than Redis, and there is no replication or cluster) but to provide a shared memory and a pub-sub system between nodejs processes, using "standard" client modules like ioredis, node_redis etc.
-- Redjs imlement Redis protocol and behaves like Redis: so it can be used by any application.
+- Redjs implements Redis protocol and behaves like Redis: so it can be used by any application.
 - All operations are performed in-memory, on master process. 
 - Persistence is not yet implemented
 
@@ -30,7 +30,7 @@ $ npm install ctoesca/redjs
 #### In a single process application:
 ```javascript
 /* create RedjsServer */
-var RedjsServer = require('Redjs')      
+const RedjsServer = require('Redjs')      
 new RedjsServer().start(6379)
 ```
 
@@ -42,7 +42,7 @@ if (cluster.isMaster){
 
     /* MASTER PROCESS */
     
-    var numProcesses = 2
+    const numProcesses = 2
     for (var i=0; i<numProcesses; i++)
 	cluster.fork();
 		
@@ -52,7 +52,7 @@ if (cluster.isMaster){
     })
     
     /* create RedjsServer */
-    var RedjsServer = require('Redjs')      
+    const RedjsServer = require('Redjs')      
     new RedjsServer().start(6379)
     
 }else{
@@ -66,7 +66,7 @@ if (cluster.isMaster){
 ### Using Redjs server with your favorite client library ([Ioredis](https://github.com/luin/ioredis) in this example)
   
 ```javascript
-var Redis = require('ioredis');
+const Redis = require('ioredis');
 var redis = new Redis();
 
 redis.set('foo', 'bar');
@@ -175,3 +175,8 @@ redis-cli -p 6379
 - ping
 - echo
 - quit
+
+### Transactions
+- multi
+- exec
+- discard

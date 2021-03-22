@@ -3,19 +3,16 @@ import { Connection } from '../Connection';
 export declare class ServerCommands extends AbstractCommands {
     constructor(opt: any);
     getCommandsNames(): string[];
-    flushdb(conn: Connection, async: string): {
-        value: string;
-        type: string;
-    };
-    flushall(conn: Connection, async: string): {
-        value: string;
-        type: string;
-    };
+    getNotImplementedCommands(): string[];
+    check_flushdb(conn: Connection, async: string): void;
+    flushdb(conn: Connection, async: string): string;
+    check_flushall(conn: Connection, async: string): void;
+    flushall(conn: Connection, async: string): string;
+    check_time(conn: Connection): void;
     time(conn: Connection): string[];
-    monitor(conn: Connection): {
-        value: string;
-        type: string;
-    };
+    check_monitor(conn: Connection): void;
+    monitor(conn: Connection): string;
+    check_info(conn: Connection, section?: string): void;
     info(conn: Connection, section?: string): string;
     getServerInfo(): string[];
     protected getReplicationInfo(): string[];

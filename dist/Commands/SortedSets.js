@@ -1,16 +1,50 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SortedSets = void 0;
+exports.SortedSetsCommnand = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
-class SortedSets extends AbstractCommands_1.AbstractCommands {
+class SortedSetsCommnand extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
     }
     getCommandsNames() {
-        return ['BZPOPMIN', 'BZPOPMAX', 'ZADD', 'ZCARD', 'ZCOUNT', 'ZINCRBY', 'ZINTERSTORE', 'ZLEXCOUNT', 'ZPOPMAX', 'ZPOPMIN', 'ZRANGE',
-            'ZRANGEBYLEX', 'ZREVRANGEBYLEX', 'ZRANGEBYSCORE', 'ZRANK', 'ZREM', 'ZREMRANGEBYLEX', 'ZREMRANGEBYRANK', 'ZREMRANGEBYSCORE',
-            'ZREVRANGE', 'ZREVRANGEBYSCORE', 'ZREVRANK', 'ZSCORE', 'ZUNIONSTORE', 'ZSCAN'];
+        return [];
+    }
+    getNotImplementedCommands() {
+        return [
+            'bzpopmax',
+            'bzpopmin',
+            'zadd',
+            'zcard',
+            'zcount',
+            'zdiff',
+            'zdiffstore',
+            'zincrby',
+            'zinter',
+            'zinterstore',
+            'zlexcount',
+            'zmscore',
+            'zpopmax',
+            'zpopmin',
+            'zrandmember',
+            'zrange',
+            'zrangebylex',
+            'zrangebyscore',
+            'zrangestore',
+            'zrank',
+            'zrem',
+            'zremrangebylex',
+            'zremrangebyrank',
+            'zremrangebyscore',
+            'zrevrange',
+            'zrevrangebylex',
+            'zrevrangebyscore',
+            'zrevrank',
+            'zscan',
+            'zscore',
+            'zunion',
+            'zunionstore'
+        ];
     }
 }
-exports.SortedSets = SortedSets;
+exports.SortedSetsCommnand = SortedSetsCommnand;
 //# sourceMappingURL=SortedSets.js.map

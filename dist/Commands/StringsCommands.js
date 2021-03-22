@@ -3,28 +3,67 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StringsCommands = void 0;
 const AbstractCommands_1 = require("./AbstractCommands");
 const utils = require("../utils");
+const StringsDataset_1 = require("../Data/StringsDataset");
+const RedisError_1 = require("../Errors/RedisError");
+const NotImplementedError_1 = require("../Errors/NotImplementedError");
 class StringsCommands extends AbstractCommands_1.AbstractCommands {
     constructor(opt) {
         super(opt);
     }
     getCommandsNames() {
-        return ['APPEND', 'BITCOUNT', 'BITFIELD', 'BITOP', 'BITPOS', 'DECR', 'DECRBY', 'GET', 'GETBIT', 'GETRANGE',
-            'GETSET', 'INCR', 'INCRBY', 'INCRBYFLOAT', 'MGET', 'MSET', 'MSETNX', 'PSETEX', 'SET', 'SETBIT', 'SETEX', 'SETNX', 'SETRANGE', 'STRLEN'];
+        return [
+            'get',
+            'strlen',
+            'set',
+            'incr'
+        ];
+    }
+    getNotImplementedCommands() {
+        return [
+            'append',
+            'bitcount',
+            'bitfield',
+            'bitop',
+            'bitpos',
+            'decr',
+            'decrby',
+            'getbit',
+            'getdel',
+            'getex',
+            'getrange',
+            'getset',
+            'incrby',
+            'incrbyfloat',
+            'mget',
+            'mset',
+            'msetnx',
+            'psetex',
+            'setbit',
+            'setex',
+            'setnx',
+            'setrange',
+            'stralgo'
+        ];
+    }
+    check_strlen(conn, key) {
+        this.checkArgCount('strlen', arguments, 2);
     }
     strlen(conn, key) {
-        this.checkArgCount('get', arguments, 2);
         let data = this.getDataset(conn.database, key);
-        if (!data)
+        if (!data) {
             return 0;
+        }
         let r = 0;
         if (typeof data.value !== 'string') {
-            throw 'ERR value is not a string or out of range';
+            throw new RedisError_1.RedisError('ERR value is not a string or out of range');
         }
         r = data.value.length;
         return r;
     }
-    get(conn, key) {
+    check_get(conn, key) {
         this.checkArgCount('get', arguments, 2);
+    }
+    get(conn, key) {
         let r = null;
         let data = this.getDataset(conn.database, key);
         if (data) {
@@ -32,19 +71,25 @@ class StringsCommands extends AbstractCommands_1.AbstractCommands {
         }
         return r;
     }
-    set(conn, key, value, ...options) {
+    check_set(conn, key, value, ...options) {
         this.checkArgCount('set', arguments, 3, -1);
-        let r = 'OK';
+    }
+    set(conn, key, value, ...options) {
+        if (options.length > 0) {
+            throw new NotImplementedError_1.NotImplementedError('set with options');
+        }
         let data = this.getOrCreate(conn.database, key);
         data.value = value;
-        return r;
+        return 'OK';
+    }
+    check_incr(conn, key) {
+        this.checkArgCount('incr', arguments, 2);
     }
     incr(conn, key) {
-        this.checkArgCount('exists', arguments, 2);
         let data = this.getDataset(conn.database, key);
         if (data) {
             if (!utils.isInt(data.value)) {
-                throw 'ERR value is not an integer or out of range';
+                throw new RedisError_1.RedisError('ERR value is not an integer or out of range');
             }
         }
         else {
@@ -54,8 +99,13 @@ class StringsCommands extends AbstractCommands_1.AbstractCommands {
         data.value++;
         return data.value;
     }
+    getDataset(db, key) {
+        let r = db.getDataset(key);
+        this.checkType(r, StringsDataset_1.StringsDataset);
+        return r;
+    }
     createNewKey(db, key) {
-        return db.createNewKey(key, { value: '' });
+        return db.createStringsDataset(key);
     }
 }
 exports.StringsCommands = StringsCommands;

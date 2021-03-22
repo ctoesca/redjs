@@ -5,8 +5,13 @@ import Promise = require('bluebird');
 import EventEmitter = require('events');
 import net = require('net');
 import * as utils from '../utils';
-
+const fs = require('fs-extra');
 import {Connection} from '../Connection';
+import {IDataset} from './IDataset'
+import {HashDataset} from './HashDataset'
+import {ListDataset} from './ListDataset'
+import {SetDataset} from './SetDataset'
+import {StringsDataset} from './StringsDataset'
 
 export class Database extends EventEmitter {
 
@@ -46,12 +51,40 @@ export class Database extends EventEmitter {
 		return this.keys.clear()
 	}
 
-	public createNewKey( key: string, object: any ) {
-		this.keys.set(key, object)
-		return object;
+	public createHashDataset(key: string): HashDataset {
+		let r = new HashDataset()
+		this.keys.set(key, r)
+		return r
 	}
+
+	public createListDataset(key: string): ListDataset {
+		let r = new ListDataset()
+		this.keys.set(key, r)
+		return r
+	}
+
+	public createSetDataset(key: string): SetDataset {
+		let r = new SetDataset()
+		this.keys.set(key, r)
+		return r
+	}
+
+	public createStringsDataset(key: string): StringsDataset {
+		let r = new StringsDataset()
+		this.keys.set(key, r)
+		return r
+	}
+
 	public getDataset( key: string) {
 		return this.keys.get(key)
+	}
+	public save(path: string) {
+		let data = {}
+		this.keys.forEach((value, key, index) => {
+			data[key] = value
+			this.logger.error('value', value)
+		})
+		fs.writeFileSync(path, JSON.stringify(data, null, 4))
 	}
 
 	/* protected onTimer() {

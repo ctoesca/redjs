@@ -2,6 +2,7 @@ import Promise = require('bluebird');
 import EventEmitter = require('events');
 const RedisParser = require('redis-parser');
 import * as utils from '../utils';
+import {RedisError} from '../Errors/RedisError'
 
 export class Parser extends EventEmitter {
 
@@ -41,13 +42,17 @@ export class Parser extends EventEmitter {
 		if (typeof data === 'string') {
 			r = this.stringToResp(data, type)
 		} else if (data === null) {
-			r = '$-1\r\n'
+			if (type === 'array') {
+				r = '*-1\r\n'
+			} else {
+				r = '$-1\r\n'
+			}
 		} else if (typeof data === 'object') {
 			r = this.objectToResp(data, type)
 		} else if (typeof data === 'number') {
 			r = this.numberToResp(data, type)
 		} else {
-			throw ('ERR Unknown response type for response \'' + data + '\'')
+			throw new RedisError( 'ERR Unknown response type for response \'' + data + '\'')
 		}
 		return r
 	}
@@ -67,9 +72,15 @@ export class Parser extends EventEmitter {
 
 	protected stringToResp(data: string, forcedType: string = null) {
 		let r = null
+
 		if (!forcedType) {
-			forcedType = 'bulkString'
+			if (data === 'OK') {
+				forcedType = 'simpleString'
+			} else {
+				forcedType = 'bulkString'
+			}
 		}
+
 		// '$6\r\nfoobar\r\n'
 		if (forcedType === 'simpleString') {
 			r = '+' + data + '\r\n'
@@ -81,15 +92,27 @@ export class Parser extends EventEmitter {
 		return r
 	}
 
-	protected objectToResp(data: any, forcedType: string = null) {
-		let r = null
-		if (typeof data.push === 'function') {
-			// ARRAY
-			// *2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n
+	protected arrayToResp(data: any, forcedType: string = null) {
+		let r
+		if (data === null) {
+			r = '*-1\r\n'
+		} else {
 			r = '*' + data.length + '\r\n'
 			for (let value of data) {
 				r += this.toRESP(value)
 			}
+		}
+		return r
+	}
+
+	protected objectToResp(data: any, forcedType: string = null) {
+		let r = null
+		if ( data instanceof Error) {
+			r = '-' + data.toString() + '\r\n'
+		} else if ((typeof data.push === 'function') || (forcedType === 'array')) {
+			// ARRAY
+			// *2\r\n$3\r\nfoo\r\n$3\r\nbar\r\n
+			r = this.arrayToResp(data)
 		} else if (typeof data.value !== 'undefined') {
 			/* object {
 				value: '...',
@@ -97,7 +120,7 @@ export class Parser extends EventEmitter {
 			}*/
 			r = this.toRESP(data.value, data.type)
 		} else {
-			throw ('ERR Unknown response type for response \'' + data + '\'')
+			throw new RedisError( 'ERR Unknown response type for response \'' + data + '\'')
 		}
 		return r
 	}
